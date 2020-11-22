@@ -1,0 +1,75 @@
+package utility.geometry;
+
+public class Point {
+
+	private final int x;
+	private final int y;
+
+	/**
+	 * Generates a 2d Point.
+	 * 
+	 * @param x
+	 * @param y
+	 */
+	public Point(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+
+	/**
+	 * Returns the x value of the Point.
+	 * 
+	 * @return x value of the point
+	 */
+	public int getX() {
+		return x;
+	}
+
+	/**
+	 * Returns the y value of the Point.
+	 * 
+	 * @return x value of the point
+	 */
+	public int getY() {
+		return y;
+	}
+
+	/**
+	 * Calculates the manhattan distance between self and other {@link Point}
+	 * @param other
+	 * @return value of manhattan distance
+	 */
+	public int manhattanDistance(Point other) {
+		return Math.abs(x - other.getX()) + Math.abs(y - other.getY());
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + x;
+		result = prime * result + y;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Point other = (Point) obj;
+		if (x != other.x)
+			return false;
+		if (y != other.y)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "(" + x + " | " + y + ")";
+	}
+}
