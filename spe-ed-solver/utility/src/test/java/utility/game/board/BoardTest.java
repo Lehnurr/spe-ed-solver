@@ -12,7 +12,7 @@ import utility.geometry.Point2i;
 public class BoardTest {
 
     @Test
-    public void turnTest() {
+    public void boardTest() {
         // Test Data: Cells
         Cell[][] cells = { { new Cell(0), new Cell(0), new Cell(0) }, { new Cell(0), new Cell(0), new Cell(0) },
                 { new Cell(0), new Cell(0), new Cell(0) }, { new Cell(0), new Cell(0), new Cell(0) } };
@@ -20,7 +20,7 @@ public class BoardTest {
         Board<Cell> board = new Board<>(cells);
 
         // Check for same object Reference
-        assertSame(cells[1][2], board.getBoardCellAt(new Point2i(1, 2)));
+        assertSame(cells[1][2], board.getBoardCellAt(new Point2i(2, 1)));
 
         // check for not fount Cell
         assertEquals(null, board.getBoardCellAt(new Point2i(4, 2)));
@@ -29,7 +29,7 @@ public class BoardTest {
         assertTrue(null, board.isOnBoard(new Point2i(1, 0)));
         assertTrue(null, board.isOnBoard(new Point2i(2, 3)));
         assertTrue(null, board.isOnBoard(new Point2i(0, 2)));
-        assertTrue(null, board.isOnBoard(new Point2i(3, 1)));
+        assertTrue(null, board.isOnBoard(new Point2i(2, 1)));
 
         // Check Inner-Field Points
         assertTrue(null, board.isOnBoard(new Point2i(1, 2)));
