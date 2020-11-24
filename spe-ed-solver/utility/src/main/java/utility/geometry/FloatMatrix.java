@@ -33,6 +33,21 @@ public class FloatMatrix {
 	}
 
 	/**
+	 * Copy Constructor for duplicating the {@link FloatMatrix} by duplicating each
+	 * value.
+	 * 
+	 * @param sourceMatrix
+	 */
+	public FloatMatrix(final FloatMatrix sourceMatrix) {
+		this(sourceMatrix.getWidth(), sourceMatrix.getHeight());
+		for (int y = 0; y < values.length; y++) {
+			for (int x = 0; x < values[0].length; x++) {
+				values[y][x] = sourceMatrix.getValue(x, y);
+			}
+		}
+	}
+
+	/**
 	 * Returns the width of the 2d matrix.
 	 * 
 	 * @return width of the matrix
