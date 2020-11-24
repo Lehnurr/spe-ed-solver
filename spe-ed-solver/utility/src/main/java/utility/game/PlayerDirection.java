@@ -1,13 +1,19 @@
 package utility.game;
 
+import utility.geometry.Vector2i;
+
 public enum PlayerDirection {
 
-	UP,
-	RIGHT,
-	DOWN, 
-	LEFT;
+	UP(new Vector2i(0, -1)),
+	RIGHT(new Vector2i(1, 0)),
+	DOWN(new Vector2i(0, 1)),
+	LEFT(new Vector2i(-1, 0));
+	
+	// vector of the direction on the game board
+	private final Vector2i vector;
 
-	private PlayerDirection() {
+	private PlayerDirection(Vector2i vector) {
+		this.vector = vector;
 	}
 
 	/**
@@ -28,6 +34,16 @@ public enum PlayerDirection {
 		}
 
 		return PlayerDirection.values()[this.ordinal() + offset + PlayerDirection.values().length];
+	}
+
+	/**
+	 * Returns a {@link Vector2i} fitting for the current direction with the
+	 * magnitude of 1.
+	 * 
+	 * @return vector of the direction
+	 */
+	public Vector2i getDirectionVector() {
+		return this.vector;
 	}
 
 }
