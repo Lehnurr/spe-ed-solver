@@ -12,6 +12,7 @@
 		<module>utility</module>
 		<module>visualisation</module>
 		<module>player</module>
+		<module>simulation</module>
 	</modules>
 
 	<properties>
