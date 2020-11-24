@@ -20,7 +20,7 @@ public enum PlayerDirection {
 	 * @param playerAction
 	 * @return new direction
 	 */
-	public PlayerDirection doTurn(PlayerAction playerAction) {
+	public PlayerDirection doAction(PlayerAction playerAction) {
 
 		int offset = 0;
 
