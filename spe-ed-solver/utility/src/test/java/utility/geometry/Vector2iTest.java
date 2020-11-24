@@ -10,9 +10,9 @@ public class Vector2iTest {
 	public void multiplyTest() {
 		Vector2i baseVector = new Vector2i(2, 7);
 		Vector2i result = baseVector.multiply(3);
-		
-		assertEquals(result.getX(), 6);
-		assertEquals(result.getY(), 21);
+
+		assertEquals(6, result.getX());
+		assertEquals(21, result.getY());
 	}
 
 }
