@@ -56,7 +56,7 @@ public class FloatMatrix {
 	 * @param point
 	 * @return float value at the given position
 	 */
-	public float getValue(Point point) {
+	public float getValue(Point2i point) {
 		return getValue(point.getX(), point.getY());
 	}
 
@@ -72,12 +72,12 @@ public class FloatMatrix {
 	}
 
 	/**
-	 * Changes the value at a given {@link Point}.
+	 * Changes the value at a given {@link Point2i}.
 	 * 
 	 * @param point
 	 * @param value
 	 */
-	public void setValue(Point point, float value) {
+	public void setValue(Point2i point, float value) {
 		setValue(point.getX(), point.getY(), value);
 	}
 

@@ -8,8 +8,8 @@ public class PointTest {
 
 	@Test
 	public void manhattenDistanceTest() {
-		Point p1 = new Point(0, 10);
-		Point p2 = new Point(5, -1);
+		Point2i p1 = new Point2i(0, 10);
+		Point2i p2 = new Point2i(5, -1);
 		
 		int distanceP1P2 = p1.manhattanDistance(p2);
 		int distanceP2P1 = p2.manhattanDistance(p1);

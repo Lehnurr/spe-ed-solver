@@ -1,6 +1,6 @@
-package utility.game;
+package utility.game.player;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
