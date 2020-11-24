@@ -29,11 +29,12 @@ public enum PlayerDirection {
 
 		if (playerAction == PlayerAction.TURN_RIGHT) {
 			offset = 1;
-		} else if (playerAction == PlayerAction.TURN_RIGHT) {
+		} else if (playerAction == PlayerAction.TURN_LEFT) {
 			offset = -1;
 		}
-
-		return PlayerDirection.values()[this.ordinal() + offset + PlayerDirection.values().length];
+		
+		int directionCount = PlayerDirection.values().length;		
+		return PlayerDirection.values()[(this.ordinal() + offset + directionCount) % directionCount];
 	}
 
 	/**
