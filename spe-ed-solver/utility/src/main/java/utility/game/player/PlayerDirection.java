@@ -1,14 +1,11 @@
-package utility.game;
+package utility.game.player;
 
 import utility.geometry.Vector2i;
 
 public enum PlayerDirection {
 
-	UP(new Vector2i(0, -1)),
-	RIGHT(new Vector2i(1, 0)),
-	DOWN(new Vector2i(0, 1)),
-	LEFT(new Vector2i(-1, 0));
-	
+	UP(new Vector2i(0, -1)), RIGHT(new Vector2i(1, 0)), DOWN(new Vector2i(0, 1)), LEFT(new Vector2i(-1, 0));
+
 	// vector of the direction on the game board
 	private final Vector2i vector;
 
@@ -32,8 +29,8 @@ public enum PlayerDirection {
 		} else if (playerAction == PlayerAction.TURN_LEFT) {
 			offset = -1;
 		}
-		
-		int directionCount = PlayerDirection.values().length;		
+
+		int directionCount = PlayerDirection.values().length;
 		return PlayerDirection.values()[(this.ordinal() + offset + directionCount) % directionCount];
 	}
 
@@ -45,6 +42,16 @@ public enum PlayerDirection {
 	 */
 	public Vector2i getDirectionVector() {
 		return this.vector;
+	}
+
+	/**
+	 * Inverts the direction (180° turn)
+	 * 
+	 * @return inverted direction
+	 */
+	public PlayerDirection getInversion() {
+		int directionCount = PlayerDirection.values().length;
+		return PlayerDirection.values()[(this.ordinal() + 2 + directionCount) % directionCount];
 	}
 
 }
