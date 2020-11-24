@@ -11,6 +11,7 @@
 		<module>core</module>
 		<module>utility</module>
 		<module>visualisation</module>
+		<module>player</module>
 	</modules>
 
 	<properties>
