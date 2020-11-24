@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-public class PointTest {
+public class Point2iTest {
 
 	@Test
 	public void manhattenDistanceTest() {
@@ -16,6 +16,13 @@ public class PointTest {
 		
 		assertEquals(distanceP1P2, 16);
 		assertEquals(distanceP2P1, 16);
+	}
+	
+	@Test
+	public void translateTest() {
+		Point2i start = new Point2i(1, 7);
+		Point2i endpoint = start.translate(new Vector2i(8, -5));
+		assertEquals(endpoint, new Point2i(9, 2));
 	}
 
 }

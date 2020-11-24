@@ -42,6 +42,16 @@ public class Point2i {
 	public int manhattanDistance(Point2i other) {
 		return Math.abs(x - other.getX()) + Math.abs(y - other.getY());
 	}
+	
+	/**
+	 * Calculates the new {@link Point2i} when translated with a {@link Vector2i}. 
+	 * 
+	 * @param offsetVector
+	 * @return new {@link Point2i} with adapted position
+	 */
+	public Point2i translate(Vector2i offsetVector) {
+		return new Point2i(getX() + offsetVector.getX(), getY() + offsetVector.getY());
+	}
 
 	@Override
 	public int hashCode() {
