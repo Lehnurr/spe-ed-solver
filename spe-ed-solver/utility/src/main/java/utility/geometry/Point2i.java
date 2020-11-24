@@ -1,6 +1,6 @@
 package utility.geometry;
 
-public class Point {
+public class Point2i {
 
 	private final int x;
 	private final int y;
@@ -11,7 +11,7 @@ public class Point {
 	 * @param x
 	 * @param y
 	 */
-	public Point(int x, int y) {
+	public Point2i(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
@@ -39,7 +39,7 @@ public class Point {
 	 * @param other
 	 * @return value of manhattan distance
 	 */
-	public int manhattanDistance(Point other) {
+	public int manhattanDistance(Point2i other) {
 		return Math.abs(x - other.getX()) + Math.abs(y - other.getY());
 	}
 
@@ -60,7 +60,7 @@ public class Point {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Point other = (Point) obj;
+		Point2i other = (Point2i) obj;
 		if (x != other.x)
 			return false;
 		if (y != other.y)
