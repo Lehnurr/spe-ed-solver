@@ -1,4 +1,4 @@
-package utility.game;
+package utility.game.board;
 
 /**
  * Board

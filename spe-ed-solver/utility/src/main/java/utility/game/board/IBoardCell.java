@@ -1,4 +1,4 @@
-package utility.game;
+package utility.game.board;
 
 public interface IBoardCell {
     int getCellValue();
