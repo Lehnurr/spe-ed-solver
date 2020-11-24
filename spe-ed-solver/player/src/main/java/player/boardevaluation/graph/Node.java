@@ -35,18 +35,18 @@ public class Node implements IBoardCell {
         return this.position;
     }
 
-    public IConcreteEdge getEdge(PlayerDirection direction, boolean doJump, int speed) {
+    public ConcreteEdge getEdge(PlayerDirection direction, boolean doJump, int speed) {
         IEdge edge = this.edges[getIntegerIndex(direction, doJump, speed)];
 
-        if (edge instanceof IAbstractEdge) {
-            edge = ((IAbstractEdge) edge).calculatePath(board, this, direction);
-            setEdge(direction, doJump, speed, (IConcreteEdge) edge);
+        if (edge instanceof AbstractEdge) {
+            edge = ((AbstractEdge) edge).calculatePath(board, this, direction);
+            setEdge(direction, doJump, speed, (ConcreteEdge) edge);
         }
 
-        return (IConcreteEdge) edge;
+        return (ConcreteEdge) edge;
     }
 
-    public void setEdge(PlayerDirection direction, boolean doJump, int speed, IConcreteEdge edge) {
+    public void setEdge(PlayerDirection direction, boolean doJump, int speed, ConcreteEdge edge) {
         this.edges[getIntegerIndex(direction, doJump, speed)] = edge;
     }
 

@@ -8,7 +8,7 @@ import utility.geometry.Vector2i;
 /**
  * AbstractEdge
  */
-public final class AbstractEdge implements IAbstractEdge {
+public final class AbstractEdge implements IEdge {
 
     private final int stepCount;
     private final int[] abstractPath;
@@ -18,8 +18,14 @@ public final class AbstractEdge implements IAbstractEdge {
         this.abstractPath = abstractPath;
     }
 
-    @Override
-    public IConcreteEdge calculatePath(Board<Node> board, Node startNode, PlayerDirection direction) {
+    /**
+     * Calculates the {@link IConcreteEdge} from the {@link IAbstractEdge}
+     * 
+     * @param board     The {@link Board} with all {@link Node Nodes}
+     * @param startNode The {@link Node} where the player must be to use this edge
+     * @param direction The {@link PlayerDirection Players direction}
+     */
+    public ConcreteEdge calculatePath(Board<Node> board, Node startNode, PlayerDirection direction) {
         Node[] path = new Node[this.stepCount];
         Node[] invertedPath = new Node[this.stepCount];
 
