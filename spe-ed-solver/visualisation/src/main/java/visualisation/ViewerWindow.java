@@ -14,7 +14,7 @@ import javax.swing.JScrollBar;
 public class ViewerWindow {
 
 	// minimum dimensions of the window
-	private final static int MIN_WINDOW_WIDTH = 700;
+	private static final int MIN_WINDOW_WIDTH = 700;
 	private static final int MIN_WINDOW_HEIGHT = 500;
 
 	// gap values for the info panel grid layout
