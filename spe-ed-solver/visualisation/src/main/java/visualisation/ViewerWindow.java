@@ -3,7 +3,10 @@ package visualisation;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.image.BufferedImage;
+import java.util.function.Consumer;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -36,6 +39,9 @@ public class ViewerWindow {
 
 	// panel to show different boards with specific ratings
 	private final JPanel boardPanel = new JPanel();
+	
+	// scrollbar to scroll through the different rounds
+	private final JScrollBar timelineScrollBar = new JScrollBar(JScrollBar.HORIZONTAL);
 
 	// boards which are currently displayed
 	private int displayedBoards = 0;
@@ -43,8 +49,8 @@ public class ViewerWindow {
 	/**
 	 * Generates a new window and shows it.
 	 */
-	public ViewerWindow() {
-
+	public ViewerWindow(Consumer<Integer> timelineChangeHandler) {
+		
 		// main panel of the whole window
 		JPanel mainPanel = new JPanel();
 		jFrame.add(mainPanel);
@@ -54,11 +60,16 @@ public class ViewerWindow {
 		mainPanel.add(boardPanel, BorderLayout.CENTER);
 
 		// scroll bar to navigate the time line
-		JScrollBar timelineScrollBar = new JScrollBar(JScrollBar.HORIZONTAL);
 		mainPanel.add(timelineScrollBar, BorderLayout.SOUTH);
 		timelineScrollBar.setMinimum(0);
 		timelineScrollBar.setMaximum(0);
 		timelineScrollBar.setBlockIncrement(1);
+		timelineScrollBar.addAdjustmentListener(new AdjustmentListener() {
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent event) {
+				timelineChangeHandler.accept(event.getValue());
+			}
+		});
 
 		// panel for info
 		JPanel infoPanel = new JPanel();
@@ -152,6 +163,16 @@ public class ViewerWindow {
 		singleBoardPanel.add(new JLabel(name), BorderLayout.NORTH);
 		singleBoardPanel.add(new JLabel(new ImageIcon(image)), BorderLayout.CENTER);
 		boardPanel.add(singleBoardPanel);
+	}
+
+	/**
+	 * Sets the max value for the time line, marking the highest round index the
+	 * user may select.
+	 * 
+	 * @param maxValue
+	 */
+	public void setMaxTimelineValue(int maxValue) {
+		this.timelineScrollBar.setMaximum(maxValue);
 	}
 
 }
