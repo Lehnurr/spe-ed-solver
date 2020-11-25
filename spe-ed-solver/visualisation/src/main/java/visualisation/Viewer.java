@@ -5,6 +5,7 @@ import java.util.List;
 
 import utility.game.player.PlayerAction;
 import utility.geometry.ContextualFloatMatrix;
+import utility.geometry.FloatMatrix;
 
 public class Viewer {
 
@@ -97,4 +98,16 @@ public class Viewer {
 				.forEach((namedImage) -> window.addBoardRating(namedImage.getName(), namedImage.getImage()));
 	}
 
+	public static void main(String[] args) {
+		Viewer viewer = new Viewer();
+		for (int i = 0; i < 20; i++) {
+			ArrayList<ContextualFloatMatrix> matrices = new ArrayList<ContextualFloatMatrix>();
+			matrices.add(new ContextualFloatMatrix("a", new FloatMatrix(200, 200)));
+			matrices.add(new ContextualFloatMatrix("b", new FloatMatrix(200, 200)));
+			matrices.add(new ContextualFloatMatrix("c", new FloatMatrix(200, 200)));
+			matrices.add(new ContextualFloatMatrix("d", new FloatMatrix(200, 200)));
+			viewer.commitRound(i * 0.5, PlayerAction.CHANGE_NOTHING, i * 0.25, matrices);
+		}
+	}
+	
 }
