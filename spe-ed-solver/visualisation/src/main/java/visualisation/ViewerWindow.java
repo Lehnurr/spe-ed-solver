@@ -5,7 +5,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
-import java.awt.image.BufferedImage;
+import java.util.List;
 import java.util.function.Consumer;
 
 import javax.swing.ImageIcon;
@@ -39,18 +39,15 @@ public class ViewerWindow {
 
 	// panel to show different boards with specific ratings
 	private final JPanel boardPanel = new JPanel();
-	
+
 	// scrollbar to scroll through the different rounds
 	private final JScrollBar timelineScrollBar = new JScrollBar(JScrollBar.HORIZONTAL);
-
-	// boards which are currently displayed
-	private int displayedBoards = 0;
 
 	/**
 	 * Generates a new window and shows it.
 	 */
 	public ViewerWindow(Consumer<Integer> timelineChangeHandler) {
-		
+
 		// main panel of the whole window
 		JPanel mainPanel = new JPanel();
 		jFrame.add(mainPanel);
@@ -136,33 +133,28 @@ public class ViewerWindow {
 	}
 
 	/**
-	 * Clears all the ratings of boards currently displayed.
-	 */
-	public void clearBoardRatings() {
-		boardPanel.removeAll();
-		displayedBoards = 0;
-	}
-
-	/**
-	 * Adds a image of a board rating with a specific name to the displayed board
-	 * images.
+	 * Adds multiple {@link NamedImages} to the {@link ViewerWindow}.
 	 * 
-	 * @param name
-	 * @param image
+	 * @param namedImages
 	 */
-	public void addBoardRating(String name, BufferedImage image) {
-
+	public void updateBoardRatings(List<NamedImage> namedImages) {
+		
 		// recalculate grid layout
-		displayedBoards++;
+		int displayedBoards = namedImages.size();
 		int xGridElements = (int) Math.ceil(Math.sqrt(displayedBoards));
 		boardPanel.setLayout(new GridLayout(0, xGridElements, BOARD_GAP_VERTICAL, BOARD_GAP_HORIZONTAL));
 
 		// update graphics
-		JPanel singleBoardPanel = new JPanel();
-		singleBoardPanel.setLayout(new BorderLayout());
-		singleBoardPanel.add(new JLabel(name), BorderLayout.NORTH);
-		singleBoardPanel.add(new JLabel(new ImageIcon(image)), BorderLayout.CENTER);
-		boardPanel.add(singleBoardPanel);
+		boardPanel.removeAll();
+		for (NamedImage namedImage : namedImages) {
+			JPanel singleBoardPanel = new JPanel();
+			singleBoardPanel.setLayout(new BorderLayout());
+			singleBoardPanel.add(new JLabel(namedImage.getName()), BorderLayout.NORTH);
+			singleBoardPanel.add(new JLabel(new ImageIcon(namedImage.getImage())), BorderLayout.CENTER);
+			boardPanel.add(singleBoardPanel);
+		}
+		boardPanel.repaint();
+		boardPanel.revalidate();
 	}
 
 	/**
@@ -173,6 +165,15 @@ public class ViewerWindow {
 	 */
 	public void setMaxTimelineValue(int maxValue) {
 		this.timelineScrollBar.setMaximum(maxValue);
+	}
+
+	/**
+	 * Externally shift the time line to a new value.
+	 * 
+	 * @param newValue the new value the timeline should be set to
+	 */
+	public void triggerTimlineChange(int newValue) {
+		this.timelineScrollBar.setValue(newValue);
 	}
 
 }

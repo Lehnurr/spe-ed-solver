@@ -43,15 +43,19 @@ public class Viewer {
 	 */
 	public void commitRound(double availableTime, PlayerAction performedAction, double requiredTime,
 			List<ContextualFloatMatrix> boardRatings) {
-		
+
 		maxRoundIdx++;
 
 		ViewerSlice slice = new ViewerSlice(maxRoundIdx, availableTime, performedAction, requiredTime);
 		boardRatings.stream().map((rating) -> ImageGeneration.generateImageFromMatrix(rating, DEFAULT_COLOR_GRADIENT))
 				.forEachOrdered((image) -> slice.addImage(image));
 		slices.add(slice);
-		
+
 		window.setMaxTimelineValue(maxRoundIdx);
+
+		if (displayedRoundIdx == maxRoundIdx - 1) {
+			window.triggerTimlineChange(maxRoundIdx);
+		}
 	}
 
 	/**
@@ -61,7 +65,7 @@ public class Viewer {
 	 * @param roundIdx
 	 */
 	public void showRound(int roundIdx) {
-		System.out.println("SHOW" + roundIdx);
+
 		if (roundIdx < 0) {
 			throw new IllegalArgumentException("referenced round index is below zero");
 		}
@@ -81,20 +85,18 @@ public class Viewer {
 	 * @param viewerSlice slice to be shown
 	 */
 	private void showSlice(final ViewerSlice viewerSlice) {
-		
+
 		// update game info
 		window.setRoundCounterText(Integer.toString(viewerSlice.getRound()));
 		window.setAvailableTimeText(String.format("%.4f", viewerSlice.getAvailableTime()));
 		window.setPerformedActionText(viewerSlice.getPerformedAction().getName());
 		window.setRequiredTimeText(String.format("%.4f", viewerSlice.getRequiredTime()));
-		
+
 		// update board ratings
-		window.clearBoardRatings();
-		viewerSlice.getImages()
-				.forEach((namedImage) -> window.addBoardRating(namedImage.getName(), namedImage.getImage()));
+		window.updateBoardRatings(viewerSlice.getImages());
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		Viewer viewer = new Viewer();
 		for (int i = 0; i < 20; i++) {
 			ArrayList<ContextualFloatMatrix> matrices = new ArrayList<ContextualFloatMatrix>();
@@ -102,8 +104,9 @@ public class Viewer {
 			matrices.add(new ContextualFloatMatrix("b", new FloatMatrix(200, 200)));
 			matrices.add(new ContextualFloatMatrix("c", new FloatMatrix(200, 200)));
 			matrices.add(new ContextualFloatMatrix("d", new FloatMatrix(200, 200)));
+			Thread.sleep(1000);
 			viewer.commitRound(i * 0.5, PlayerAction.CHANGE_NOTHING, i * 0.25, matrices);
 		}
 	}
-	
+
 }
