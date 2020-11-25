@@ -89,7 +89,7 @@ public class Viewer {
 		// update game info
 		window.setRoundCounterText(Integer.toString(viewerSlice.getRound()));
 		window.setAvailableTimeText(String.format("%.4f", viewerSlice.getAvailableTime()));
-		window.setPerformedActionText(viewerSlice.toString());
+		window.setPerformedActionText(viewerSlice.getPerformedAction().getName());
 		window.setRequiredTimeText(String.format("%.4f", viewerSlice.getRequiredTime()));
 		
 		// update board ratings
