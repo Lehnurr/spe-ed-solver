@@ -68,7 +68,7 @@ public class Node implements IBoardCell {
 
     public void setCellValue(int value) {
         if (this.value != value && value != 0) {
-            // TODO:
+            // TODO: Destroy edges
             // destroy all edges starting here
             // destroy all edges ending here (inverted edges)
             // destroy all edges that pass this node (maybe save performance wehn doing the
