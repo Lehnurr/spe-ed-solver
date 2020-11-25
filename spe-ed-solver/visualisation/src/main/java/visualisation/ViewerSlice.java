@@ -22,7 +22,7 @@ public class ViewerSlice {
 	private final PlayerAction performedAction;
 
 	// time the player actually needed to calculate the performed action in seconds
-	private final double timeRequired;
+	private final double requiredTime;
 
 	// named images containing information about round specific board ratings
 	private final List<NamedImage> images = new ArrayList<NamedImage>();
@@ -35,12 +35,12 @@ public class ViewerSlice {
 	 * @param performedAction
 	 * @param timeRequired
 	 */
-	public ViewerSlice(int round, double availableTime, PlayerAction performedAction, double timeRequired) {
+	public ViewerSlice(int round, double availableTime, PlayerAction performedAction, double requiredTime) {
 		super();
 		this.round = round;
 		this.availableTime = availableTime;
 		this.performedAction = performedAction;
-		this.timeRequired = timeRequired;
+		this.requiredTime = requiredTime;
 	}
 
 	/**
@@ -67,8 +67,8 @@ public class ViewerSlice {
 	/**
 	 * @return the actual time the player needed to calculate his action
 	 */
-	public double getTimeRequired() {
-		return timeRequired;
+	public double getRequiredTime() {
+		return requiredTime;
 	}
 
 	/**

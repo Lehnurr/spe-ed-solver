@@ -75,6 +75,26 @@ public class Viewer {
 		displayedRoundIdx = roundIdx;
 
 		ViewerSlice slice = slices.get(displayedRoundIdx);
+		showSlice(slice);
+	}
+
+	/**
+	 * Responsible for showing a {@link ViewerSlice} on the {@link ViewerWindow}.
+	 * 
+	 * @param viewerSlice slice to be shown
+	 */
+	private void showSlice(final ViewerSlice viewerSlice) {
+		
+		// update game info
+		window.setRoundCounterText(Integer.toString(viewerSlice.getRound()));
+		window.setAvailableTimeText(String.format("%.4f", viewerSlice.getAvailableTime()));
+		window.setPerformedActionText(viewerSlice.toString());
+		window.setRequiredTimeText(String.format("%.4f", viewerSlice.getRequiredTime()));
+		
+		// update board ratings
+		window.clearBoardRatings();
+		viewerSlice.getImages()
+				.forEach((namedImage) -> window.addBoardRating(namedImage.getName(), namedImage.getImage()));
 	}
 
 }
