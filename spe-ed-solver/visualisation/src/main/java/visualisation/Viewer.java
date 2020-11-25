@@ -19,8 +19,8 @@ public class Viewer {
 	private final List<ViewerSlice> slices = new ArrayList<ViewerSlice>();
 
 	// round information
-	private int maxRoundIdx = 0;
-	private int displayedRoundIdx = 0;
+	private int maxRoundIdx = -1;
+	private int displayedRoundIdx = -1;
 
 	/**
 	 * Generates a new {@link Viewer} with the default {@link ViewerWindow}.
@@ -43,20 +43,15 @@ public class Viewer {
 	 */
 	public void commitRound(double availableTime, PlayerAction performedAction, double requiredTime,
 			List<ContextualFloatMatrix> boardRatings) {
+		
+		maxRoundIdx++;
 
 		ViewerSlice slice = new ViewerSlice(maxRoundIdx, availableTime, performedAction, requiredTime);
 		boardRatings.stream().map((rating) -> ImageGeneration.generateImageFromMatrix(rating, DEFAULT_COLOR_GRADIENT))
 				.forEachOrdered((image) -> slice.addImage(image));
 		slices.add(slice);
-
+		
 		window.setMaxTimelineValue(maxRoundIdx);
-
-		// automatically display the new slice when user is on former newest slice
-		if (displayedRoundIdx == maxRoundIdx) {
-			showRound(maxRoundIdx);
-		}
-
-		maxRoundIdx++;
 	}
 
 	/**
@@ -66,6 +61,7 @@ public class Viewer {
 	 * @param roundIdx
 	 */
 	public void showRound(int roundIdx) {
+		System.out.println("SHOW" + roundIdx);
 		if (roundIdx < 0) {
 			throw new IllegalArgumentException("referenced round index is below zero");
 		}
