@@ -62,12 +62,10 @@ public class Node implements IBoardCell {
         return index;
     }
 
-    @Override
     public int getCellValue() {
         return value;
     }
 
-    @Override
     public void setCellValue(int value) {
         if (this.value != value && value != 0) {
             // TODO:

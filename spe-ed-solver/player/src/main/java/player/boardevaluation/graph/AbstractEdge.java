@@ -58,7 +58,6 @@ public final class AbstractEdge implements IEdge {
         return edge;
     }
 
-    @Override
     public int getStepCount() {
         return stepCount;
     }

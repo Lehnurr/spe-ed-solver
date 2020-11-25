@@ -17,7 +17,7 @@ public class BoardTest {
         Cell[][] cells = { { new Cell(0), new Cell(0), new Cell(0) }, { new Cell(0), new Cell(0), new Cell(0) },
                 { new Cell(0), new Cell(0), new Cell(0) }, { new Cell(0), new Cell(0), new Cell(0) } };
         // Test Data: Board
-        Board<Cell> board = new Board<>(cells);
+        Board<Cell> board = new Board<Cell>(cells);
 
         // Check for same object Reference
         assertSame(cells[1][2], board.getBoardCellAt(new Point2i(2, 1)));

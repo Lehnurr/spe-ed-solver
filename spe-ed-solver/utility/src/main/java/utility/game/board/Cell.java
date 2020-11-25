@@ -11,12 +11,10 @@ public class Cell implements IBoardCell {
         this.value = cellValue;
     }
 
-    @Override
     public int getCellValue() {
         return value;
     }
 
-    @Override
     public void setCellValue(int value) {
         this.value = value;
     }
