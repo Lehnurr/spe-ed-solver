@@ -9,20 +9,20 @@ public class FloatMatrixTest {
 	private final static double TEST_DOUBLE_DELTA = 0.00001;
 
 	@Test
-	public void floatMatrixDimensionsTest() {
+	public void testFloatMatrixDimensions() {
 		FloatMatrix matrix = new FloatMatrix(10, 15);
 		assertEquals(10, matrix.getWidth());
 		assertEquals(15, matrix.getHeight());
 	}
 
 	@Test
-	public void floatMatrixDefaultValueTest() {
+	public void testFloatMatrixDefaultValue() {
 		FloatMatrix matrix = new FloatMatrix(2, 2, 10f);
 		assertEquals(10f, matrix.getValue(0, 0), TEST_DOUBLE_DELTA);
 	}
 
 	@Test
-	public void floatMatrixMinMaxTest() {
+	public void testFloatMatrixMinMax() {
 		FloatMatrix m1 = new FloatMatrix(10, 5, 0f);
 		FloatMatrix m2 = new FloatMatrix(10, 5, 0f);
 
@@ -41,7 +41,7 @@ public class FloatMatrixTest {
 	}
 
 	@Test
-	public void floatMatrixMultiplyTest() {
+	public void testFloatMatrixMultiply() {
 		FloatMatrix m1 = new FloatMatrix(10, 5, 0f);
 		FloatMatrix m2 = new FloatMatrix(10, 5, 0f);
 
@@ -53,7 +53,7 @@ public class FloatMatrixTest {
 	}
 
 	@Test
-	public void floatMatrixAddTest() {
+	public void testFloatMatrixAdd() {
 		FloatMatrix m1 = new FloatMatrix(10, 5, 0f);
 		FloatMatrix m2 = new FloatMatrix(10, 5, 0f);
 

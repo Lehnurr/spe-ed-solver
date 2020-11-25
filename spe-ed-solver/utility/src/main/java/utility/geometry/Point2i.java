@@ -36,15 +36,16 @@ public class Point2i {
 
 	/**
 	 * Calculates the manhattan distance between self and other {@link Point}
+	 * 
 	 * @param other
 	 * @return value of manhattan distance
 	 */
 	public int manhattanDistance(Point2i other) {
 		return Math.abs(x - other.getX()) + Math.abs(y - other.getY());
 	}
-	
+
 	/**
-	 * Calculates the new {@link Point2i} when translated with a {@link Vector2i}. 
+	 * Calculates the new {@link Point2i} when translated with a {@link Vector2i}.
 	 * 
 	 * @param offsetVector
 	 * @return new {@link Point2i} with adapted position
@@ -55,10 +56,10 @@ public class Point2i {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		final int PRIME = 31;
 		int result = 1;
-		result = prime * result + x;
-		result = prime * result + y;
+		result = PRIME * result + x;
+		result = PRIME * result + y;
 		return result;
 	}
 

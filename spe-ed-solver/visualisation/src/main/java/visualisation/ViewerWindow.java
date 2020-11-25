@@ -15,15 +15,15 @@ public class ViewerWindow {
 
 	// minimum dimensions of the window
 	private final static int MIN_WINDOW_WIDTH = 700;
-	private final static int MIN_WINDOW_HEIGHT = 500;
+	private static final int MIN_WINDOW_HEIGHT = 500;
 
 	// gap values for the info panel grid layout
-	private final static int INFO_GAP_HORIZONTAL = 10;
-	private final static int INFO_GAP_VERTICAL = 5;
+	private static final int INFO_GAP_HORIZONTAL = 10;
+	private static final int INFO_GAP_VERTICAL = 5;
 
 	// gap values for the board panel grid layout
-	private final static int BOARD_GAP_HORIZONTAL = 100;
-	private final static int BOARD_GAP_VERTICAL = 100;
+	private static final int BOARD_GAP_HORIZONTAL = 100;
+	private static final int BOARD_GAP_VERTICAL = 100;
 
 	// parent JFrame
 	private final JFrame jFrame = new JFrame();

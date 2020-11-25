@@ -7,7 +7,7 @@ import org.junit.Test;
 public class Point2iTest {
 
 	@Test
-	public void manhattenDistanceTest() {
+	public void testManhattenDistance() {
 		Point2i p1 = new Point2i(0, 10);
 		Point2i p2 = new Point2i(5, -1);
 
@@ -19,7 +19,7 @@ public class Point2iTest {
 	}
 
 	@Test
-	public void translateTest() {
+	public void testTranslate() {
 		Point2i start = new Point2i(1, 7);
 		Point2i endpoint = start.translate(new Vector2i(8, -5));
 		assertEquals(new Point2i(9, 2), endpoint);

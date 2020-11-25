@@ -7,7 +7,7 @@ import org.junit.Test;
 public class Vector2iTest {
 
 	@Test
-	public void multiplyTest() {
+	public void testMultiply() {
 		Vector2i baseVector = new Vector2i(2, 7);
 		Vector2i result = baseVector.multiply(3);
 

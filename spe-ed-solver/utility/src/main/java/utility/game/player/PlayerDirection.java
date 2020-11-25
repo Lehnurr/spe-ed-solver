@@ -50,8 +50,9 @@ public enum PlayerDirection {
 	 * @return inverted direction
 	 */
 	public PlayerDirection getInversion() {
+		final int FULL_TURN = 2;
 		int directionCount = PlayerDirection.values().length;
-		return PlayerDirection.values()[(this.ordinal() + 2 + directionCount) % directionCount];
+		return PlayerDirection.values()[(this.ordinal() + FULL_TURN + directionCount) % directionCount];
 	}
 
 }
