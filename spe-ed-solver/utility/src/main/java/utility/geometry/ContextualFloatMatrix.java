@@ -60,6 +60,35 @@ public class ContextualFloatMatrix {
 	public float getValue(Point2i point) {
 		return matrix.getValue(point);
 	}
+	
+	/**
+	 * Returns the value of the underlying matrix at the given position.
+	 * 
+	 * @param x
+	 * @param y
+	 * @return float value at the given coordinates
+	 */
+	public float getValue(int x, int y) {
+		return matrix.getValue(x, y);
+	}
+	
+	/**
+	 * Returns the width of the underlying {@link FloatMatrix}.
+	 * 
+	 * @return width of the matrix
+	 */
+	public int getWidth() {
+		return matrix.getWidth();
+	}
+	
+	/**
+	 * Returns the height of the underlying {@link FloatMatrix}.
+	 * 
+	 * @return height of the matrix
+	 */
+	public int getHeight() {
+		return matrix.getHeight();
+	}
 
 	/**
 	 * Returns the maximum valid value for the matrix.

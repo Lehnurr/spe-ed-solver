@@ -8,6 +8,9 @@ import utility.geometry.ContextualFloatMatrix;
 
 public class Viewer {
 
+	// color gradient to apply to every matrix
+	private static final ColorGradient DEFAULT_COLOR_GRADIENT = ColorGradient.FIRE;
+
 	// window to display the information to
 	private final ViewerWindow window;
 
@@ -41,16 +44,17 @@ public class Viewer {
 			List<ContextualFloatMatrix> boardRatings) {
 
 		ViewerSlice slice = new ViewerSlice(maxRoundIdx, availableTime, performedAction, requiredTime);
-		// TODO images
+		boardRatings.stream().map((rating) -> ImageGeneration.generateImageFromMatrix(rating, DEFAULT_COLOR_GRADIENT))
+				.forEachOrdered((image) -> slice.addImage(image));
 		slices.add(slice);
 
 		window.setMaxTimelineValue(maxRoundIdx);
-		
+
 		// automatically display the new slice when user is on former newest slice
 		if (displayedRoundIdx == maxRoundIdx) {
 			showRound(maxRoundIdx);
 		}
-		
+
 		maxRoundIdx++;
 	}
 
@@ -67,9 +71,9 @@ public class Viewer {
 		if (roundIdx > maxRoundIdx) {
 			throw new IllegalArgumentException("referenced round index is higher than the stored rounds");
 		}
-				
+
 		displayedRoundIdx = roundIdx;
-		
+
 		ViewerSlice slice = slices.get(displayedRoundIdx);
 	}
 
