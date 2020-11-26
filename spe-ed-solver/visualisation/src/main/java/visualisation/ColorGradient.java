@@ -10,8 +10,10 @@ public enum ColorGradient {
 	 */
 	FIRE {
 		@Override
-		protected int applyUnbounded(float value) {
-			return (int) (0xFFFFFF * value);
+		protected int applyUnbounded(final float value) {
+			final int bgrValue = (int) (0xFFFFFF * value);
+			final int rgbValue = (Integer.reverseBytes(bgrValue) >> 8) & 0xFFFFFF;
+			return rgbValue;
 		}
 	};
 
@@ -23,9 +25,10 @@ public enum ColorGradient {
 	 * @return RGB value as int (0 - 0xFFFFFF)
 	 */
 	protected abstract int applyUnbounded(final float value);
-	
+
 	/**
-	 * Clipping value to range between 0 and 1 and applying RGB gradient transformation.
+	 * Clipping value to range between 0 and 1 and applying RGB gradient
+	 * transformation.
 	 * 
 	 * @param value
 	 * @return RGB value as int (0 - 0xFFFFFF)
