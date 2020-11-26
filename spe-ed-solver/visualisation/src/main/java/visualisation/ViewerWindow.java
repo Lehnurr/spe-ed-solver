@@ -3,8 +3,10 @@ package visualisation;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -148,10 +150,14 @@ public class ViewerWindow {
 		boardPanel.removeAll();
 		for (NamedImage namedImage : namedImages) {
 			JPanel singleBoardPanel = new JPanel();
+			boardPanel.add(singleBoardPanel);
+			
 			singleBoardPanel.setLayout(new BorderLayout());
 			singleBoardPanel.add(new JLabel(namedImage.getName()), BorderLayout.NORTH);
-			singleBoardPanel.add(new JLabel(new ImageIcon(namedImage.getImage())), BorderLayout.CENTER);
-			boardPanel.add(singleBoardPanel);
+						
+			Image image = namedImage.getImage().getScaledInstance(200, 200, Image.SCALE_FAST);
+			ImageIcon imageIcon = new ImageIcon(image);
+			singleBoardPanel.add(new JLabel(imageIcon), BorderLayout.CENTER);
 		}
 		boardPanel.repaint();
 		boardPanel.revalidate();

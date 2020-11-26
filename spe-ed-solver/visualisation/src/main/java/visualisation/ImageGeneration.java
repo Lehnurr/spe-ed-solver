@@ -25,7 +25,7 @@ public class ImageGeneration {
 		final float rangeMin = matrix.getRangeMin();
 		final float stretchFactor = 1 / (rangeMax - rangeMin);
 		
-		BufferedImage bufferedImage = new BufferedImage(240, 240, BufferedImage.TYPE_INT_RGB);
+		BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
