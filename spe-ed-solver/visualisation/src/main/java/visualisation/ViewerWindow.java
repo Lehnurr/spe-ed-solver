@@ -6,7 +6,10 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -15,6 +18,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
+import javax.swing.SwingConstants;
+
+import utility.game.player.PlayerAction;
 
 public class ViewerWindow {
 
@@ -25,10 +31,6 @@ public class ViewerWindow {
 	// gap values for the info panel grid layout
 	private static final int INFO_GAP_HORIZONTAL = 10;
 	private static final int INFO_GAP_VERTICAL = 5;
-
-	// gap values for the board panel grid layout
-	private static final int BOARD_GAP_HORIZONTAL = 100;
-	private static final int BOARD_GAP_VERTICAL = 100;
 
 	// parent JFrame
 	private final JFrame jFrame = new JFrame();
@@ -44,6 +46,9 @@ public class ViewerWindow {
 
 	// scrollbar to scroll through the different rounds
 	private final JScrollBar timelineScrollBar = new JScrollBar(JScrollBar.HORIZONTAL);
+
+	// storing the board ratings added to the window
+	private List<NamedImage> boardRatings = new ArrayList<>();
 
 	/**
 	 * Generates a new window and shows it.
@@ -93,45 +98,53 @@ public class ViewerWindow {
 
 		// exit program when closing window
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		// redraw board ratings when window resize happens
+		mainPanel.addComponentListener(new ComponentAdapter() {
+			@Override
+		    public void componentResized(ComponentEvent e) {
+				redrawBoardPanel();
+		    }
+		});
 
 		// show JFrame
 		jFrame.setVisible(true);
 	}
 
 	/**
-	 * Updates the text of the displayed round in the window.
+	 * Updates the displayed round in the window.
 	 * 
 	 * @param roundCounter
 	 */
-	public void setRoundCounterText(String roundCounter) {
-		roundLabel.setText(roundCounter);
+	public void setRoundCounter(final int roundCounter) {
+		roundLabel.setText(Integer.toString(roundCounter));
 	}
 
 	/**
-	 * Updates the text of the displayed available time in the window.
+	 * Updates the displayed available time in the window.
 	 * 
 	 * @param availableTime
 	 */
-	public void setAvailableTimeText(String availableTime) {
-		availableTimeLabel.setText(availableTime);
+	public void setAvailableTime(final double availableTime) {
+		availableTimeLabel.setText(String.format("%.4f", availableTime));
 	}
 
 	/**
-	 * Updates the text for the displayed performed action in the window.
+	 * Updates the displayed performed action in the window.
 	 * 
 	 * @param performedAction
 	 */
-	public void setPerformedActionText(String performedAction) {
-		performedActionLabel.setText(performedAction);
+	public void setPerformedAction(final PlayerAction performedAction) {
+		performedActionLabel.setText(performedAction.getName());
 	}
 
 	/**
-	 * Updates the text for the displayed required time in the window.
+	 * Updates the displayed required time in the window.
 	 * 
 	 * @param requiredTime
 	 */
-	public void setRequiredTimeText(String requiredTime) {
-		requiredTimeLabel.setText(requiredTime);
+	public void setRequiredTime(final double requiredTime) {
+		requiredTimeLabel.setText(String.format("%.4f", requiredTime));
 	}
 
 	/**
@@ -140,25 +153,54 @@ public class ViewerWindow {
 	 * @param namedImages
 	 */
 	public void updateBoardRatings(List<NamedImage> namedImages) {
-		
-		// recalculate grid layout
-		int displayedBoards = namedImages.size();
-		int xGridElements = (int) Math.ceil(Math.sqrt(displayedBoards));
-		boardPanel.setLayout(new GridLayout(0, xGridElements, BOARD_GAP_VERTICAL, BOARD_GAP_HORIZONTAL));
+		boardRatings = namedImages;
+		redrawBoardPanel();
+	}
 
-		// update graphics
-		boardPanel.removeAll();
-		for (NamedImage namedImage : namedImages) {
-			JPanel singleBoardPanel = new JPanel();
-			boardPanel.add(singleBoardPanel);
-			
-			singleBoardPanel.setLayout(new BorderLayout());
-			singleBoardPanel.add(new JLabel(namedImage.getName()), BorderLayout.NORTH);
-						
-			Image image = namedImage.getImage().getScaledInstance(200, 200, Image.SCALE_FAST);
-			ImageIcon imageIcon = new ImageIcon(image);
-			singleBoardPanel.add(new JLabel(imageIcon), BorderLayout.CENTER);
+	/**
+	 * Internal function to handle a redraw of the board panel.
+	 */
+	private void redrawBoardPanel() {
+		
+		final int displayedBoards = boardRatings.size();
+		
+		if (displayedBoards > 0) {
+			// recalculate grid layout
+			final int xGridElements = (int) Math.ceil(Math.sqrt(displayedBoards));
+			final int yGridElements = (int) Math.ceil(displayedBoards / xGridElements);
+			boardPanel.setLayout(new GridLayout(yGridElements, xGridElements));
+	
+			// calculates max size in each dimension for board rating
+			final float maxElementWidth = boardPanel.getWidth() / xGridElements;
+			final float maxElementHeight = boardPanel.getHeight() / yGridElements;
+	
+			// update graphics
+			boardPanel.removeAll();
+			for (NamedImage namedImage : boardRatings) {
+	
+				// create new panel for Board rating
+				JPanel singleBoardPanel = new JPanel();
+				boardPanel.add(singleBoardPanel);
+	
+				// update layout
+				singleBoardPanel.setLayout(new BorderLayout());
+				JLabel imageTitle = new JLabel(namedImage.getName(), SwingConstants.CENTER);
+				singleBoardPanel.add(imageTitle, BorderLayout.NORTH);
+				BufferedImage image = namedImage.getImage();
+	
+				// scale and display image
+				float scalingFactor = maxElementWidth / image.getWidth();
+				if (image.getHeight() * scalingFactor > maxElementHeight)
+					scalingFactor = maxElementHeight / image.getHeight();
+				final int newWidth = (int) (image.getWidth() * scalingFactor);
+				final int newHeight = (int) (image.getHeight() * scalingFactor);
+				Image rescaledImage = image.getScaledInstance(newWidth, newHeight, Image.SCALE_FAST);
+				ImageIcon imageIcon = new ImageIcon(rescaledImage);
+				JLabel imageLabel = new JLabel(imageIcon);
+				singleBoardPanel.add(imageLabel, BorderLayout.CENTER);
+			}
 		}
+
 		boardPanel.repaint();
 		boardPanel.revalidate();
 	}

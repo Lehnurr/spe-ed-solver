@@ -87,10 +87,10 @@ public class Viewer {
 	private void showSlice(final ViewerSlice viewerSlice) {
 
 		// update game info
-		window.setRoundCounterText(Integer.toString(viewerSlice.getRound()));
-		window.setAvailableTimeText(String.format("%.4f", viewerSlice.getAvailableTime()));
-		window.setPerformedActionText(viewerSlice.getPerformedAction().getName());
-		window.setRequiredTimeText(String.format("%.4f", viewerSlice.getRequiredTime()));
+		window.setRoundCounter(viewerSlice.getRound());
+		window.setAvailableTime(viewerSlice.getAvailableTime());
+		window.setPerformedAction(viewerSlice.getPerformedAction());
+		window.setRequiredTime(viewerSlice.getRequiredTime());
 
 		// update board ratings
 		window.updateBoardRatings(viewerSlice.getImages());
@@ -100,7 +100,7 @@ public class Viewer {
 		Viewer viewer = new Viewer();
 		for (int i = 0; i < 20; i++) {
 			ArrayList<ContextualFloatMatrix> matrices = new ArrayList<ContextualFloatMatrix>();
-			matrices.add(new ContextualFloatMatrix("a", new FloatMatrix(200, 200)));
+			matrices.add(new ContextualFloatMatrix("a", new FloatMatrix(400, 200)));
 			matrices.add(new ContextualFloatMatrix("b", new FloatMatrix(200, 200)));
 			matrices.add(new ContextualFloatMatrix("c", new FloatMatrix(200, 200)));
 			matrices.add(new ContextualFloatMatrix("d", new FloatMatrix(200, 200)));
