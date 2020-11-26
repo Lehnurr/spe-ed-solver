@@ -1,5 +1,6 @@
 package utility.game.player;
 
+import utility.extensions.EnumExtensions;
 import utility.geometry.Vector2i;
 
 public enum PlayerDirection {
@@ -41,6 +42,7 @@ public enum PlayerDirection {
 	 * @return vector of the direction
 	 */
 	public Vector2i getDirectionVector() {
+		EnumExtensions.getRandomValue(PlayerDirection.class);
 		return this.vector;
 	}
 
@@ -54,5 +56,4 @@ public enum PlayerDirection {
 		int directionCount = PlayerDirection.values().length;
 		return PlayerDirection.values()[(this.ordinal() + FULL_TURN + directionCount) % directionCount];
 	}
-
 }
