@@ -14,11 +14,12 @@ public class SimulationPlayer implements IPlayer {
     private boolean isActive;
     private int speed;
 
-    SimulationPlayer(int playerId, Point2i initialPosition, PlayerDirection initialDirection, int initialSpeed) {
+    public SimulationPlayer(int playerId, Point2i initialPosition, PlayerDirection initialDirection, int initialSpeed) {
         this.playerId = playerId;
         this.position = initialPosition;
         this.direction = initialDirection;
         this.speed = initialSpeed;
+        this.isActive = true;
     }
 
     @Override
@@ -34,7 +35,7 @@ public class SimulationPlayer implements IPlayer {
     @Override
     public boolean isActive() {
         if (this.isActive && (getSpeed() > MAX_SPEED || getSpeed() < MIN_SPEED))
-            this.isActive = false;
+            die();
 
         return this.isActive;
     }
@@ -55,7 +56,11 @@ public class SimulationPlayer implements IPlayer {
     }
 
     @Override
+    /**
+     * Sets the to do action. The Player dies, if an action is already set.
+     */
     public void setAction(PlayerAction action) {
+        // in the simulation it is not allowed to overwrite the set action
         if (this.lastSetAction != null)
             die();
 
@@ -69,6 +74,10 @@ public class SimulationPlayer implements IPlayer {
         doMove();
     }
 
+    /**
+     * Applies the {@link SimulationPlayer#lastSetAction} to the Player, if the
+     * player is alive
+     */
     private void doAction() {
         if (!isActive())
             return;
@@ -81,6 +90,10 @@ public class SimulationPlayer implements IPlayer {
             this.direction.doAction(this.lastSetAction);
     }
 
+    /**
+     * Changes the Players Position depending on direction and speed, if the player
+     * is alive
+     */
     private void doMove() {
         if (!isActive())
             return;
