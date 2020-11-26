@@ -32,6 +32,10 @@ public class ViewerWindow {
 	private static final int INFO_GAP_HORIZONTAL = 10;
 	private static final int INFO_GAP_VERTICAL = 5;
 
+	// paddings for board ratings
+	private static final int BOARD_RATING_PADDING_HORIZONTAL = 8;
+	private static final int BOARD_RATING_PADDING_VERTICAL = 32;
+
 	// parent JFrame
 	private final JFrame jFrame = new JFrame();
 
@@ -98,13 +102,13 @@ public class ViewerWindow {
 
 		// exit program when closing window
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		// redraw board ratings when window resize happens
 		mainPanel.addComponentListener(new ComponentAdapter() {
 			@Override
-		    public void componentResized(ComponentEvent e) {
+			public void componentResized(ComponentEvent e) {
 				redrawBoardPanel();
-		    }
+			}
 		});
 
 		// show JFrame
@@ -161,33 +165,33 @@ public class ViewerWindow {
 	 * Internal function to handle a redraw of the board panel.
 	 */
 	private void redrawBoardPanel() {
-		
+
 		final int displayedBoards = boardRatings.size();
-		
+
 		if (displayedBoards > 0) {
 			// recalculate grid layout
 			final int xGridElements = (int) Math.ceil(Math.sqrt(displayedBoards));
 			final int yGridElements = (int) Math.ceil(displayedBoards / xGridElements);
 			boardPanel.setLayout(new GridLayout(yGridElements, xGridElements));
-	
+
 			// calculates max size in each dimension for board rating
-			final float maxElementWidth = boardPanel.getWidth() / xGridElements;
-			final float maxElementHeight = boardPanel.getHeight() / yGridElements;
-	
+			final float maxElementWidth = boardPanel.getWidth() / xGridElements - BOARD_RATING_PADDING_HORIZONTAL;
+			final float maxElementHeight = boardPanel.getHeight() / yGridElements - BOARD_RATING_PADDING_VERTICAL;
+
 			// update graphics
 			boardPanel.removeAll();
 			for (NamedImage namedImage : boardRatings) {
-	
+
 				// create new panel for Board rating
 				JPanel singleBoardPanel = new JPanel();
 				boardPanel.add(singleBoardPanel);
-	
+
 				// update layout
 				singleBoardPanel.setLayout(new BorderLayout());
 				JLabel imageTitle = new JLabel(namedImage.getName(), SwingConstants.CENTER);
 				singleBoardPanel.add(imageTitle, BorderLayout.NORTH);
 				BufferedImage image = namedImage.getImage();
-	
+
 				// scale and display image
 				float scalingFactor = maxElementWidth / image.getWidth();
 				if (image.getHeight() * scalingFactor > maxElementHeight)
