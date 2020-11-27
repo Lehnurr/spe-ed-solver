@@ -16,3 +16,6 @@ hs_err_pid*
 #vs code
 .vscode/*
 *.code-workspace
+
+# local .todo txt-File
+todo.txt
