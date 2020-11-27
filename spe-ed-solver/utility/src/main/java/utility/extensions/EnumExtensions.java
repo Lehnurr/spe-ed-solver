@@ -22,7 +22,6 @@ public final class EnumExtensions {
 
         if (enumValues == null)
             return null;
-
         final int randomIndex = new Random().nextInt(enumValues.length);
         return enumValues[randomIndex];
     }

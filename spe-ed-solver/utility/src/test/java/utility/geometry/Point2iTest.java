@@ -33,7 +33,7 @@ public class Point2iTest {
 	public void testVonNeumannNeighborhood() {
 
 		Point2i center = new Point2i(3, 2);
-		List<Point2i> neighbors = center.getVonNeumannNeighborhood();
+		List<Point2i> neighbors = center.vonNeumannNeighborhood();
 		assertEquals("Von-Neumann-Neighborhood have to return 4 neighbors", 4, neighbors.size());
 		assertTrue("west neighbor required", neighbors.contains(new Point2i(2, 2)));
 		assertTrue("east neighbor required", neighbors.contains(new Point2i(4, 2)));
@@ -45,7 +45,7 @@ public class Point2iTest {
 	public void testMooreNeighborhood() {
 
 		Point2i center = new Point2i(7, 0);
-		List<Point2i> neighbors = center.getMooreNeighborhood();
+		List<Point2i> neighbors = center.mooreNeighborhood();
 		assertEquals("Moore-Neighborhood have to return 8 neighbors", 8, neighbors.size());
 
 		assertTrue("north-west neighbor required", neighbors.contains(new Point2i(6, -1)));
@@ -58,6 +58,18 @@ public class Point2iTest {
 
 		assertTrue("west neighbor required", neighbors.contains(new Point2i(6, 0)));
 		assertTrue("east neighbor required", neighbors.contains(new Point2i(8, 0)));
+	}
+
+	@Test
+	public void testPointsInRectangle() {
+		Point2i pointA = new Point2i(2, 3);
+		Point2i pointB = new Point2i(3, 4);
+		List<Point2i> containedPoints = pointA.pointsInRectangle(pointB);
+
+		assertTrue(containedPoints.contains(new Point2i(2, 3)));
+		assertTrue(containedPoints.contains(new Point2i(2, 4)));
+		assertTrue(containedPoints.contains(new Point2i(3, 3)));
+		assertTrue(containedPoints.contains(new Point2i(3, 4)));
 
 	}
 

@@ -72,7 +72,7 @@ public class Node implements IBoardCell {
             // destroy all edges starting here
             // destroy all edges ending here (inverted edges)
             // destroy all edges that pass this node (maybe save performance wehn doing the
-            // half + inversions)
+            // half + inversions) (LUT)
         }
 
         this.value = value;

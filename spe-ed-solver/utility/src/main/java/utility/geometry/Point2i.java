@@ -59,11 +59,31 @@ public class Point2i {
 	}
 
 	/**
+	 * Calculates all contained Points in a rectangle defined by two diagonal
+	 * corner-Points
+	 * 
+	 * @return all Points in the defined rectangle
+	 */
+	public List<Point2i> pointsInRectangle(Point2i other) {
+		final int xFrom = Math.min(this.getX(), other.getX());
+		final int xTo = Math.max(this.getX(), other.getX());
+		final int yFrom = Math.min(this.getY(), other.getY());
+		final int yTo = Math.max(this.getY(), other.getY());
+
+		List<Point2i> points = new ArrayList<>();
+		for (int xPosition = xFrom; xPosition <= xTo; xPosition++)
+			for (int yPosition = yFrom; yPosition <= yTo; yPosition++)
+				points.add(new Point2i(xPosition, yPosition));
+
+		return points;
+	}
+
+	/**
 	 * Calculates the von Neumann neighborhood (4-neighborhood)
 	 * 
 	 * @return 4 neighbors (top, bottom, left, right)
 	 */
-	public List<Point2i> getVonNeumannNeighborhood() {
+	public List<Point2i> vonNeumannNeighborhood() {
 		final Point2i west = translate(new Vector2i(-1, 0));
 		final Point2i north = translate(new Vector2i(0, -1));
 		final Point2i east = translate(new Vector2i(1, 0));
@@ -76,7 +96,7 @@ public class Point2i {
 	 * 
 	 * @return 8 neighbors (all surrounding cells)
 	 */
-	public List<Point2i> getMooreNeighborhood() {
+	public List<Point2i> mooreNeighborhood() {
 		final Point2i west = translate(new Vector2i(-1, 0));
 		final Point2i northWest = translate(new Vector2i(-1, -1));
 		final Point2i north = translate(new Vector2i(0, -1));

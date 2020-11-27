@@ -55,6 +55,10 @@ public class SimulationPlayer implements IPlayer {
         return position;
     }
 
+    public boolean isReadyToMove() {
+        return this.lastSetAction != null || !this.isActive();
+    }
+
     @Override
     /**
      * Sets the to do action. The Player dies, if an action is already set.
