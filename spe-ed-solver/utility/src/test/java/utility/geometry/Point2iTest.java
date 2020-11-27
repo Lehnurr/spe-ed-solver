@@ -1,6 +1,10 @@
 package utility.geometry;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
 
 import org.junit.Test;
 
@@ -23,6 +27,38 @@ public class Point2iTest {
 		Point2i start = new Point2i(1, 7);
 		Point2i endpoint = start.translate(new Vector2i(8, -5));
 		assertEquals(new Point2i(9, 2), endpoint);
+	}
+
+	@Test
+	public void testVonNeumannNeighborhood() {
+
+		Point2i center = new Point2i(3, 2);
+		List<Point2i> neighbors = center.getVonNeumannNeighborhood();
+		assertEquals("Von-Neumann-Neighborhood have to return 4 neighbors", 4, neighbors.size());
+		assertTrue("west neighbor required", neighbors.contains(new Point2i(2, 2)));
+		assertTrue("east neighbor required", neighbors.contains(new Point2i(4, 2)));
+		assertTrue("norh neighbor required", neighbors.contains(new Point2i(3, 1)));
+		assertTrue("south neighbor required", neighbors.contains(new Point2i(3, 3)));
+	}
+
+	@Test
+	public void testMooreNeighborhood() {
+
+		Point2i center = new Point2i(7, 0);
+		List<Point2i> neighbors = center.getMooreNeighborhood();
+		assertEquals("Moore-Neighborhood have to return 8 neighbors", 8, neighbors.size());
+
+		assertTrue("north-west neighbor required", neighbors.contains(new Point2i(6, -1)));
+		assertTrue("nort neighbor required", neighbors.contains(new Point2i(7, -1)));
+		assertTrue("north-east neighbor required", neighbors.contains(new Point2i(8, -1)));
+
+		assertTrue("south-west neighbor required", neighbors.contains(new Point2i(6, 1)));
+		assertTrue("south neighbor required", neighbors.contains(new Point2i(7, 1)));
+		assertTrue("south-east neighbor required", neighbors.contains(new Point2i(8, 1)));
+
+		assertTrue("west neighbor required", neighbors.contains(new Point2i(6, 0)));
+		assertTrue("east neighbor required", neighbors.contains(new Point2i(8, 0)));
+
 	}
 
 }

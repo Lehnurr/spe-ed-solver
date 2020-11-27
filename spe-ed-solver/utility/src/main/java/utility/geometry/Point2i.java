@@ -1,5 +1,9 @@
 package utility.geometry;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Point2i {
 
 	private final int x;
@@ -52,6 +56,36 @@ public class Point2i {
 	 */
 	public Point2i translate(Vector2i offsetVector) {
 		return new Point2i(getX() + offsetVector.getX(), getY() + offsetVector.getY());
+	}
+
+	/**
+	 * Calculates the von Neumann neighborhood (4-neighborhood)
+	 * 
+	 * @return 4 neighbors (top, bottom, left, right)
+	 */
+	public List<Point2i> getVonNeumannNeighborhood() {
+		final Point2i west = translate(new Vector2i(-1, 0));
+		final Point2i north = translate(new Vector2i(0, -1));
+		final Point2i east = translate(new Vector2i(1, 0));
+		final Point2i south = translate(new Vector2i(0, 1));
+		return Arrays.asList(west, north, east, south);
+	}
+
+	/**
+	 * Calculates the von Moore neighborhood (8-neighborhood)
+	 * 
+	 * @return 8 neighbors (all surrounding cells)
+	 */
+	public List<Point2i> getMooreNeighborhood() {
+		final Point2i west = translate(new Vector2i(-1, 0));
+		final Point2i northWest = translate(new Vector2i(-1, -1));
+		final Point2i north = translate(new Vector2i(0, -1));
+		final Point2i northEast = translate(new Vector2i(1, -1));
+		final Point2i east = translate(new Vector2i(1, 0));
+		final Point2i southEast = translate(new Vector2i(1, 1));
+		final Point2i south = translate(new Vector2i(0, 1));
+		final Point2i southWest = translate(new Vector2i(-1, 1));
+		return Arrays.asList(west, northWest, north, northEast, east, southEast, south, southWest);
 	}
 
 	@Override
