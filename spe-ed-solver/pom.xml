@@ -13,6 +13,7 @@
 		<module>visualisation</module>
 		<module>player</module>
 		<module>simulation</module>
+		<module>web-communication</module>
 	</modules>
 
 	<properties>
