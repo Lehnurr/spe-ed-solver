@@ -1,9 +1,11 @@
 package core;
 
+import picocli.CommandLine;
+
 public class Main {
 
 	public static void main(String[] args) {
-		System.out.println("HELLO WORLD!");
+		new CommandLine(new CommandLineParser()).execute(args);
 	}
 
 }
