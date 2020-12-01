@@ -1,4 +1,4 @@
-package core;
+package core.parser;
 
 import picocli.CommandLine.Command;
 
@@ -9,12 +9,11 @@ import picocli.CommandLine.Command;
  * By default the parser will redirect to the {@link PlayLiveCommand} which will
  * get executed.
  */
-@Command(subcommands = { PlayLiveCommand.class })
+@Command(name = "start", subcommands = { PlayLiveCommand.class, PlaySimulationCommand.class })
 public class CommandLineParser implements Runnable {
 
 	@Override
 	public void run() {
-		// redirect to play live command as default for handling empty requests
 		PlayLiveCommand playLiveCommand = new PlayLiveCommand();
 		playLiveCommand.run();
 	}

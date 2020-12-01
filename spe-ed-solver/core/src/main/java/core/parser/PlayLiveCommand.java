@@ -1,11 +1,11 @@
-package core;
+package core.parser;
 
+import core.modes.LiveMode;
 import picocli.CommandLine.Command;
 
 /**
- * {@link Command} which runs the application in the live mode. Thereby
- * connecting to the webservice with the given environment variables. The game
- * spe_ed is played with a single player instance.<br>
+ * {@link Command} which runs a {@link LiveMode} with the given command line
+ * arguments. <br>
  * This {@link Command} is set as default by the {@link CommandLineParser} and
  * will get executed automatically if no arguments were given to the
  * application. Therefore fulfilling the requirements to be able to run in the
@@ -16,7 +16,7 @@ public class PlayLiveCommand implements Runnable {
 
 	@Override
 	public void run() {
-		// TODO everything
+		new LiveMode().run();
 	}
 
 }
