@@ -80,7 +80,7 @@ public class SimulationPlayer implements IPlayer {
 
     /**
      * Applies the {@link SimulationPlayer#lastSetAction} to the Player, if the
-     * player is alive
+     * player is alive and resets the Action
      */
     private void doAction() {
         if (!isActive())
@@ -92,6 +92,8 @@ public class SimulationPlayer implements IPlayer {
             this.speed--;
         else
             this.direction.doAction(this.lastSetAction);
+
+        this.lastSetAction = null;
     }
 
     /**
