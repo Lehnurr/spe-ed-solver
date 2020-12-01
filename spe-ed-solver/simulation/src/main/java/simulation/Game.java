@@ -19,7 +19,7 @@ import utility.geometry.FloatMatrix;
 import utility.geometry.Point2i;
 
 /**
- * Game
+ * A simulated spe_ed Game
  */
 public class Game {
     private static final int JUMP_FREQUENCY = 6;
@@ -30,6 +30,12 @@ public class Game {
     private OffsetTime deadline;
     private int round = 1;
 
+    /**
+     * 
+     * @param height
+     * @param width
+     * @param playerCount
+     */
     public Game(int height, int width, int playerCount) {
         this.board = new FloatMatrix(width, height);
         this.players = new SimulationPlayer[playerCount];
@@ -68,6 +74,9 @@ public class Game {
         return getGameState();
     }
 
+    /**
+     * Resets the deadline by a random number of seconds between 2 and 15
+     */
     private void resetDeadLine() {
         // random number of seconds between 2 (inclusive) and 15 (inclusive)
         final int MIN = 2;
@@ -77,11 +86,21 @@ public class Game {
         this.deadline = OffsetTime.now().plusSeconds(deadLineSeconds);
     }
 
+    /**
+     * Creates the GameSate as JSON-String that is not bound to any player
+     * 
+     * @return the Game-State-JSON-String
+     */
     private String getGameState() {
         // TODO: implement json-String return
         return random.nextInt() + "";
     }
 
+    /**
+     * Returns the current Time as a JSON-String
+     * 
+     * @return The Current UTC Time in the ISO format
+     */
     public String getServerTime() {
         JsonParser jsonParser = new JsonParser();
         String currentTime = OffsetTime.now().format(DateTimeFormatter.ISO_INSTANT);
@@ -99,27 +118,35 @@ public class Game {
      * @return The next Game-State, if all Players sent an {@link PlayerAction
      *         action} for this round. Else {@code null}
      */
-    public String doAction(int playerId, PlayerAction action) {
+    public String setAction(int playerId, PlayerAction action) {
         var currentPlayer = this.players[playerId - 1];
 
         if (OffsetTime.now().isAfter(this.deadline)) {
             currentPlayer.die();
         }
 
-        if (currentPlayer.isActive()) {
-            currentPlayer.setAction(action);
-        }
+        currentPlayer.setAction(action);
 
-        // return if not all players have sent an action
-        if (!Arrays.stream(players).allMatch(SimulationPlayer::isReadyToMove)) {
+        // End round, if all players sent an Action
+        if (Arrays.stream(players).allMatch(SimulationPlayer::isReadyToMove)) {
+            // Do Actions & move the player
+            Arrays.stream(players).forEach(SimulationPlayer::doActionAndMove);
+            // update the board and the players alive-state
+            updateGameState();
+            // return the new GameState as JSON
+            return getGameState();
+        } else {
+            // return null, because no new gameState is available
             return null;
         }
+    }
 
-        // Do Actions & move the player
-        Arrays.stream(players).forEach(SimulationPlayer::doActionAndMove);
+    /**
+     * Applies the did steps to the board, processes collisions and increse round
+     */
+    private void updateGameState() {
+        HashMap<Point2i, Integer> newPassedCells = new HashMap<>();
 
-        HashMap<Point2i, Integer> newSteps = new HashMap<>();
-        // Update board and maybe kill player
         for (var player : this.players) {
             if (!player.isActive())
                 continue;
@@ -128,45 +155,68 @@ public class Game {
             var firstStepVector = player.getDirection().getDirectionVector().multiply((player.getSpeed() - 1) * -1);
             var firstStepPosition = player.getPosition().translate(firstStepVector);
 
-            // calculate the passed steps
-            List<Point2i> passedSteps = getPassedSteps(firstStepPosition, player.getPosition());
-
-            for (var step : passedSteps) {
-                if (setCell(step, player.getPlayerId()) == -1) {
-                    player.die();
-                }
-
-                newSteps.computeIfPresent(step, (key, value) -> {
-                    player.die();
-                    if (value > 0)
-                        players[value].die();
-                    return -1;
-                });
-
-                newSteps.computeIfAbsent(step, k -> player.getPlayerId());
-
-            }
-
+            applyPassedSteps(player, firstStepPosition, newPassedCells);
         }
 
         round++;
-        return getGameState();
-
     }
 
-    private int setCell(Point2i point, int value) {
-        if ((int) board.getValue(point) == 0)
-            board.setValue(point, value);
-        else
-            board.setValue(point, -1);
+    /**
+     * Applys the last steps from a player to the Board. The Player dies, if he
+     * causes a collision
+     * 
+     * @param player               the player whose steps are to be applied
+     * @param oldPosition          the players position at the start of this round
+     * @param passedCellsThisRound Cells that have already been used by a player in
+     *                             this round
+     */
+    private void applyPassedSteps(SimulationPlayer player, Point2i oldPosition,
+            HashMap<Point2i, Integer> passedCellsThisRound) {
+        // calculate the passed steps
+        List<Point2i> steps = getPassedSteps(oldPosition, player.getPosition());
 
-        return (int) board.getValue(point);
+        for (var step : steps) {
+            if (setCell(step, player.getPlayerId()) == -1) {
+                player.die();
+            }
+
+            passedCellsThisRound.computeIfPresent(step, (key, value) -> {
+                player.die();
+                if (value > 0)
+                    players[value - 1].die();
+                return -1;
+            });
+
+            passedCellsThisRound.computeIfAbsent(step, k -> player.getPlayerId());
+
+        }
     }
 
+    /**
+     * Calculates the passed Cellc between two positions
+     * 
+     * @return The passed Cells (Jumped over cells are excluded)
+     */
     private List<Point2i> getPassedSteps(Point2i positionA, Point2i positionB) {
         if (round % JUMP_FREQUENCY == 0)
             return positionB.pointsInRectangle(positionA);
         else
             return Arrays.asList(positionA, positionB);
+    }
+
+    /**
+     * Sets a Board Cell with a value (playerId) and returns the new value
+     * 
+     * @param point    The point to set
+     * @param playerId The new playerId to set
+     * @return The actual new value (-1, if the cell was already set)
+     */
+    private int setCell(Point2i point, int playerId) {
+        if ((int) board.getValue(point) == 0)
+            board.setValue(point, playerId);
+        else
+            board.setValue(point, -1);
+
+        return (int) board.getValue(point);
     }
 }
