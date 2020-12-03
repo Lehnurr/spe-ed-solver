@@ -24,6 +24,14 @@
 			<artifactId>web-communication</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		
+
+ <dependency>
+      <groupId>de.lehnurr.spe-ed-solver</groupId>
+      <artifactId>player</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
 	</dependencies>
 
 	<build>
