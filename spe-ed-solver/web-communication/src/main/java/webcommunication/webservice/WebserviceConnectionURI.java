@@ -6,8 +6,6 @@ import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-import webcommunication.MalformedURLException;
-
 public class WebserviceConnectionURI {
 
 	// name of the parameter used to identify the APi key for the webservice

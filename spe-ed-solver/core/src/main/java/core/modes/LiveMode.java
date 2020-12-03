@@ -1,5 +1,8 @@
 package core.modes;
 
+import webcommunication.webservice.SpeedClientEndpoint;
+import webcommunication.webservice.WebserviceConnectionURI;
+
 /**
  * {@link Runnable} for the live play mode to play spe_ed on an online
  * webservice.
@@ -15,7 +18,7 @@ public class LiveMode implements Runnable {
 
 	@Override
 	public void run() {
-		System.out.println("RUNNING LIVE");
+		
 	}
 
 }

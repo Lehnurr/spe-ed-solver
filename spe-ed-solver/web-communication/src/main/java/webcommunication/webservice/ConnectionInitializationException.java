@@ -1,4 +1,4 @@
-package webcommunication;
+package webcommunication.webservice;
 
 /**
  * Exception wrapper thrown when the connection to a web application could not

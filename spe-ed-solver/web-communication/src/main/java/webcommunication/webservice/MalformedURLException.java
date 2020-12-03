@@ -1,4 +1,4 @@
-package webcommunication;
+package webcommunication.webservice;
 
 /**
  * Exception wrapper thrown when the a URL has an invalid format.
