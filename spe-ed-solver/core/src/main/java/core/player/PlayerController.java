@@ -11,8 +11,8 @@ import player.SpeedSolverPlayer;
  */
 public class PlayerController {
 
-    private Map<Integer, SpeedSolverPlayer> players;
-    private BiConsumer<Integer, String> doPlayerActionAction;
+    private final Map<Integer, SpeedSolverPlayer> players;
+    private final BiConsumer<Integer, String> doPlayerActionAction;
 
     /**
      * A Controller to Control multiple Speeed-Solver-Player
@@ -39,13 +39,25 @@ public class PlayerController {
     }
 
     /**
+     * Sends the new GameState to a specific single Player
+     * 
+     * @param gameState The new JSON-String-Game-State
+     */
+    public void sendGameState(String gameState, int playerId) {
+        var player = this.players.get(playerId);
+        if (player == null)
+            return;
+
+        player.calculateAction(gameState, action -> doPlayerActionAction.accept(playerId, action));
+    }
+
+    /**
      * Sends the new GameState to all controlled Players
      * 
      * @param gameState The new JSON-String-Game-State
      */
     public void sendGameState(String gameState) {
-        for (SpeedSolverPlayer player : this.players.values()) {
-            player.doRound(gameState, action -> doPlayerActionAction.accept(player.getPlayerId(), action));
-        }
+        // TODO: translate the "you" variable to the playerId
+        this.players.keySet().forEach(playerId -> sendGameState(gameState, playerId));
     }
 }

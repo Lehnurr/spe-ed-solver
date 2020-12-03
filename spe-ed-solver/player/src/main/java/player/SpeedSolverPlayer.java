@@ -7,7 +7,7 @@ import java.util.function.Consumer;
  */
 public class SpeedSolverPlayer {
 
-    private int playerId;
+    private final int playerId;
 
     public SpeedSolverPlayer(int playerId) {
         this.playerId = playerId;
@@ -20,11 +20,10 @@ public class SpeedSolverPlayer {
      * @param doPlayerActionActionA A Function-Reference for the Player to send the
      *                              next Action
      */
-    public void doRound(String gameState, Consumer<String> doPlayerActionAction) {
+    public void calculateAction(String gameState, Consumer<String> doPlayerActionAction) {
 
         // Send the Calculated Action
         doPlayerActionAction.accept("{ CALCULATED_ACTION}");
-
     }
 
     public int getPlayerId() {
