@@ -3,7 +3,7 @@ package core.modes;
 import core.parser.EnvironmentVariableParser;
 import core.parser.EnvrionmentVariableParseException;
 import webcommunication.webservice.ConnectionInitializationException;
-import webcommunication.webservice.SpeedClientEndpoint;
+import webcommunication.webservice.SpeedClientSocket;
 import webcommunication.webservice.WebserviceConnectionURI;
 
 /**
@@ -26,8 +26,8 @@ public class LiveMode implements Runnable {
 			
 			final WebserviceConnectionURI webserviceConnectionURI = environmentVariableParser.getWebserviceConnectionUri();
 			
-			final SpeedClientEndpoint clientEndpoint = new SpeedClientEndpoint(null);
-			clientEndpoint.connectToServer(webserviceConnectionURI);
+			final SpeedClientSocket clientSocket = new SpeedClientSocket(null);
+			clientSocket.connectToServer(webserviceConnectionURI);
 		} catch (ConnectionInitializationException e) {
 			e.printStackTrace();
 		} catch (EnvrionmentVariableParseException e) {
