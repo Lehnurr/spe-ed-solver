@@ -1,6 +1,8 @@
 package webcommunication.webservice;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.function.Function;
 
 import org.eclipse.jetty.client.HttpClient;
@@ -24,6 +26,7 @@ import utility.game.player.PlayerAction;
 public class SpeedClientSocket {
 
 	private static final String JETTY_ENDPOINT_IDENTIFICATION_ALGORITHM = "HTTPS";
+	private static final long JETTY_WEBSOCKET_TIMEOUT = 0;
 
 	private final Function<GameStepInfo, PlayerAction> handleStepFunction;
 
@@ -62,14 +65,16 @@ public class SpeedClientSocket {
 		try {
 			client.start();
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new ConnectionInitializationException("Starting the spe_ed socket not possible!", e);
 		}
 
 		try {
-			client.connect(this, webserviceConnectionURI.getURI());
-		} catch (IOException e) {
-			e.printStackTrace();
+			final Future<Session> sessionFuture = client.connect(this, webserviceConnectionURI.getURI());
+
+			try (final Session session = sessionFuture.get()) {
+				session.setIdleTimeout(JETTY_WEBSOCKET_TIMEOUT);
+			}
+		} catch (IOException | InterruptedException | ExecutionException e) {
 			throw new ConnectionInitializationException("Initializing connection to spe_ed webservice not possible!",
 					e);
 		}
