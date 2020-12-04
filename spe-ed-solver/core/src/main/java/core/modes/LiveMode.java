@@ -1,5 +1,8 @@
 package core.modes;
 
+import core.parser.EnvironmentVariableParser;
+import core.parser.EnvrionmentVariableParseException;
+import webcommunication.webservice.ConnectionInitializationException;
 import webcommunication.webservice.SpeedClientEndpoint;
 import webcommunication.webservice.WebserviceConnectionURI;
 
@@ -18,7 +21,18 @@ public class LiveMode implements Runnable {
 
 	@Override
 	public void run() {
-		
+		try {
+			final EnvironmentVariableParser environmentVariableParser = new EnvironmentVariableParser();
+			
+			final WebserviceConnectionURI webserviceConnectionURI = environmentVariableParser.getWebserviceConnectionUri();
+			
+			final SpeedClientEndpoint clientEndpoint = new SpeedClientEndpoint(null);
+			clientEndpoint.connectToServer(webserviceConnectionURI);
+		} catch (ConnectionInitializationException e) {
+			e.printStackTrace();
+		} catch (EnvrionmentVariableParseException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
