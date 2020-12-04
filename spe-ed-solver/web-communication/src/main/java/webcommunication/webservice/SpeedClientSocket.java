@@ -23,6 +23,8 @@ import utility.game.player.PlayerAction;
 @WebSocket
 public class SpeedClientSocket {
 
+	private static final String JETTY_ENDPOINT_IDENTIFICATION_ALGORITHM = "HTTPS";
+
 	private final Function<GameStepInfo, PlayerAction> handleStepFunction;
 
 	/**
@@ -51,7 +53,7 @@ public class SpeedClientSocket {
 			throws ConnectionInitializationException {
 
 		final SslContextFactory sslContextFactory = new SslContextFactory.Client();
-		sslContextFactory.setTrustAll(true);
+		sslContextFactory.setEndpointIdentificationAlgorithm(JETTY_ENDPOINT_IDENTIFICATION_ALGORITHM);
 
 		final HttpClient httpClient = new HttpClient(sslContextFactory);
 
@@ -61,8 +63,7 @@ public class SpeedClientSocket {
 			client.start();
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new ConnectionInitializationException("Starting the spe_ed socket not possible!",
-					e);
+			throw new ConnectionInitializationException("Starting the spe_ed socket not possible!", e);
 		}
 
 		try {
