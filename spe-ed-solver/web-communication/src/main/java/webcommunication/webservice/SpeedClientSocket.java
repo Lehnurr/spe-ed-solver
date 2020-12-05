@@ -82,12 +82,12 @@ public class SpeedClientSocket {
 
 	@OnWebSocketMessage
 	public void onMessage(final Session session, final String message) throws MessageSendingException {
-		System.out.println(message);
+		System.out.println("request:\t" + message);
 		// TODO parsing request String to {@link GameStepInfo}
 		// PlayerAction responseAction = handleStepFunction.apply(null);
 		// TODO parsing {@link PlayerAction} to String response
-		String responseText = "{\"action\":" + PlayerAction.CHANGE_NOTHING.getName() + "}";
-
+		String responseText = "{\"action\":\"" + PlayerAction.CHANGE_NOTHING.getName() + "\"}";
+		System.out.println("response:\t" + responseText);
 		try {
 			session.getRemote().sendString(responseText);
 		} catch (IOException e) {

@@ -5,8 +5,8 @@ package utility.game.player;
  */
 public enum PlayerAction {
 
-	TURN_LEFT("TURN_LEFT"), TURN_RIGHT("TURN_RIGHT"), SLOW_DOWN("SLOW_DOWN"), SPEED_UP("SPEED_UP"),
-	CHANGE_NOTHING("CHANGE_NOTHING");
+	TURN_LEFT("turn_left"), TURN_RIGHT("turn_right"), SLOW_DOWN("slow_down"), SPEED_UP("speed_up"),
+	CHANGE_NOTHING("change_nothing");
 
 	// textual representation of the action type
 	private final String name;
