@@ -1,8 +1,6 @@
 package webcommunication.webservice;
 
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.function.Function;
 
 import org.eclipse.jetty.client.HttpClient;
@@ -26,7 +24,7 @@ import utility.game.player.PlayerAction;
 public class SpeedClientSocket {
 
 	private static final String JETTY_ENDPOINT_IDENTIFICATION_ALGORITHM = "HTTPS";
-	private static final long JETTY_WEBSOCKET_TIMEOUT = 0;
+	private static final long JETTY_WEBSOCKET_TIMEOUT = 3600000;
 
 	private final Function<GameStepInfo, PlayerAction> handleStepFunction;
 
@@ -69,12 +67,8 @@ public class SpeedClientSocket {
 		}
 
 		try {
-			final Future<Session> sessionFuture = client.connect(this, webserviceConnectionURI.getURI());
-
-			try (final Session session = sessionFuture.get()) {
-				session.setIdleTimeout(JETTY_WEBSOCKET_TIMEOUT);
-			}
-		} catch (IOException | InterruptedException | ExecutionException e) {
+			client.connect(this, webserviceConnectionURI.getURI());
+		} catch (IOException e) {
 			throw new ConnectionInitializationException("Initializing connection to spe_ed webservice not possible!",
 					e);
 		}
@@ -82,6 +76,7 @@ public class SpeedClientSocket {
 
 	@OnWebSocketConnect
 	public void onOpen(final Session session) {
+		session.setIdleTimeout(JETTY_WEBSOCKET_TIMEOUT);
 		System.out.println("Connection opened!");
 	}
 
@@ -103,7 +98,6 @@ public class SpeedClientSocket {
 	@OnWebSocketClose
 	public void onClose(final Session session, final int closeCode, final String closeReason) {
 		System.out.println("Connection closed!");
-		System.out.println(closeReason);
 	}
 
 	@OnWebSocketError
