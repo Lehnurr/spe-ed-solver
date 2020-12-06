@@ -1,17 +1,15 @@
 package webcommunication.webservice;
 
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 import java.util.function.Function;
 
-import org.eclipse.jetty.client.HttpClient;
-import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import org.eclipse.jetty.websocket.client.WebSocketClient;
 
 import utility.game.GameStepInfo;
 import utility.game.player.PlayerAction;
@@ -21,12 +19,13 @@ import utility.game.player.PlayerAction;
  * spe_ed webservice.
  */
 @WebSocket
-public class SpeedClientSocket {
+public class SpeedWebSocket {
 
-	private static final String JETTY_ENDPOINT_IDENTIFICATION_ALGORITHM = "HTTPS";
 	private static final long JETTY_WEBSOCKET_TIMEOUT = 3600000;
 
 	private final Function<GameStepInfo, PlayerAction> handleStepFunction;
+
+	private final CountDownLatch closeLatch = new CountDownLatch(1);
 
 	/**
 	 * Creates a new {@link SpeedClientSocket} which is able to connect to a spe_ed
@@ -35,43 +34,11 @@ public class SpeedClientSocket {
 	 * @param handleStepFunction {@link Function} which handles a single game step
 	 * @throws ConnectionInitializationException
 	 */
-	public SpeedClientSocket(final Function<GameStepInfo, PlayerAction> handleStepFunction)
+	public SpeedWebSocket(final Function<GameStepInfo, PlayerAction> handleStepFunction)
 			throws ConnectionInitializationException {
 
 		this.handleStepFunction = handleStepFunction;
 
-	}
-
-	/**
-	 * Method to connect to a spe_ed webserver and returning the session of the
-	 * newly opened connection.
-	 * 
-	 * @param webserviceConnectionURI
-	 * @return {@link Session} of the opened connection
-	 * @throws ConnectionInitializationException
-	 */
-	public void connectToServer(final WebserviceConnectionURI webserviceConnectionURI)
-			throws ConnectionInitializationException {
-
-		final SslContextFactory sslContextFactory = new SslContextFactory.Client();
-		sslContextFactory.setEndpointIdentificationAlgorithm(JETTY_ENDPOINT_IDENTIFICATION_ALGORITHM);
-
-		final HttpClient httpClient = new HttpClient(sslContextFactory);
-
-		WebSocketClient client = new WebSocketClient(httpClient);
-
-		try {
-			client.start();
-		} catch (Exception e) {
-			throw new ConnectionInitializationException("Starting the spe_ed socket not possible!", e);
-		}
-
-		try {
-			client.connect(this, webserviceConnectionURI.getURI());
-		} catch (IOException e) {
-			throw new ConnectionInitializationException("Initializing connection to spe_ed webservice not possible!",
-					e);
-		}
 	}
 
 	@OnWebSocketConnect
@@ -97,12 +64,26 @@ public class SpeedClientSocket {
 
 	@OnWebSocketClose
 	public void onClose(final Session session, final int closeCode, final String closeReason) {
+		closeLatch.countDown();
 		System.out.println("Connection closed!");
 	}
 
 	@OnWebSocketError
-	public void onError(final Session session, final Throwable throwable) {
-		throwable.printStackTrace();
+	public void onError(final Session session, final Throwable t) {
+		t.printStackTrace();
+	}
+
+	/**
+	 * Asynchronous wait for the closure of the {@link SpeedWebSocket}. Blocks until
+	 * the {@link SpeedWebSocket} is closed.
+	 */
+	public void awaitClosure() {
+		try {
+			closeLatch.await();
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			throw new RuntimeException(e);
+		}
 	}
 
 }

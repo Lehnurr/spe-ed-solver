@@ -3,7 +3,9 @@ package core.modes;
 import core.parser.EnvironmentVariableParser;
 import core.parser.EnvrionmentVariableParseException;
 import webcommunication.webservice.ConnectionInitializationException;
-import webcommunication.webservice.SpeedClientSocket;
+import webcommunication.webservice.ConnectionTerminationException;
+import webcommunication.webservice.SpeedWebSocket;
+import webcommunication.webservice.SpeedWebSocketClient;
 import webcommunication.webservice.WebserviceConnectionURI;
 
 /**
@@ -26,11 +28,18 @@ public class LiveMode implements Runnable {
 			
 			final WebserviceConnectionURI webserviceConnectionURI = environmentVariableParser.getWebserviceConnectionUri();
 			
-			final SpeedClientSocket clientSocket = new SpeedClientSocket(null);
-			clientSocket.connectToServer(webserviceConnectionURI);
+			final SpeedWebSocket socket = new SpeedWebSocket(null);
+			final SpeedWebSocketClient socketClient = new SpeedWebSocketClient();
+			
+			socketClient.connectToServer(socket, webserviceConnectionURI);
+			socket.awaitClosure();
+			socketClient.assureStopped();
+			
 		} catch (ConnectionInitializationException e) {
 			e.printStackTrace();
 		} catch (EnvrionmentVariableParseException e) {
+			e.printStackTrace();
+		} catch (ConnectionTerminationException e) {
 			e.printStackTrace();
 		}
 	}
