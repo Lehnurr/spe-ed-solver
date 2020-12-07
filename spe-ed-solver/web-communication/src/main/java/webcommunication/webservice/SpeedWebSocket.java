@@ -11,8 +11,9 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-import utility.game.GameStepInfo;
 import utility.game.player.PlayerAction;
+import utility.game.stepinformation.GameStepInformation;
+import webcommunication.webservice.parser.ResponseParser;
 
 /**
  * {@link WebSocket} annotated websocket to connect a webservice client to the
@@ -23,7 +24,9 @@ public class SpeedWebSocket {
 
 	private static final long JETTY_WEBSOCKET_TIMEOUT = 3600000;
 
-	private final Function<GameStepInfo, PlayerAction> handleStepFunction;
+	private static final ResponseParser RESPONSE_PARSER = new ResponseParser();
+
+	private final Function<GameStepInformation, PlayerAction> handleStepFunction;
 
 	private final CountDownLatch closeLatch = new CountDownLatch(1);
 
@@ -34,7 +37,7 @@ public class SpeedWebSocket {
 	 * @param handleStepFunction {@link Function} which handles a single game step
 	 * @throws ConnectionInitializationException
 	 */
-	public SpeedWebSocket(final Function<GameStepInfo, PlayerAction> handleStepFunction)
+	public SpeedWebSocket(final Function<GameStepInformation, PlayerAction> handleStepFunction)
 			throws ConnectionInitializationException {
 
 		this.handleStepFunction = handleStepFunction;
@@ -51,9 +54,8 @@ public class SpeedWebSocket {
 	public void onMessage(final Session session, final String message) throws MessageSendingException {
 		System.out.println("request:\t" + message);
 		// TODO parsing request String to {@link GameStepInfo}
-		// PlayerAction responseAction = handleStepFunction.apply(null);
-		// TODO parsing {@link PlayerAction} to String response
-		String responseText = "{\"action\":\"" + PlayerAction.CHANGE_NOTHING.getName() + "\"}";
+		final PlayerAction responseAction = handleStepFunction.apply(null);
+		String responseText = RESPONSE_PARSER.parseResponse(responseAction);
 		System.out.println("response:\t" + responseText);
 		try {
 			session.getRemote().sendString(responseText);
