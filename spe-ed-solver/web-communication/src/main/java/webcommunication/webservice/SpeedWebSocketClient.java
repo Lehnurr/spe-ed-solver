@@ -6,8 +6,6 @@ import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
-import org.eclipse.jetty.websocket.common.WebSocketSession;
-import org.eclipse.jetty.websocket.common.WebSocketSessionListener;
 
 public class SpeedWebSocketClient {
 
@@ -31,12 +29,6 @@ public class SpeedWebSocketClient {
 
 		websocketClient = new WebSocketClient(httpClient);
 
-		websocketClient.addSessionListener(new WebSocketSessionListener() {
-			@Override
-			public void onSessionClosed(WebSocketSession session) {
-//				assureStopped();
-			}
-		});
 	}
 
 	/**
