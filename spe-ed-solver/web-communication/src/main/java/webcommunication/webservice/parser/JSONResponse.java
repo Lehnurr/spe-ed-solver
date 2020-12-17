@@ -15,8 +15,8 @@ public class JSONResponse {
 	 * 
 	 * @param playerAction {@link PlayerAction} to respond with
 	 */
-	public JSONResponse(final PlayerAction playerAction) {
-		this.action = playerAction.getName();
+	public JSONResponse(final String playerAction) {
+		this.action = playerAction;
 	}
 
 }

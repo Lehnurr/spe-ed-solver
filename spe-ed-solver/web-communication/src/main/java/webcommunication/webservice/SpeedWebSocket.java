@@ -13,6 +13,7 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import utility.game.player.PlayerAction;
 import utility.game.stepinformation.GameStepInformation;
+import webcommunication.webservice.parser.GameStepInformationParser;
 import webcommunication.webservice.parser.ResponseParser;
 
 /**
@@ -25,6 +26,7 @@ public class SpeedWebSocket {
 	private static final long JETTY_WEBSOCKET_TIMEOUT = 3600000;
 
 	private static final ResponseParser RESPONSE_PARSER = new ResponseParser();
+	private static final GameStepInformationParser GAME_STEP_PARSER = new GameStepInformationParser();
 
 	private final Function<GameStepInformation, PlayerAction> handleStepFunction;
 
@@ -53,8 +55,8 @@ public class SpeedWebSocket {
 	@OnWebSocketMessage
 	public void onMessage(final Session session, final String message) throws MessageSendingException {
 		System.out.println("request:\t" + message);
-		// TODO parsing request String to {@link GameStepInfo}
-		final PlayerAction responseAction = handleStepFunction.apply(null);
+		final GameStepInformation gameStepInformation = GAME_STEP_PARSER.parseGameStepInformation(message);
+		final PlayerAction responseAction = handleStepFunction.apply(gameStepInformation);
 		String responseText = RESPONSE_PARSER.parseResponse(responseAction);
 		System.out.println("response:\t" + responseText);
 		try {

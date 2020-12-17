@@ -38,7 +38,7 @@ public class ResponseParser {
 	 * @return {@link String JSON String} of the answer 
 	 */
 	public String parseResponse(final PlayerAction playerAction) {
-		final JSONResponse jsonResponse = new JSONResponse(playerAction);
+		final JSONResponse jsonResponse = new JSONResponse(playerAction.getName());
 		return gson.toJson(jsonResponse).toString();
 	}
 
