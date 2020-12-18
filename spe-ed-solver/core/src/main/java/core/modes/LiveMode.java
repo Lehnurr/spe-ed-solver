@@ -8,8 +8,7 @@ import utility.game.player.PlayerAction;
 import utility.game.step.GameStep;
 import webcommunication.webservice.ConnectionInitializationException;
 import webcommunication.webservice.ConnectionTerminationException;
-import webcommunication.webservice.SpeedWebSocket;
-import webcommunication.webservice.SpeedWebSocketClient;
+import webcommunication.webservice.SpeedConnectionManager;
 import webcommunication.webservice.WebserviceConnectionURI;
 
 /**
@@ -32,17 +31,14 @@ public class LiveMode implements Runnable {
 			
 			final WebserviceConnectionURI webserviceConnectionURI = environmentVariableParser.getWebserviceConnectionUri();
 			
-			final SpeedWebSocket socket = new SpeedWebSocket(new Function<GameStep, PlayerAction>() {
+			final SpeedConnectionManager connectionManager = new SpeedConnectionManager(webserviceConnectionURI);
+			
+			connectionManager.play(new Function<GameStep, PlayerAction>() {
 				@Override
 				public PlayerAction apply(GameStep arg0) {
 					return PlayerAction.CHANGE_NOTHING;
 				}
 			});
-			final SpeedWebSocketClient socketClient = new SpeedWebSocketClient();
-			
-			socketClient.connectToServer(socket, webserviceConnectionURI);
-			socket.awaitClosure();
-			socketClient.assureStopped();
 			
 		} catch (ConnectionInitializationException e) {
 			e.printStackTrace();
