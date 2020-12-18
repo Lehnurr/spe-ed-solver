@@ -1,4 +1,4 @@
-package webcommunication.webservice.parser;
+package webcommunication.webservice.parser.jsonobject;
 
 import java.util.Date;
 import java.util.Map;
@@ -7,7 +7,7 @@ import java.util.Map;
  * Class representing the JSON Object sent to each spe_ed client in a single
  * game step.
  */
-public class JSONGameStepInformation {
+public class JSONGameStep {
 
 	public int width;
 	public int height;

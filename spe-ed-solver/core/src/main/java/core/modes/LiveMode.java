@@ -5,7 +5,7 @@ import java.util.function.Function;
 import core.parser.EnvironmentVariableParser;
 import core.parser.EnvrionmentVariableParseException;
 import utility.game.player.PlayerAction;
-import utility.game.stepinformation.GameStepInformation;
+import utility.game.step.GameStep;
 import webcommunication.webservice.ConnectionInitializationException;
 import webcommunication.webservice.ConnectionTerminationException;
 import webcommunication.webservice.SpeedWebSocket;
@@ -32,9 +32,9 @@ public class LiveMode implements Runnable {
 			
 			final WebserviceConnectionURI webserviceConnectionURI = environmentVariableParser.getWebserviceConnectionUri();
 			
-			final SpeedWebSocket socket = new SpeedWebSocket(new Function<GameStepInformation, PlayerAction>() {
+			final SpeedWebSocket socket = new SpeedWebSocket(new Function<GameStep, PlayerAction>() {
 				@Override
-				public PlayerAction apply(GameStepInformation arg0) {
+				public PlayerAction apply(GameStep arg0) {
 					return PlayerAction.CHANGE_NOTHING;
 				}
 			});

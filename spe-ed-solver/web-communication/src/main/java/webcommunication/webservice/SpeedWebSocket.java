@@ -12,8 +12,8 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import utility.game.player.PlayerAction;
-import utility.game.stepinformation.GameStepInformation;
-import webcommunication.webservice.parser.GameStepInformationParser;
+import utility.game.step.GameStep;
+import webcommunication.webservice.parser.GameStepParser;
 import webcommunication.webservice.parser.ResponseParser;
 
 /**
@@ -26,9 +26,9 @@ public class SpeedWebSocket {
 	private static final long JETTY_WEBSOCKET_TIMEOUT = 3600000;
 
 	private static final ResponseParser RESPONSE_PARSER = new ResponseParser();
-	private static final GameStepInformationParser GAME_STEP_PARSER = new GameStepInformationParser();
+	private static final GameStepParser GAME_STEP_PARSER = new GameStepParser();
 
-	private final Function<GameStepInformation, PlayerAction> handleStepFunction;
+	private final Function<GameStep, PlayerAction> handleStepFunction;
 
 	private final CountDownLatch closeLatch = new CountDownLatch(1);
 
@@ -39,7 +39,7 @@ public class SpeedWebSocket {
 	 * @param handleStepFunction {@link Function} which handles a single game step
 	 * @throws ConnectionInitializationException
 	 */
-	public SpeedWebSocket(final Function<GameStepInformation, PlayerAction> handleStepFunction)
+	public SpeedWebSocket(final Function<GameStep, PlayerAction> handleStepFunction)
 			throws ConnectionInitializationException {
 
 		this.handleStepFunction = handleStepFunction;
@@ -55,7 +55,7 @@ public class SpeedWebSocket {
 	@OnWebSocketMessage
 	public void onMessage(final Session session, final String message) throws MessageSendingException {
 		System.out.println("request:\t" + message);
-		final GameStepInformation gameStepInformation = GAME_STEP_PARSER.parseGameStepInformation(message);
+		final GameStep gameStepInformation = GAME_STEP_PARSER.parseGameStep(message);
 		final PlayerAction responseAction = handleStepFunction.apply(gameStepInformation);
 		String responseText = RESPONSE_PARSER.parseResponse(responseAction);
 		System.out.println("response:\t" + responseText);

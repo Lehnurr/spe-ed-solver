@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import utility.game.player.PlayerAction;
+import webcommunication.webservice.parser.jsonobject.JSONResponse;
 
 /**
  * Responsible for parsing the response to send to the spe_ed server from a

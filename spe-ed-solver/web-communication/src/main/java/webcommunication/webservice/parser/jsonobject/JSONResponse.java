@@ -1,4 +1,4 @@
-package webcommunication.webservice.parser;
+package webcommunication.webservice.parser.jsonobject;
 
 import utility.game.player.PlayerAction;
 
