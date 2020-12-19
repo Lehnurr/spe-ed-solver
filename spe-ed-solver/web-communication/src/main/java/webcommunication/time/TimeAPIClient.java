@@ -2,7 +2,6 @@ package webcommunication.time;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
@@ -18,27 +17,30 @@ import webcommunication.time.parser.ServerTimeParser;
 public class TimeAPIClient {
 
 	private final ServerTimeParser responseParser;
+	
+	private final URI targetUri;
 
 	/**
-	 * Creates a new {@link TimeAPIClient} with a given
-	 * {@link ServerTimeParser}.
+	 * Creates a new {@link TimeAPIClient} with a given {@link ServerTimeParser}.
 	 * 
-	 * @param responseParser {@link ServerTimeParser} responsible for parsing
-	 *                       the time API responses
+	 * @param responseParser {@link ServerTimeParser} responsible for parsing the
+	 *                       time API responses
+	 * @param targetUri      {@link URI} of the time API
 	 */
-	public TimeAPIClient(final ServerTimeParser responseParser) {
+	public TimeAPIClient(final ServerTimeParser responseParser, final URI targetUri) {
 		this.responseParser = responseParser;
+		this.targetUri = targetUri;
 	}
 
 	/**
 	 * Responsible for requesting the the server time of the given spe_ed time API
 	 * with a HTTP GET request.
 	 * 
-	 * @param targetUri {@link URI} of the time API
+	 * 
 	 * @return {@link ZonedDateTime} of server time
 	 * @throws TimeRequestException
 	 */
-	public ZonedDateTime getServerTime(final URI targetUri) throws TimeRequestException {
+	public ZonedDateTime getServerTime() throws TimeRequestException {
 
 		final HttpClient client = getStartedHttpClient();
 
@@ -58,7 +60,7 @@ public class TimeAPIClient {
 	 * @throws TimeRequestException
 	 */
 	private HttpClient getStartedHttpClient() throws TimeRequestException {
-		
+
 		final JettyHttpClientFactory factory = new JettyHttpClientFactory();
 		final HttpClient client = factory.getNewHttpClient();
 
@@ -100,7 +102,7 @@ public class TimeAPIClient {
 	/**
 	 * Closes the given {@link HttpClient}.
 	 * 
-	 * @param client
+	 * @param client {@link HttpClient} which has to be closed
 	 * @throws TimeRequestException
 	 */
 	private void closeHttpClient(final HttpClient client) throws TimeRequestException {

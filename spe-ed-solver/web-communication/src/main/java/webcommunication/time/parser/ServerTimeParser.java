@@ -1,6 +1,5 @@
 package webcommunication.time.parser;
 
-import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
