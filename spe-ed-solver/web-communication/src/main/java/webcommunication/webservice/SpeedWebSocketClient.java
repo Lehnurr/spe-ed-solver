@@ -3,13 +3,12 @@ package webcommunication.webservice;
 import java.io.IOException;
 
 import org.eclipse.jetty.client.HttpClient;
-import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 
-public class SpeedWebSocketClient {
+import webcommunication.JettyHttpClientFactory;
 
-	private static final String JETTY_ENDPOINT_IDENTIFICATION_ALGORITHM = "HTTPS";
+public class SpeedWebSocketClient {
 
 	private final WebSocketClient websocketClient;
 
@@ -22,10 +21,8 @@ public class SpeedWebSocketClient {
 	 */
 	public SpeedWebSocketClient() throws ConnectionInitializationException {
 
-		final SslContextFactory sslContextFactory = new SslContextFactory.Client();
-		sslContextFactory.setEndpointIdentificationAlgorithm(JETTY_ENDPOINT_IDENTIFICATION_ALGORITHM);
-
-		final HttpClient httpClient = new HttpClient(sslContextFactory);
+		final JettyHttpClientFactory factory = new JettyHttpClientFactory();
+		final HttpClient httpClient = factory.getNewHttpClient();
 
 		websocketClient = new WebSocketClient(httpClient);
 
