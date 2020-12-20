@@ -57,6 +57,7 @@ public class GameStepPlayer implements IPlayer {
 	}
 
 	@Override
+	@Override
 	public boolean isActive() {
 		return active;
 	}
