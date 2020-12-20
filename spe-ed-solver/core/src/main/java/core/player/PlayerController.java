@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 import player.SpeedSolverPlayer;
+import utility.game.player.PlayerAction;
 
 /**
  * PlayerController for multiple Player
@@ -12,7 +13,7 @@ import player.SpeedSolverPlayer;
 public class PlayerController {
 
     private final Map<Integer, SpeedSolverPlayer> players;
-    private final BiConsumer<Integer, String> doPlayerActionAction;
+    private final BiConsumer<Integer, PlayerAction> doPlayerActionAction;
 
     /**
      * A Controller to Control multiple Speeed-Solver-Player
@@ -20,7 +21,7 @@ public class PlayerController {
      * @param doPlayerActionAction A Function-Reference for the Player to send their
      *                             PlayerId and the next Action they want to do
      */
-    public PlayerController(BiConsumer<Integer, String> doPlayerActionAction) {
+    public PlayerController(BiConsumer<Integer, PlayerAction> doPlayerActionAction) {
         this.players = new HashMap<>();
         this.doPlayerActionAction = doPlayerActionAction;
     }
@@ -48,7 +49,8 @@ public class PlayerController {
         if (player == null)
             return;
 
-        player.calculateAction(gameState, action -> doPlayerActionAction.accept(playerId, action));
+        PlayerAction action = player.calculateAction(gameState);
+        doPlayerActionAction.accept(playerId, action);
     }
 
     /**

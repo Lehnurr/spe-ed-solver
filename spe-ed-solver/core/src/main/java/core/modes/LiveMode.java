@@ -1,11 +1,8 @@
 package core.modes;
 
-import java.util.function.Function;
-
 import core.parser.EnvironmentVariableParser;
 import core.parser.EnvrionmentVariableParseException;
 import utility.game.player.PlayerAction;
-import utility.game.step.GameStep;
 import webcommunication.webservice.ConnectionInitializationException;
 import webcommunication.webservice.ConnectionTerminationException;
 import webcommunication.webservice.SpeedConnectionManager;
@@ -28,23 +25,16 @@ public class LiveMode implements Runnable {
 	public void run() {
 		try {
 			final EnvironmentVariableParser environmentVariableParser = new EnvironmentVariableParser();
-			
-			final WebserviceConnectionURI webserviceConnectionURI = environmentVariableParser.getWebserviceConnectionUri();
-			
+
+			final WebserviceConnectionURI webserviceConnectionURI = environmentVariableParser
+					.getWebserviceConnectionUri();
+
 			final SpeedConnectionManager connectionManager = new SpeedConnectionManager(webserviceConnectionURI);
-			
-			connectionManager.play(new Function<GameStep, PlayerAction>() {
-				@Override
-				public PlayerAction apply(GameStep arg0) {
-					return PlayerAction.CHANGE_NOTHING;
-				}
-			});
-			
-		} catch (ConnectionInitializationException e) {
-			e.printStackTrace();
-		} catch (EnvrionmentVariableParseException e) {
-			e.printStackTrace();
-		} catch (ConnectionTerminationException e) {
+
+			connectionManager.play(step -> PlayerAction.CHANGE_NOTHING);
+
+		} catch (ConnectionInitializationException | EnvrionmentVariableParseException
+				| ConnectionTerminationException e) {
 			e.printStackTrace();
 		}
 	}

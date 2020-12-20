@@ -1,6 +1,6 @@
 package player;
 
-import java.util.function.Consumer;
+import utility.game.player.PlayerAction;
 
 /**
  * SpeedSolverPlayer
@@ -20,10 +20,10 @@ public class SpeedSolverPlayer {
      * @param doPlayerActionActionA A Function-Reference for the Player to send the
      *                              next Action
      */
-    public void calculateAction(String gameState, Consumer<String> doPlayerActionAction) {
+    public PlayerAction calculateAction(String gameState) {
 
         // Send the Calculated Action
-        doPlayerActionAction.accept("{ CALCULATED_ACTION}");
+        return PlayerAction.CHANGE_NOTHING;
     }
 
     public int getPlayerId() {
