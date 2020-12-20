@@ -5,7 +5,7 @@ import utility.geometry.Point2i;
 /**
  * Board
  */
-public class Board<CellType extends IBoardCell> {
+public class Board<CellType extends IBoardCell<?>> {
 
     private final CellType[][] cells;
     private final int height;

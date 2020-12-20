@@ -3,15 +3,15 @@ package utility.game.board;
 /**
  * IBoardCell
  */
-public interface IBoardCell {
+public interface IBoardCell<CellType> {
 
     /**
      * @return The Cells value
      */
-    int getCellValue();
+	CellType getCellValue();
 
     /**
      * Sets the Cells value
      */
-    void setCellValue(int value);
+    void setCellValue(CellType value);
 }

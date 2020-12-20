@@ -3,20 +3,26 @@ package utility.game.board;
 /**
  * Cell
  */
-public class Cell implements IBoardCell {
+public class Cell implements IBoardCell<CellValue> {
 
-    private int value;
+    private CellValue value;
 
     public Cell(int cellValue) {
-        this.value = cellValue;
+        this(CellValue.fromInteger(cellValue));
+    }
+    
+    public Cell(CellValue value) {
+    	this.value = value;
     }
 
-    public int getCellValue() {
-        return value;
-    }
+	@Override
+	public CellValue getCellValue() {
+		return this.value;
+	}
 
-    public void setCellValue(int value) {
-        this.value = value;
-    }
+	@Override
+	public void setCellValue(CellValue value) {
+		this.value = value;
+	}
 
 }
