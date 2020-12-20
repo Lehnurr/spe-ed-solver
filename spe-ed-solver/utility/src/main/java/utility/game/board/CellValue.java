@@ -16,7 +16,7 @@ public enum CellValue {
 	/**
 	 * Returns the Cells value
 	 */
-	public int getCellValue() {
+	public int getIntegerValue() {
 		return this.value;
 	}
 

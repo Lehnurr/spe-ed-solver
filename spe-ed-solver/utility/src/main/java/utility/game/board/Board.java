@@ -43,5 +43,9 @@ public class Board<CellType extends IBoardCell<?>> {
     public int getWidth() {
         return width;
     }
+    
+    public int getHeight() {
+    	return height;
+    }
 
 }

@@ -36,6 +36,12 @@
 			<artifactId>simulation</artifactId>
 			<version>${project.version}</version>
     	</dependency>
+    	
+    	<dependency>
+			<groupId>de.lehnurr.spe-ed-solver</groupId>
+			<artifactId>visualisation</artifactId>
+			<version>${project.version}</version>
+    	</dependency>
 	</dependencies>
 
 	<build>
