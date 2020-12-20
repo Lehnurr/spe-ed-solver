@@ -57,7 +57,12 @@ public class GameStepParser {
 					ZoneId.of(SPE_ED_TIME_FORMAT));
 			deadline = timeSynchronizationManager.createDeadline(deadlineTime);
 		} else {
-			deadline = null;
+			deadline = new Deadline() {
+				@Override
+				public long getRemainingMilliseconds() {
+					return 0;
+				}
+			};
 		}
 
 		final int boardWidth = jsonObject.cells[0].length;

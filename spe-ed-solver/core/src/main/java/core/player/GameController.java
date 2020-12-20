@@ -11,27 +11,27 @@ import utility.game.step.GameStep;
  */
 public class GameController {
 
-    private final Map<Integer, PlayerController> players;
+	private final Map<Integer, PlayerController> players;
 
-    /**
-     * A Controller to Control multiple PlayerController
-     * 
-     */
-    public GameController() {
-        this.players = new HashMap<>();
-    }
+	/**
+	 * A Controller to Control multiple PlayerController
+	 * 
+	 */
+	public GameController() {
+		this.players = new HashMap<>();
+	}
 
-    /**
-     * Sends the new GameStep to the player of the GameStep
-     * 
-     * @param gameStep The new GameStep
-     */
-    public PlayerAction sendGameStep(GameStep gameStep) {
-        final int playerId = gameStep.getSelf().getPlayerId();
+	/**
+	 * Sends the new GameStep to the player of the GameStep
+	 * 
+	 * @param gameStep The new GameStep
+	 */
+	public PlayerAction sendGameStep(GameStep gameStep) {
+		final int playerId = gameStep.getSelf().getPlayerId();
 
-        if (!this.players.containsKey(playerId))
-            this.players.put(playerId, new PlayerController(playerId));
+		if (!this.players.containsKey(playerId))
+			this.players.put(playerId, new PlayerController(playerId));
 
-        return this.players.get(playerId).calculateAction(gameStep);
-    }
+		return this.players.get(playerId).calculateAction(gameStep);
+	}
 }

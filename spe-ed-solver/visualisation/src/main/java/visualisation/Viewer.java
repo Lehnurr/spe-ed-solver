@@ -40,6 +40,11 @@ public class Viewer {
 
 	/**
 	 * Stores round specific information.
+	 * 
+	 * @param availableMilliseconds available time in milliseconds
+	 * @param performedAction       {@link PlayerAction} performed in the round
+	 * @param requiredMilliseconds  required time in milliseconds
+	 * @param boardRatings          {@link ContextualFloatMatrix}s of board ratings
 	 */
 	public void commitRound(double availableTime, PlayerAction performedAction, double requiredTime,
 			List<ContextualFloatMatrix> boardRatings) {
