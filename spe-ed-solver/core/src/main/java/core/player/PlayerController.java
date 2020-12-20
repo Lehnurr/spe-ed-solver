@@ -37,11 +37,11 @@ public class PlayerController {
 		final List<ContextualFloatMatrix> boardRatings = new ArrayList<>();
 		boardRatings.add(gameStep.getBoardAsMatrix("Board"));
 
-		final PlayerAction action = player.calculateAction(gameStep);
+		final PlayerAction action = player.calculateAction(gameStep, boardRatings::add);
 
 		final long requiredMilliseconds = availableMilliseconds - gameStep.getDeadline().getRemainingMilliseconds();
 
-		viewer.commitRound(availableMilliseconds, action, requiredMilliseconds, boardRatings);
+		viewer.commitRound(availableMilliseconds / 1000., action, requiredMilliseconds / 1000., boardRatings);
 
 		return action;
 	}
