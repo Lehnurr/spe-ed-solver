@@ -1,3 +1,3 @@
 # spe-ed-java
 
-[README.en-US.md](English Readme)
+[English Readme](README.en-US.md)
