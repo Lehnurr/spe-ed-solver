@@ -1,3 +1,4 @@
+  
 package webcommunication.time;
 
 import java.net.URI;
@@ -16,7 +17,7 @@ import webcommunication.time.parser.ServerTimeParser;
  */
 public class TimeAPIClient {
 
-	private final ServerTimeParser responseParser;
+	private final ServerTimeParser serverTimeParser;
 	
 	private final URI targetUri;
 
@@ -27,8 +28,8 @@ public class TimeAPIClient {
 	 *                       time API responses
 	 * @param targetUri      {@link URI} of the time API
 	 */
-	public TimeAPIClient(final ServerTimeParser responseParser, final URI targetUri) {
-		this.responseParser = responseParser;
+	public TimeAPIClient(final ServerTimeParser serverTimeParser, final URI targetUri) {
+		this.serverTimeParser = serverTimeParser;
 		this.targetUri = targetUri;
 	}
 
@@ -48,7 +49,7 @@ public class TimeAPIClient {
 
 		closeHttpClient(client);
 
-		ZonedDateTime time = responseParser.parseTimeAPIResponse(responseString);
+		ZonedDateTime time = serverTimeParser.parseTimeAPIResponse(responseString);
 
 		return time;
 	}

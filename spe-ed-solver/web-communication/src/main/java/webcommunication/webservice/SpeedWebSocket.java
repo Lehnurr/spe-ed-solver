@@ -25,8 +25,8 @@ public class SpeedWebSocket {
 
 	private static final long JETTY_WEBSOCKET_TIMEOUT = 3600000;
 
-	private static final ResponseParser RESPONSE_PARSER = new ResponseParser();
-	private static final GameStepParser GAME_STEP_PARSER = new GameStepParser();
+	private final GameStepParser gameStepParser;
+	private final ResponseParser responseParser;
 
 	private final Function<GameStep, PlayerAction> handleStepFunction;
 
@@ -37,10 +37,16 @@ public class SpeedWebSocket {
 	 * webservice server.
 	 * 
 	 * @param handleStepFunction {@link Function} which handles a single game step
+	 * @param gameStepParser     {@link GameStepParser} to parse a JSON game step
+	 * @param responseParser     {@link ResponseParser} to parse JSON responses
 	 * @throws ConnectionInitializationException
 	 */
-	public SpeedWebSocket(final Function<GameStep, PlayerAction> handleStepFunction)
+	public SpeedWebSocket(final Function<GameStep, PlayerAction> handleStepFunction,
+			final GameStepParser gameStepParser, final ResponseParser responseParser)
 			throws ConnectionInitializationException {
+
+		this.gameStepParser = gameStepParser;
+		this.responseParser = responseParser;
 
 		this.handleStepFunction = handleStepFunction;
 
@@ -55,9 +61,9 @@ public class SpeedWebSocket {
 	@OnWebSocketMessage
 	public void onMessage(final Session session, final String message) throws MessageSendingException {
 		System.out.println("request:\t" + message);
-		final GameStep gameStepInformation = GAME_STEP_PARSER.parseGameStep(message);
+		final GameStep gameStepInformation = gameStepParser.parseGameStep(message);
 		final PlayerAction responseAction = handleStepFunction.apply(gameStepInformation);
-		String responseText = RESPONSE_PARSER.parseResponse(responseAction);
+		String responseText = responseParser.parseResponse(responseAction);
 		System.out.println("response:\t" + responseText);
 		try {
 			session.getRemote().sendString(responseText);

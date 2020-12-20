@@ -21,12 +21,28 @@ public class TimeSynchronizationManager {
 	 * @param timeApiClient {@link TimeAPIClient} to get the server time from
 	 * @throws TimeRequestException
 	 */
-	public TimeSynchronizationManager(final TimeAPIClient timeApiClient) throws TimeRequestException {
+	public TimeSynchronizationManager(final TimeAPIClient timeApiClient) {
 
 		final ZonedDateTime clientTime = ZonedDateTime.now();
-		final ZonedDateTime serverTime = timeApiClient.getServerTime();
 
-		this.serverTimeOffset = Duration.between(clientTime, serverTime);
+		Duration serverTimeOffset;
+		try {
+			ZonedDateTime serverTime = timeApiClient.getServerTime();
+			serverTimeOffset = Duration.between(clientTime, serverTime);
+		} catch (TimeRequestException e) {
+			// TODO LOGGING WARNING
+			serverTimeOffset = Duration.ZERO;
+		}
+		this.serverTimeOffset = serverTimeOffset;
+	}
+
+	/**
+	 * Creates a new {@link TimeSynchronizationManager} without a connection to a
+	 * {@link TimeAPIClient}. This results in an unsynchronized behavior and is not
+	 * recommended.
+	 */
+	public TimeSynchronizationManager() {
+		this.serverTimeOffset = Duration.ZERO;
 	}
 
 	/**

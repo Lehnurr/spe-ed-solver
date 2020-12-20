@@ -7,26 +7,33 @@ import utility.geometry.Point2i;
  */
 public interface IPlayer {
 
-    public static final int MAX_SPEED = 10;
-    public static final int MIN_SPEED = 1;
+	public static final int MAX_SPEED = 10;
+	public static final int MIN_SPEED = 1;
 
-    /**
-     * @return Returns the integer-ID of the Player
-     */
-    int getPlayerId();
+	/**
+	 * @return Returns the integer-ID of the Player
+	 */
+	int getPlayerId();
 
-    /**
-     * Returns the players current direction
-     */
-    PlayerDirection getDirection();
+	/**
+	 * Returns the players current direction
+	 */
+	PlayerDirection getDirection();
 
-    /**
-     * Returns the players current speed
-     */
-    int getSpeed();
+	/**
+	 * Returns the players current speed
+	 */
+	int getSpeed();
 
-    /**
-     * Returns the players current position
+	/**
+	 * Returns the players current position
+	 */
+	Point2i getPosition();
+
+	/**
+     * Indicates if the Player is "alive".
+     * 
+     * @return true for alive, false for dead
      */
-    Point2i getPosition();
+	boolean isActive();
 }
