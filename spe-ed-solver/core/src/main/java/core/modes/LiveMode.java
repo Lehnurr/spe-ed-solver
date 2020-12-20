@@ -1,5 +1,7 @@
 package core.modes;
 
+import java.net.URI;
+
 import core.parser.EnvironmentVariableParser;
 import core.parser.EnvrionmentVariableParseException;
 import core.player.GameController;
@@ -29,7 +31,10 @@ public class LiveMode implements Runnable {
 			final WebserviceConnectionURI webserviceConnectionURI = environmentVariableParser
 					.getWebserviceConnectionUri();
 
-			final SpeedConnectionManager connectionManager = new SpeedConnectionManager(webserviceConnectionURI);
+			final URI timeApiURI = environmentVariableParser.getTimeUrl();
+
+			final SpeedConnectionManager connectionManager = new SpeedConnectionManager(webserviceConnectionURI,
+					timeApiURI);
 
 			final GameController gameController = new GameController();
 
