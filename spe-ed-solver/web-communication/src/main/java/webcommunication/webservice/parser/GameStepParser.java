@@ -51,10 +51,14 @@ public class GameStepParser {
 
 		final JSONGameStep jsonObject = gson.fromJson(jsonString, JSONGameStep.class);
 
-		final ZonedDateTime deadlineTime = ZonedDateTime.ofInstant(jsonObject.deadline.toInstant(),
-				ZoneId.of(SPE_ED_TIME_FORMAT));
-
-		final Deadline deadline = timeSynchronizationManager.createDeadline(deadlineTime);
+		final Deadline deadline;
+		if (jsonObject.running) { // if game is over, no deadline is available
+			final ZonedDateTime deadlineTime = ZonedDateTime.ofInstant(jsonObject.deadline.toInstant(),
+					ZoneId.of(SPE_ED_TIME_FORMAT));
+			deadline = timeSynchronizationManager.createDeadline(deadlineTime);
+		} else {
+			deadline = null;
+		}
 
 		final int boardWidth = jsonObject.cells[0].length;
 		final int boardHeight = jsonObject.cells.length;
@@ -71,7 +75,7 @@ public class GameStepParser {
 		final boolean running = jsonObject.running;
 
 		final int jsonSelfId = jsonObject.you;
-		final JSONGameStepPlayer jsonSelf = jsonObject.players.remove(Integer.toString((jsonSelfId)));
+		final JSONGameStepPlayer jsonSelf = jsonObject.players.remove(Integer.toString(jsonSelfId));
 		final GameStepPlayer self = new GameStepPlayer(jsonSelfId, jsonSelf);
 
 		final Map<Integer, IPlayer> enemies = new HashMap<>();
