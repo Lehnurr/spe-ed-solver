@@ -1,9 +1,16 @@
 package webcommunication.webservice;
 
+import java.net.URI;
 import java.util.function.Function;
 
 import utility.game.player.PlayerAction;
 import utility.game.step.GameStep;
+import webcommunication.time.TimeAPIClient;
+import webcommunication.time.TimeRequestException;
+import webcommunication.time.TimeSynchronizationManager;
+import webcommunication.time.parser.ServerTimeParser;
+import webcommunication.webservice.parser.GameStepParser;
+import webcommunication.webservice.parser.ResponseParser;
 
 /**
  * Class responsible for managing the life cycle of a game of spe_ed on a given
@@ -13,6 +20,7 @@ import utility.game.step.GameStep;
 public class SpeedConnectionManager {
 
 	final WebserviceConnectionURI webserviceConnectionURI;
+	final TimeSynchronizationManager timeSynchronizationManager;
 
 	/**
 	 * Creates a new {@link SpeedConnectionManager} with a given
@@ -20,9 +28,16 @@ public class SpeedConnectionManager {
 	 * spe_ed on.
 	 * 
 	 * @param webserviceConnectionURI of the spe_ed server
+	 * @param timeApiUri              {@link URI} of the API for the spe_ed_server
+	 *                                time
+	 * @throws TimeRequestException
 	 */
-	public SpeedConnectionManager(final WebserviceConnectionURI webserviceConnectionURI) {
+	public SpeedConnectionManager(final WebserviceConnectionURI webserviceConnectionURI, final URI timeApiUri) {
 		this.webserviceConnectionURI = webserviceConnectionURI;
+
+		final ServerTimeParser serverTimeParser = new ServerTimeParser();
+		final TimeAPIClient timeApiClient = new TimeAPIClient(serverTimeParser, timeApiUri);
+		this.timeSynchronizationManager = new TimeSynchronizationManager(timeApiClient);
 	}
 
 	/**
@@ -39,14 +54,16 @@ public class SpeedConnectionManager {
 	public void play(final Function<GameStep, PlayerAction> gameStepHandler)
 			throws ConnectionInitializationException, ConnectionTerminationException {
 
-		final SpeedWebSocket socket = new SpeedWebSocket(gameStepHandler);
-		
+		final GameStepParser gameStepParser = new GameStepParser(timeSynchronizationManager);
+		final ResponseParser responseParser = new ResponseParser();
+
+		final SpeedWebSocket socket = new SpeedWebSocket(gameStepHandler, gameStepParser, responseParser);
+
 		final SpeedWebSocketClient socketClient = new SpeedWebSocketClient();
 
 		socketClient.connectToServer(socket, webserviceConnectionURI);
 		socket.awaitClosure();
 		socketClient.assureStopped();
-
 	}
 
 }
