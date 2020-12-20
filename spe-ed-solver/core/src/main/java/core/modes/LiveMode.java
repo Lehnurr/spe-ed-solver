@@ -33,7 +33,7 @@ public class LiveMode implements Runnable {
 
 			final PlayerController playerController = new PlayerController();
 
-			connectionManager.play(step -> playerController.sendGameStep(step, step.getYouId()));
+			connectionManager.play(step -> playerController.sendGameStep(step, step.getSelf().getPlayerId()));
 
 		} catch (ConnectionInitializationException | EnvrionmentVariableParseException
 				| ConnectionTerminationException e) {
