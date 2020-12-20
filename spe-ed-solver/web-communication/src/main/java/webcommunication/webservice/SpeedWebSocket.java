@@ -61,14 +61,16 @@ public class SpeedWebSocket {
 	@OnWebSocketMessage
 	public void onMessage(final Session session, final String message) throws MessageSendingException {
 		System.out.println("request:\t" + message);
-		final GameStep gameStepInformation = gameStepParser.parseGameStep(message);
-		final PlayerAction responseAction = handleStepFunction.apply(gameStepInformation);
+		final GameStep gameStep = gameStepParser.parseGameStep(message);
+		final PlayerAction responseAction = handleStepFunction.apply(gameStep);
 		String responseText = responseParser.parseResponse(responseAction);
 		System.out.println("response:\t" + responseText);
-		try {
-			session.getRemote().sendString(responseText);
-		} catch (IOException e) {
-			throw new MessageSendingException("Could not sent response: " + responseText, e);
+		if(gameStep.isRunning()) {
+			try {
+				session.getRemote().sendString(responseText);
+			} catch (IOException e) {
+				throw new MessageSendingException("Could not sent response: " + responseText, e);
+			}
 		}
 	}
 
