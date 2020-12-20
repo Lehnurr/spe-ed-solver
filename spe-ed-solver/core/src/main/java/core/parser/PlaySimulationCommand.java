@@ -14,31 +14,31 @@ import picocli.CommandLine.Spec;
 @Command(name = "simulated",
 		description = "Starts a game of spe_ed locally with the given players and simulates the game.")
 public class PlaySimulationCommand implements Runnable {
-	
-	@Spec 
+
+	@Spec
 	private CommandSpec spec;
-	
+
 	private int boardWidth;
 	private int boardHeight;
 	private int playerCount;
-	
-	@Option(names = {"-w", "--width"}, description = "The width of the game board.")
+
+	@Option(names = { "-w", "--width" }, description = "The width of the game board.")
 	public void setBoardWidth(final int boardWidth) {
 		if (boardWidth <= 0) {
 			throw new ParameterException(spec.commandLine(), "The board width must be > 0!");
 		}
 		this.boardWidth = boardWidth;
 	}
-	
-	@Option(names = {"-h", "--height"}, description = "The height of the game board.")
+
+	@Option(names = { "-h", "--height" }, description = "The height of the game board.")
 	public void setBoardHeight(final int boardHeight) {
 		if (boardHeight <= 0) {
 			throw new ParameterException(spec.commandLine(), "The board height must be > 0!");
 		}
 		this.boardHeight = boardHeight;
 	}
-	
-	@Option(names = {"-p", "--playerCount"}, description = "The amount of players to play the simulation with.")
+
+	@Option(names = { "-p", "--playerCount" }, description = "The amount of players to play the simulation with.")
 	public void setPlayerCount(final int playerCount) {
 		if (playerCount < 2) {
 			throw new ParameterException(spec.commandLine(), "You need at least 2 players to simulate a game!");
@@ -48,7 +48,7 @@ public class PlaySimulationCommand implements Runnable {
 		}
 		this.playerCount = playerCount;
 	}
-
+	
 	@Override
 	public void run() {
 		new SimulationMode(boardHeight, boardWidth, playerCount).run();
