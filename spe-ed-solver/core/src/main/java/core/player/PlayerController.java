@@ -14,7 +14,6 @@ import utility.game.step.GameStep;
 public class PlayerController {
 
     private final Map<Integer, SpeedSolverPlayer> players;
-    private final BiConsumer<Integer, PlayerAction> doPlayerActionAction;
 
     /**
      * A Controller to Control multiple Speeed-Solver-Player
@@ -22,9 +21,8 @@ public class PlayerController {
      * @param doPlayerActionAction A Function-Reference for the Player to send their
      *                             PlayerId and the next Action they want to do
      */
-    public PlayerController(BiConsumer<Integer, PlayerAction> doPlayerActionAction) {
+    public PlayerController() {
         this.players = new HashMap<>();
-        this.doPlayerActionAction = doPlayerActionAction;
     }
 
     /**
@@ -32,35 +30,40 @@ public class PlayerController {
      * 
      * @return true if the player was added, false if the player already existed
      */
-    public boolean addPlayer(int playerId) {
+    public SpeedSolverPlayer addPlayer(int playerId) {
         if (this.players.containsKey(playerId))
-            return false;
+            return null;
 
-        this.players.computeIfAbsent(playerId, SpeedSolverPlayer::new);
-        return true;
+        return this.players.computeIfAbsent(playerId, SpeedSolverPlayer::new);
     }
 
     /**
-     * Sends the new GameStep to a specific single Player
+     * Sends the new GameStep to a specific single Player. Adds the player if it
+     * does not already exist
      * 
-     * @param gameStep The new JSON-String-Game-State
+     * @param gameStep The new GameStep
      */
-    public void sendGameStep(GameStep gameStep, int playerId) {
+    public PlayerAction sendGameStep(GameStep gameStep, int playerId) {
         var player = this.players.get(playerId);
-        if (player == null)
-            return;
 
-        PlayerAction action = player.calculateAction(gameStep);
-        doPlayerActionAction.accept(playerId, action);
+        if (player == null)
+            player = addPlayer(playerId);
+
+        return player.calculateAction(gameStep);
     }
 
     /**
      * Sends the new GameStep to all controlled Players
      * 
-     * @param gameStep The new JSON-String-Game-State
+     * @param gameStep             The new GameStep
+     * @param doPlayerActionAction The function that accepts the new Action for each
+     *                             Player
      */
-    public void sendGameStep(GameStep gameStep) {
-        // TODO: translate the "you" variable to the playerId
-        this.players.keySet().forEach(playerId -> sendGameStep(gameStep, playerId));
+    public void sendGameStep(GameStep gameStep, BiConsumer<Integer, PlayerAction> doPlayerActionAction) {
+        this.players.keySet().forEach(playerId -> {
+            // TODO: translate the "you" variable to the playerId
+            PlayerAction action = sendGameStep(gameStep, playerId);
+            doPlayerActionAction.accept(playerId, action);
+        });
     }
 }

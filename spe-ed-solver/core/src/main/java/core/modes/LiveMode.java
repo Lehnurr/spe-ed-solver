@@ -2,7 +2,7 @@ package core.modes;
 
 import core.parser.EnvironmentVariableParser;
 import core.parser.EnvrionmentVariableParseException;
-import utility.game.player.PlayerAction;
+import core.player.PlayerController;
 import webcommunication.webservice.ConnectionInitializationException;
 import webcommunication.webservice.ConnectionTerminationException;
 import webcommunication.webservice.SpeedConnectionManager;
@@ -31,7 +31,9 @@ public class LiveMode implements Runnable {
 
 			final SpeedConnectionManager connectionManager = new SpeedConnectionManager(webserviceConnectionURI);
 
-			connectionManager.play(step -> PlayerAction.CHANGE_NOTHING);
+			final PlayerController playerController = new PlayerController();
+
+			connectionManager.play(step -> playerController.sendGameStep(step, step.getYouId()));
 
 		} catch (ConnectionInitializationException | EnvrionmentVariableParseException
 				| ConnectionTerminationException e) {
