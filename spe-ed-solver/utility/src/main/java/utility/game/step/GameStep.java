@@ -14,18 +14,18 @@ import utility.game.player.IPlayer;
  */
 public class GameStep {
 
-    private final IPlayer self;
-    
-    private final Map<Integer, IPlayer> enemies;
-    
-    private final Deadline deadline;
-    
-    private final Board<Cell> board;
-    
+	private final IPlayer self;
+
+	private final Map<Integer, IPlayer> enemies;
+
+	private final Deadline deadline;
+
+	private final Board<Cell> board;
+
 	private final boolean running;
-    
-    public GameStep(final IPlayer self, final Map<Integer, IPlayer> enemies, final Deadline deadline, final Board<Cell> board,
-			final boolean running) {
+
+	public GameStep(final IPlayer self, final Map<Integer, IPlayer> enemies, final Deadline deadline,
+			final Board<Cell> board, final boolean running) {
 		this.self = self;
 		this.enemies = Collections.unmodifiableMap(enemies);
 		this.deadline = deadline;
@@ -68,6 +68,8 @@ public class GameStep {
 		return running;
 	}
 
-    
+	public int getPlayerCount() {
+		return this.getEnemies().size() + 1;
+	}
 
 }

@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import utility.game.player.IPlayer;
+import utility.game.player.IMovablePlayer;
 import utility.game.player.PlayerAction;
 import utility.game.player.PlayerDirection;
 import utility.geometry.Point2i;
@@ -26,14 +26,15 @@ public class SimulationPlayerTest {
 
     @Test
     public void testDoActionAndMove() {
-        SimulationPlayer player = new SimulationPlayer(1, new Point2i(0, 0), PlayerDirection.UP, IPlayer.MIN_SPEED);
+        SimulationPlayer player = new SimulationPlayer(1, new Point2i(0, 0), PlayerDirection.UP,
+                IMovablePlayer.MIN_SPEED);
 
         player.setAction(PlayerAction.SLOW_DOWN);
         player.doActionAndMove();
         assertEquals(0, player.getSpeed());
         assertFalse("Player with speed < MIN_SPEED have to be dead", player.isActive());
 
-        player = new SimulationPlayer(1, new Point2i(0, 0), PlayerDirection.UP, IPlayer.MAX_SPEED);
+        player = new SimulationPlayer(1, new Point2i(0, 0), PlayerDirection.UP, IMovablePlayer.MAX_SPEED);
         player.setAction(PlayerAction.SPEED_UP);
         player.doActionAndMove();
         assertEquals(11, player.getSpeed());

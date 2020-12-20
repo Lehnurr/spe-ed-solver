@@ -40,4 +40,8 @@ public class Board<CellType extends IBoardCell<?>> {
                 && position.getY() < this.height;
     }
 
+    public int getWidth() {
+        return width;
+    }
+
 }

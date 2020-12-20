@@ -2,6 +2,7 @@ package simulation;
 
 import java.time.OffsetTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,12 +11,14 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.google.gson.JsonParser;
-
 import utility.extensions.EnumExtensions;
+import utility.game.board.Board;
+import utility.game.board.Cell;
+import utility.game.board.CellValue;
+import utility.game.player.IPlayer;
 import utility.game.player.PlayerAction;
 import utility.game.player.PlayerDirection;
-import utility.geometry.FloatMatrix;
+import utility.game.step.GameStep;
 import utility.geometry.Point2i;
 
 /**
@@ -24,20 +27,26 @@ import utility.geometry.Point2i;
 public class Game {
     private static final int JUMP_FREQUENCY = 6;
 
-    private final FloatMatrix board;
+    private final Board<Cell> board;
     private final SimulationPlayer[] players;
     private final Random random;
-    private OffsetTime deadline;
+    private SimulationDeadline deadline;
     private int round = 1;
 
     /**
+     * Initilizes a new Simulated Spe-ed Game
      * 
-     * @param height
-     * @param width
-     * @param playerCount
+     * @param height      Height of the Board
+     * @param width       Widht of the Board
+     * @param playerCount Number of Simulated Players
      */
     public Game(int height, int width, int playerCount) {
-        this.board = new FloatMatrix(width, height);
+        var cells = new Cell[height][width];
+        for (int row = 0; row < height; row++)
+            for (int col = 0; col < width; col++)
+                cells[row][col] = new Cell(0);
+
+        this.board = new Board<>(cells);
         this.players = new SimulationPlayer[playerCount];
         this.random = new Random();
     }
@@ -45,9 +54,9 @@ public class Game {
     /**
      * Starts the simulation
      * 
-     * @return Initial Gamestate
+     * @return Initial GameStep for each Player
      */
-    public String startSimulation() {
+    public List<GameStep> startSimulation() {
         // Initialize Players with a random startposition and a random direction
         Set<Point2i> notAvailableStartPositions = new HashSet<>();
         for (int playerIndex = 0; playerIndex < players.length; playerIndex++) {
@@ -70,42 +79,9 @@ public class Game {
                     SimulationPlayer.MIN_SPEED);
         }
 
-        resetDeadLine();
-        return getGameState();
-    }
+        deadline.resetDeadLine();
 
-    /**
-     * Resets the deadline by a random number of seconds between 2 and 15
-     */
-    private void resetDeadLine() {
-        // random number of seconds between 2 (inclusive) and 15 (inclusive)
-        final int MIN = 2;
-        final int MAX = 15;
-
-        var deadLineSeconds = random.nextInt(MAX - MIN + 1) + MIN;
-        this.deadline = OffsetTime.now().plusSeconds(deadLineSeconds);
-    }
-
-    /**
-     * Creates the GameSate as JSON-String that is not bound to any player
-     * 
-     * @return the Game-State-JSON-String
-     */
-    private String getGameState() {
-        // TODO: implement json-String return
-        return random.nextInt() + "";
-    }
-
-    /**
-     * Returns the current Time as a JSON-String
-     * 
-     * @return The Current UTC Time in the ISO format
-     */
-    public String getServerTime() {
-        JsonParser jsonParser = new JsonParser();
-        String currentTime = OffsetTime.now().format(DateTimeFormatter.ISO_INSTANT);
-
-        return jsonParser.parse(currentTime).getAsString();
+        return generateGameSteps();
     }
 
     /**
@@ -118,10 +94,10 @@ public class Game {
      * @return The next Game-State, if all Players sent an {@link PlayerAction
      *         action} for this round. Else {@code null}
      */
-    public String setAction(int playerId, PlayerAction action) {
+    public List<GameStep> setAction(int playerId, PlayerAction action) {
         var currentPlayer = this.players[playerId - 1];
 
-        if (OffsetTime.now().isAfter(this.deadline)) {
+        if (this.deadline.getRemainingMilliseconds() <= 0) {
             currentPlayer.die();
         }
 
@@ -134,11 +110,24 @@ public class Game {
             // update the board and the players alive-state
             updateGameState();
             // return the new GameState as JSON
-            return getGameState();
+            return generateGameSteps();
         } else {
             // return null, because no new gameState is available
-            return null;
+            return new ArrayList<>();
         }
+    }
+
+    private List<GameStep> generateGameSteps() {
+        List<GameStep> gameSteps = new ArrayList<>();
+
+        for (var player : this.players) {
+            var enemies = Arrays.stream(this.players).filter(p -> p != player)
+                    .collect(Collectors.toMap(SimulationPlayer::getPlayerId, IPlayer.class::cast));
+
+            gameSteps.add(new GameStep((IPlayer) player, enemies, deadline, board, true));
+        }
+
+        return gameSteps;
     }
 
     /**
@@ -176,7 +165,7 @@ public class Game {
         List<Point2i> steps = getPassedSteps(oldPosition, player.getPosition());
 
         for (var step : steps) {
-            if (setCell(step, player.getPlayerId()) == -1) {
+            if (setCell(step, player.getPlayerId()) == CellValue.MULTIPLE_PLAYER) {
                 player.die();
             }
 
@@ -209,14 +198,14 @@ public class Game {
      * 
      * @param point    The point to set
      * @param playerId The new playerId to set
-     * @return The actual new value (-1, if the cell was already set)
+     * @return The actual new value
      */
-    private int setCell(Point2i point, int playerId) {
-        if ((int) board.getValue(point) == 0)
-            board.setValue(point, playerId);
+    private CellValue setCell(Point2i point, int playerId) {
+        if (board.getBoardCellAt(point).getCellValue() == CellValue.EMPTY_CELL)
+            board.getBoardCellAt(point).setCellValue(playerId);
         else
-            board.setValue(point, -1);
+            board.getBoardCellAt(point).setCellValue(-1);
 
-        return (int) board.getValue(point);
+        return board.getBoardCellAt(point).getCellValue();
     }
 }

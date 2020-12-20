@@ -7,7 +7,7 @@ import utility.geometry.Point2i;
 /**
  * Node
  */
-public class Node implements IBoardCell {
+public class Node implements IBoardCell<Cell> {
 
     private static final int PLAYER_DIRECTION_ORDINAL_HIGHEST_ONE_BIT = Integer
             .highestOneBit(PlayerDirection.values().length - 1);
@@ -62,20 +62,20 @@ public class Node implements IBoardCell {
         return index;
     }
 
-    public int getCellValue() {
-        return value;
+    public Cell getCellValue() {
+        return new Cell(value);
     }
 
-    public void setCellValue(int value) {
-        if (this.value != value && value != 0) {
-            // TODO: Destroy edges
-            // destroy all edges starting here
-            // destroy all edges ending here (inverted edges)
-            // destroy all edges that pass this node (maybe save performance wehn doing the
-            // half + inversions) (LUT)
-        }
+    public void setCellValue(Cell value) {
+        // if (this.value != value && value != 0) {
+        // TODO: Destroy edges
+        // destroy all edges starting here
+        // destroy all edges ending here (inverted edges)
+        // destroy all edges that pass this node (maybe save performance wehn doing the
+        // half + inversions) (LUT)
+        // }
 
-        this.value = value;
+        // this.value = value;
 
     }
 

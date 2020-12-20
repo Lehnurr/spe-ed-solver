@@ -1,11 +1,11 @@
 package simulation;
 
-import utility.game.player.IPlayer;
+import utility.game.player.IMovablePlayer;
 import utility.game.player.PlayerAction;
 import utility.game.player.PlayerDirection;
 import utility.geometry.Point2i;
 
-public class SimulationPlayer implements IPlayer {
+public class SimulationPlayer implements IMovablePlayer {
 
     private int playerId;
     private Point2i position;

@@ -5,15 +5,15 @@ package utility.game.board;
  */
 public class Cell implements IBoardCell<CellValue> {
 
-    private CellValue value;
+	private CellValue value;
 
-    public Cell(int cellValue) {
-        this(CellValue.fromInteger(cellValue));
-    }
-    
-    public Cell(CellValue value) {
-    	this.value = value;
-    }
+	public Cell(int cellValue) {
+		this(CellValue.fromInteger(cellValue));
+	}
+
+	public Cell(CellValue value) {
+		this.value = value;
+	}
 
 	@Override
 	public CellValue getCellValue() {
@@ -23,6 +23,10 @@ public class Cell implements IBoardCell<CellValue> {
 	@Override
 	public void setCellValue(CellValue value) {
 		this.value = value;
+	}
+
+	public void setCellValue(int value) {
+		this.value = CellValue.fromInteger(value);
 	}
 
 }

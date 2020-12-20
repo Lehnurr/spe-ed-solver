@@ -17,7 +17,7 @@ public class SpeedSolverPlayer {
     /**
      * Starts the Player to calculate a Action for the given GameStep
      * 
-     * @param gameStep              the new gameStep
+     * @param gameStep              The new gameStep
      * @param doPlayerActionActionA A Function-Reference for the Player to send the
      *                              next Action
      */
