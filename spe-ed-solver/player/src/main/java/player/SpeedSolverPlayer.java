@@ -1,6 +1,7 @@
 package player;
 
 import utility.game.player.PlayerAction;
+import utility.game.step.GameStep;
 
 /**
  * SpeedSolverPlayer
@@ -14,13 +15,13 @@ public class SpeedSolverPlayer {
     }
 
     /**
-     * Starts the Player to calculate a Action for the given GameState
+     * Starts the Player to calculate a Action for the given GameStep
      * 
-     * @param gameState             the new gameState as JSON-String
+     * @param gameStep              the new gameStep
      * @param doPlayerActionActionA A Function-Reference for the Player to send the
      *                              next Action
      */
-    public PlayerAction calculateAction(String gameState) {
+    public PlayerAction calculateAction(GameStep gameStep) {
 
         // Send the Calculated Action
         return PlayerAction.CHANGE_NOTHING;

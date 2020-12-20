@@ -6,6 +6,7 @@ import java.util.function.BiConsumer;
 
 import player.SpeedSolverPlayer;
 import utility.game.player.PlayerAction;
+import utility.game.step.GameStep;
 
 /**
  * PlayerController for multiple Player
@@ -40,26 +41,26 @@ public class PlayerController {
     }
 
     /**
-     * Sends the new GameState to a specific single Player
+     * Sends the new GameStep to a specific single Player
      * 
-     * @param gameState The new JSON-String-Game-State
+     * @param gameStep The new JSON-String-Game-State
      */
-    public void sendGameState(String gameState, int playerId) {
+    public void sendGameStep(GameStep gameStep, int playerId) {
         var player = this.players.get(playerId);
         if (player == null)
             return;
 
-        PlayerAction action = player.calculateAction(gameState);
+        PlayerAction action = player.calculateAction(gameStep);
         doPlayerActionAction.accept(playerId, action);
     }
 
     /**
-     * Sends the new GameState to all controlled Players
+     * Sends the new GameStep to all controlled Players
      * 
-     * @param gameState The new JSON-String-Game-State
+     * @param gameStep The new JSON-String-Game-State
      */
-    public void sendGameState(String gameState) {
+    public void sendGameStep(GameStep gameStep) {
         // TODO: translate the "you" variable to the playerId
-        this.players.keySet().forEach(playerId -> sendGameState(gameState, playerId));
+        this.players.keySet().forEach(playerId -> sendGameStep(gameStep, playerId));
     }
 }
