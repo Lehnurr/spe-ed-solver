@@ -1,11 +1,9 @@
 package simulation;
 
-import utility.game.player.IMovablePlayer;
-import utility.game.player.PlayerAction;
-import utility.game.player.PlayerDirection;
+import utility.game.player.*;
 import utility.geometry.Point2i;
 
-public class SimulationPlayer implements IMovablePlayer {
+public class SimulationPlayer extends MovablePlayer {
 
     private int playerId;
     private Point2i position;
@@ -15,6 +13,12 @@ public class SimulationPlayer implements IMovablePlayer {
     private int speed;
 
     public SimulationPlayer(int playerId, Point2i initialPosition, PlayerDirection initialDirection, int initialSpeed) {
+        this(playerId, initialPosition, initialDirection, initialSpeed, 1);
+    }
+
+    public SimulationPlayer(int playerId, Point2i initialPosition, PlayerDirection initialDirection, int initialSpeed,
+            int initialRound) {
+        super(initialRound);
         this.playerId = playerId;
         this.position = initialPosition;
         this.direction = initialDirection;
@@ -73,16 +77,11 @@ public class SimulationPlayer implements IMovablePlayer {
     }
 
     @Override
-    public void doActionAndMove() {
-        doAction();
-        doMove();
-    }
-
     /**
      * Applies the {@link SimulationPlayer#lastSetAction} to the Player, if the
      * player is alive and resets the Action
      */
-    private void doAction() {
+    protected void doAction() {
         if (!isActive())
             return;
 
@@ -96,16 +95,16 @@ public class SimulationPlayer implements IMovablePlayer {
         this.lastSetAction = null;
     }
 
+    @Override
     /**
      * Changes the Players Position depending on direction and speed, if the player
      * is alive
      */
-    private void doMove() {
+    protected void doMove() {
         if (!isActive())
             return;
 
         var speedDirectionVector = this.direction.getDirectionVector().multiply(this.speed);
         this.position = this.position.translate(speedDirectionVector);
     }
-
 }
