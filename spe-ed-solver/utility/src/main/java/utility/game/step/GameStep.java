@@ -79,13 +79,14 @@ public class GameStep {
 		for (int y = 0; y < board.getHeight(); y++) {
 			for (int x = 0; x < board.getWidth(); x++) {
 				final Point2i point = new Point2i(x, y);
-				final float value = board.getBoardCellAt(point).getCellValue().getIntegerValue();
+				final CellValue cellValue = board.getBoardCellAt(point).getCellValue();
+				final float value = cellValue.getIntegerValue();
 				matrix.setValue(new Point2i(x, y), value);
 			}
 		}
 
 		final float maxValue = CellValue.PLAYER_SIX.getIntegerValue();
-		final float minValue = CellValue.MULTIPLE_PLAYER.getIntegerValue();
+		final float minValue = CellValue.EMPTY_CELL.getIntegerValue();
 
 		return new ContextualFloatMatrix(name, matrix, minValue, maxValue);
 	}

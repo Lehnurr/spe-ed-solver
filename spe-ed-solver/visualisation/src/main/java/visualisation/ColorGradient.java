@@ -11,9 +11,9 @@ public enum ColorGradient {
 	FIRE {
 		@Override
 		protected int applyUnbounded(final float value) {
-			final int rValue = (int) (0xFF * Math.max(0, Math.min(1/3f, value)) * 3);
-			final int gValue = (int) (0xFF * Math.max(0, Math.min(1/3f, value - 0.33)) * 3);
-			final int bValue = (int) (0xFF * Math.max(0, Math.min(1/3f, value - 0.66)) * 3);
+			final int rValue = (int) (0xFF * Math.max(0, Math.min(1 / 3f, value)) * 3);
+			final int gValue = (int) (0xFF * Math.max(0, Math.min(1 / 3f, value - 0.33)) * 3);
+			final int bValue = (int) (0xFF * Math.max(0, Math.min(1 / 3f, value - 0.66)) * 3);
 			final int rgbValue = (rValue << 16) | (gValue << 8) | bValue;
 			return rgbValue;
 		}
