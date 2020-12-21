@@ -11,27 +11,31 @@ import utility.game.step.GameStep;
  */
 public class GameController {
 
-	private final Map<Integer, PlayerController> players;
+	private final Map<Integer, PlayerController> playerControllers;
+
+	private final boolean viewerEnabled;
 
 	/**
-	 * A Controller to Control multiple PlayerController
+	 * A Controller to Control multiple {@link PlayerController PlayerControllers}.
 	 * 
 	 */
-	public GameController() {
-		this.players = new HashMap<>();
+	public GameController(final boolean viewerEnabled) {
+		this.playerControllers = new HashMap<>();
+		this.viewerEnabled = viewerEnabled;
 	}
 
 	/**
-	 * Sends the new GameStep to the player of the GameStep
+	 * Sends the new {@link GameStep} to the {@link IPlayer} self of the
+	 * {@link GameStep}.
 	 * 
 	 * @param gameStep The new GameStep
 	 */
 	public PlayerAction sendGameStep(GameStep gameStep) {
 		final int playerId = gameStep.getSelf().getPlayerId();
+		
+		if(!playerControllers.containsKey(playerId))
+			playerControllers.put(playerId, new PlayerController(playerId, viewerEnabled));
 
-		if (!this.players.containsKey(playerId))
-			this.players.put(playerId, new PlayerController(playerId));
-
-		return this.players.get(playerId).calculateAction(gameStep);
+		return this.playerControllers.get(playerId).calculateAction(gameStep);
 	}
 }

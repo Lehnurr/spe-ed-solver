@@ -15,12 +15,17 @@ import webcommunication.webservice.WebserviceConnectionURI;
  * webservice.
  */
 public class LiveMode implements Runnable {
+	
+	private final boolean viewerEnabled;
 
 	/**
 	 * Creates a new {@link Runnable} for the live play mode to play spe_ed on an
 	 * online webservice. The constructor is used to set starting parameters.
+	 * 
+	 * @param viewerEnabled true if a viewer window should be shown to the user
 	 */
-	public LiveMode() {
+	public LiveMode(final boolean viewerEnabled) {
+		this.viewerEnabled = viewerEnabled;
 	}
 
 	@Override
@@ -36,7 +41,7 @@ public class LiveMode implements Runnable {
 			final SpeedConnectionManager connectionManager = new SpeedConnectionManager(webserviceConnectionURI,
 					timeApiURI);
 
-			final GameController gameController = new GameController();
+			final GameController gameController = new GameController(viewerEnabled);
 
 			connectionManager.play(gameController::sendGameStep);
 
