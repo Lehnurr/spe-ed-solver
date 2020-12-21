@@ -81,6 +81,7 @@ public class Game {
 
         deadline.resetDeadLine();
 
+        System.out.printf(" %d Players on a %d*%d Board%n", this.players.length, board.getWidth(), board.getHeight());
         return generateGameSteps();
     }
 
