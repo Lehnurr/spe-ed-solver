@@ -18,9 +18,16 @@ public class PlaySimulationCommand implements Runnable {
 	@Spec
 	private CommandSpec spec;
 
+	private boolean viewerEnabled = false;
+
 	private int boardWidth;
 	private int boardHeight;
 	private int playerCount;
+
+	@Option(names = { "-v", "--viewer" }, description = "If specified the viewer will be enabled.")
+	public void setViewerEnabled(final boolean viewerEnabled) {
+		this.viewerEnabled = viewerEnabled;
+	}
 
 	@Option(names = { "-w", "--width" }, description = "The width of the game board.")
 	public void setBoardWidth(final int boardWidth) {
@@ -48,10 +55,10 @@ public class PlaySimulationCommand implements Runnable {
 		}
 		this.playerCount = playerCount;
 	}
-	
+
 	@Override
 	public void run() {
-		new SimulationMode(boardHeight, boardWidth, playerCount).run();
+		new SimulationMode(boardHeight, boardWidth, playerCount, viewerEnabled).run();
 	}
 
 }

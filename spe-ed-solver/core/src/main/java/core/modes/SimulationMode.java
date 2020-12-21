@@ -21,9 +21,9 @@ public class SimulationMode implements Runnable {
 	 * @param playerCount Number of Simulated Players
 	 * 
 	 */
-	public SimulationMode(int height, int width, int playerCount) {
+	public SimulationMode(int height, int width, int playerCount, boolean viewerEnabled) {
 		game = new Game(height, width, playerCount);
-		gameController = new GameController();
+		gameController = new GameController(viewerEnabled);
 	}
 
 	@Override

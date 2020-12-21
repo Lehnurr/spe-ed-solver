@@ -5,9 +5,11 @@ import java.util.List;
 
 import utility.game.player.PlayerAction;
 import utility.geometry.ContextualFloatMatrix;
-import utility.geometry.FloatMatrix;
 
-public class Viewer {
+/**
+ * Reference implementation for the {@link IViewer} interface.
+ */
+public class Viewer implements IViewer {
 
 	// color gradient to apply to every matrix
 	private static final ColorGradient DEFAULT_COLOR_GRADIENT = ColorGradient.FIRE;
@@ -38,14 +40,7 @@ public class Viewer {
 		this.window = viewerWindow;
 	}
 
-	/**
-	 * Stores round specific information.
-	 * 
-	 * @param availableMilliseconds available time in milliseconds
-	 * @param performedAction       {@link PlayerAction} performed in the round
-	 * @param requiredMilliseconds  required time in milliseconds
-	 * @param boardRatings          {@link ContextualFloatMatrix}s of board ratings
-	 */
+	@Override
 	public void commitRound(double availableTime, PlayerAction performedAction, double requiredTime,
 			List<ContextualFloatMatrix> boardRatings) {
 
@@ -99,19 +94,6 @@ public class Viewer {
 
 		// update board ratings
 		window.updateBoardRatings(viewerSlice.getImages());
-	}
-
-	public static void main(String[] args) throws InterruptedException {
-		Viewer viewer = new Viewer();
-		for (int i = 0; i < 20; i++) {
-			ArrayList<ContextualFloatMatrix> matrices = new ArrayList<ContextualFloatMatrix>();
-			matrices.add(new ContextualFloatMatrix("a", new FloatMatrix(400, 200)));
-			matrices.add(new ContextualFloatMatrix("b", new FloatMatrix(200, 200)));
-			matrices.add(new ContextualFloatMatrix("c", new FloatMatrix(200, 200)));
-			matrices.add(new ContextualFloatMatrix("d", new FloatMatrix(200, 200)));
-			Thread.sleep(1000);
-			viewer.commitRound(i * 0.5, PlayerAction.CHANGE_NOTHING, i * 0.25, matrices);
-		}
 	}
 
 }
