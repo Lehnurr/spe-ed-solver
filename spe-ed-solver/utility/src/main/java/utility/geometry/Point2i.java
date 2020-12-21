@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The representation of a integer 2d coordinate
+ */
 public class Point2i {
 
 	private final int x;

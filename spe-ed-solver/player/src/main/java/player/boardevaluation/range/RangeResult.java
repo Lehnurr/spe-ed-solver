@@ -3,7 +3,8 @@ package player.boardevaluation.range;
 import java.util.ArrayList;
 import java.util.List;
 
-import utility.game.player.IPlayer;
+import utility.game.player.IMovable;
+import utility.game.player.MovablePlayer;
 import utility.game.player.PlayerAction;
 import utility.game.player.PlayerDirection;
 import utility.geometry.Point2i;
@@ -11,29 +12,33 @@ import utility.geometry.Point2i;
 /**
  * Result of a Range Calculation
  */
-public final class RangeResult {
+public final class RangeResult implements IMovable {
 
-    private final PlayerAction chosenAction;
+    private int round;
+    private final PlayerAction initialAction;
+    private PlayerAction nextAction;
     private final List<Point2i> passedCells;
     private final PlayerDirection targetDirection;
-    private final int targetSpeed;
-    private final Point2i targetPosition;
+    private int targetSpeed;
+    private Point2i targetPosition;
 
-    public RangeResult(PlayerAction chosenAction, List<Point2i> passedCells, PlayerDirection targetDirection,
-            int targetSpeed, Point2i targetPosition) {
-        this.chosenAction = chosenAction;
+    public RangeResult(int currentRound, PlayerAction chosenAction, List<Point2i> passedCells,
+            PlayerDirection targetDirection, int targetSpeed, Point2i targetPosition) {
+        this.round = currentRound;
+        this.initialAction = chosenAction;
         this.passedCells = passedCells;
         this.targetDirection = targetDirection;
         this.targetSpeed = targetSpeed;
         this.targetPosition = targetPosition;
     }
 
-    public RangeResult(PlayerAction chosenAction, IPlayer player) {
-        this(chosenAction, new ArrayList<>(), player.getDirection(), player.getSpeed(), player.getPosition());
+    public RangeResult(PlayerAction chosenAction, MovablePlayer player) {
+        this(player.getRound(), chosenAction, new ArrayList<>(), player.getDirection(), player.getSpeed(),
+                player.getPosition());
     }
 
-    public PlayerAction getChosenAction() {
-        return this.chosenAction;
+    public PlayerAction getInitialAction() {
+        return this.initialAction;
     }
 
     public List<Point2i> getPassedCells() {
@@ -52,16 +57,41 @@ public final class RangeResult {
         return this.targetPosition;
     }
 
-    public RangeResult addResult(List<Point2i> newPassedCells, PlayerDirection targetDirection, int targetSpeed,
-            Point2i targetPosition) {
+    @Override
+    public void setNextAction(final PlayerAction action) {
+        this.nextAction = action;
+    }
 
-        // Create new Rangeresult with same initial Action
-        var newResult = new RangeResult(this.chosenAction, this.passedCells, targetDirection, targetSpeed,
-                targetPosition);
+    @Override
+    public void doAction() {
+        if (this.nextAction == PlayerAction.SPEED_UP)
+            this.targetSpeed++;
+        else if (this.nextAction == PlayerAction.SLOW_DOWN)
+            this.targetSpeed--;
+        else
+            this.targetDirection.doAction(this.nextAction);
 
-        // Add the new passed cells to thepassedCells
-        newResult.passedCells.addAll(newPassedCells);
+        this.nextAction = null;
+    }
 
-        return newResult;
+    @Override
+    public void doMove() {
+        var speedDirectionVector = this.targetDirection.getDirectionVector().multiply(this.targetSpeed);
+        var newPosition = this.targetPosition.translate(speedDirectionVector);
+        var newPassedCells = targetPosition.pointsInRectangle(newPosition);
+
+        while (round % 6 == 0 && newPassedCells.size() > 2) {
+            newPassedCells.remove(1);
+        }
+
+        this.targetPosition = newPosition;
+        this.passedCells.addAll(newPassedCells);
+        this.round++;
+    }
+
+    @Override
+    public RangeResult copy() {
+        return new RangeResult(this.round, this.initialAction, new ArrayList<>(this.passedCells), targetDirection,
+                targetSpeed, targetPosition);
     }
 }

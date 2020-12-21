@@ -67,7 +67,7 @@ public class SimulationPlayer extends MovablePlayer {
     /**
      * Sets the to do action. The Player dies, if an action is already set.
      */
-    public void setAction(PlayerAction action) {
+    public void setNextAction(PlayerAction action) {
         // in the simulation it is not allowed to overwrite the set action
         if (this.lastSetAction != null)
             die();
@@ -81,7 +81,7 @@ public class SimulationPlayer extends MovablePlayer {
      * Applies the {@link SimulationPlayer#lastSetAction} to the Player, if the
      * player is alive and resets the Action
      */
-    protected void doAction() {
+    public void doAction() {
         if (!isActive())
             return;
 
@@ -100,11 +100,16 @@ public class SimulationPlayer extends MovablePlayer {
      * Changes the Players Position depending on direction and speed, if the player
      * is alive
      */
-    protected void doMove() {
+    public void doMove() {
         if (!isActive())
             return;
 
         var speedDirectionVector = this.direction.getDirectionVector().multiply(this.speed);
         this.position = this.position.translate(speedDirectionVector);
+    }
+
+    @Override
+    public SimulationPlayer copy() {
+        return new SimulationPlayer(this.playerId, this.position, this.direction, this.speed, this.getRound());
     }
 }

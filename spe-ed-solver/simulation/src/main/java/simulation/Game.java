@@ -102,7 +102,7 @@ public class Game {
             currentPlayer.die();
         }
 
-        currentPlayer.setAction(action);
+        currentPlayer.setNextAction(action);
 
         // End round, if all players sent an Action
         if (Arrays.stream(players).allMatch(SimulationPlayer::isReadyToMove)) {

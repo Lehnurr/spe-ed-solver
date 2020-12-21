@@ -3,7 +3,7 @@ package utility.game.player;
 /**
  * MovablePlayer
  */
-public abstract class MovablePlayer implements IPlayer {
+public abstract class MovablePlayer implements IPlayer, IMovable {
 
     private int round;
 
@@ -22,13 +22,6 @@ public abstract class MovablePlayer implements IPlayer {
     public abstract void die();
 
     /**
-     * Sets the Action that the Player will do
-     * 
-     * @param action
-     */
-    public abstract void setAction(PlayerAction action);
-
-    /**
      * Calls {@link #doAction()} and {@link #doMove()} and increases the
      * Round-number
      */
@@ -37,16 +30,6 @@ public abstract class MovablePlayer implements IPlayer {
         doMove();
         this.round++;
     }
-
-    /**
-     * Applies the last set {@link PlayerAction action}
-     */
-    protected abstract void doAction();
-
-    /**
-     * moves the player for speed Cells forward
-     */
-    protected abstract void doMove();
 
     public final int getRound() {
         return this.round;
