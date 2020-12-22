@@ -1,4 +1,4 @@
-package player.boardevaluation.range;
+package player.analysis.range;
 
 import java.util.ArrayList;
 import java.util.List;

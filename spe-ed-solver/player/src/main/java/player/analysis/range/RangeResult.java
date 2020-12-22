@@ -1,6 +1,5 @@
-package player.boardevaluation.range;
+package player.analysis.range;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
