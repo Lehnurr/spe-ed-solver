@@ -9,9 +9,11 @@ import utility.game.player.PlayerAction;
 public class PathDescriptor {
 
 	private static final int BITS_PER_FRAGMENT = 3;
+	private static final int FRAGMENT_BIT_MASK = 0b111;
 
 	private final int integerDescriptor;
-	private final int bitOffset;
+	private final int depth;
+	private final int mask;
 
 	/**
 	 * Generates a new {@link PathDescriptor} out of the given playerId.
@@ -20,7 +22,8 @@ public class PathDescriptor {
 	 */
 	public PathDescriptor(final int playerId) {
 		this.integerDescriptor = playerId;
-		this.bitOffset = BITS_PER_FRAGMENT;
+		this.depth = 0;
+		this.mask = FRAGMENT_BIT_MASK;
 	}
 
 	/**
@@ -28,11 +31,13 @@ public class PathDescriptor {
 	 * already existing {@link PathDescriptor}.
 	 * 
 	 * @param integerDescriptor
-	 * @param bitOffset
+	 * @param depth
+	 * @param mask
 	 */
-	private PathDescriptor(final int integerDescriptor, final int bitOffset) {
+	private PathDescriptor(final int integerDescriptor, final int depth, final int mask) {
 		this.integerDescriptor = integerDescriptor;
-		this.bitOffset = bitOffset;
+		this.depth = depth;
+		this.mask = mask;
 	}
 
 	/**
@@ -43,9 +48,11 @@ public class PathDescriptor {
 	 * @return the created {@link PathDescriptor}
 	 */
 	public PathDescriptor append(final int actionId) {
-		final int newDescriptor = (actionId << bitOffset) & integerDescriptor;
-		final int newOffset = bitOffset + BITS_PER_FRAGMENT;
-		return new PathDescriptor(newDescriptor, newOffset);
+		final int newDepth = depth + 1;
+		final int newDescriptor = (actionId << (BITS_PER_FRAGMENT * newDepth)) & integerDescriptor;
+		final int newMask = (mask << BITS_PER_FRAGMENT) + FRAGMENT_BIT_MASK;
+
+		return new PathDescriptor(newDescriptor, newMask, newDepth);
 	}
 
 	/**
@@ -69,12 +76,21 @@ public class PathDescriptor {
 	}
 
 	/**
-	 * Returns the offset in number of bits.
+	 * Returns the mask of the relevant part of the integer descriptor.
 	 * 
-	 * @return offset in the internal descriptor
+	 * @return bit mask
 	 */
-	public int getBitOffset() {
-		return bitOffset;
+	public int getMask() {
+		return mask;
+	}
+
+	/**
+	 * Returns the depth of the descriptor.
+	 * 
+	 * @return depth
+	 */
+	public int getDepth() {
+		return depth;
 	}
 
 	/**
@@ -86,7 +102,7 @@ public class PathDescriptor {
 	 * @return result of the calculation
 	 */
 	public boolean dependsOn(final PathDescriptor other) {
-		return (this.getIntegerValue() & other.getBitOffset()) == other.getIntegerValue();
+		return (this.getIntegerValue() & other.getMask()) == other.getIntegerValue();
 	}
 
 	/**
@@ -97,33 +113,7 @@ public class PathDescriptor {
 	 * @return result of the calculation
 	 */
 	public boolean upgrades(final PathDescriptor other) {
-		return this.getIntegerValue() == (other.getIntegerValue() & this.getBitOffset())
-				&& this.getBitOffset() > other.getBitOffset();
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + bitOffset;
-		result = prime * result + integerDescriptor;
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		PathDescriptor other = (PathDescriptor) obj;
-		if (bitOffset != other.bitOffset)
-			return false;
-		if (integerDescriptor != other.integerDescriptor)
-			return false;
-		return true;
+		return this.getIntegerValue() == (other.getIntegerValue() & this.getMask()) && this.getMask() > other.getMask();
 	}
 
 }
