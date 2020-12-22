@@ -20,7 +20,7 @@ public final class DirectRange {
      * Calculates the Result for all possible Actions
      * 
      * @param board The Board of the Current GameStep
-     * @param state A State of a Movable
+     * @param state A State of a {@link #IMovablePlayer}
      * @return A List of all Possible targets
      */
     public static List<RangeResult> calculateDirectRange(Board<?> board, IMovablePlayer state) {
