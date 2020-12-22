@@ -1,6 +1,6 @@
 package utility.game.player;
 
-public interface IMovable {
+public interface IMovablePlayer extends IPlayer {
 
     /**
      * Sets the Action that the Player will do
@@ -8,6 +8,8 @@ public interface IMovable {
      * @param action The ToDo-Action
      */
     void setNextAction(PlayerAction action);
+
+    PlayerAction getNextAction();
 
     /**
      * Applies the last set {@link PlayerAction action}
@@ -20,9 +22,14 @@ public interface IMovable {
     void doMove();
 
     /**
+     * Returns the current Round number
+     */
+    int getRound();
+
+    /**
      * Creates a Copy of the Movable
      * 
      * @return The Copy of the IMovable
      */
-    IMovable copy();
+    IMovablePlayer copy();
 }

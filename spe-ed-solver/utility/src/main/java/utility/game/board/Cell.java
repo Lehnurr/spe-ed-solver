@@ -29,4 +29,8 @@ public class Cell implements IBoardCell<CellValue> {
 		this.value = CellValue.fromInteger(value);
 	}
 
+	public boolean isEmpty() {
+		return value == CellValue.EMPTY_CELL;
+	}
+
 }

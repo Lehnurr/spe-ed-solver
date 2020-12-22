@@ -31,9 +31,9 @@ public interface IPlayer {
 	Point2i getPosition();
 
 	/**
-     * Indicates if the Player is "alive".
-     * 
-     * @return true for alive, false for dead
-     */
+	 * Indicates if the Player is "alive".
+	 * 
+	 * @return true for alive, false for dead
+	 */
 	boolean isActive();
 }

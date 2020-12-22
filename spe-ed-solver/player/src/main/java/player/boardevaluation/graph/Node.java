@@ -79,4 +79,8 @@ public class Node implements IBoardCell<Cell> {
 
     }
 
+    public boolean isEmpty() {
+        return value == 0;
+    }
+
 }

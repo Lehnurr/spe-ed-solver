@@ -8,10 +8,17 @@ public interface IBoardCell<CellType> {
     /**
      * @return The Cells value
      */
-	CellType getCellValue();
+    CellType getCellValue();
 
     /**
      * Sets the Cells value
      */
     void setCellValue(CellType value);
+
+    /**
+     * Checks if the Cell is not in Use by any Player
+     * 
+     * @return true if the cell can be passed
+     */
+    boolean isEmpty();
 }

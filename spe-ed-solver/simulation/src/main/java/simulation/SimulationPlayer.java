@@ -77,6 +77,11 @@ public class SimulationPlayer extends MovablePlayer {
     }
 
     @Override
+    public PlayerAction getNextAction() {
+        return this.lastSetAction;
+    }
+
+    @Override
     /**
      * Applies the {@link SimulationPlayer#lastSetAction} to the Player, if the
      * player is alive and resets the Action

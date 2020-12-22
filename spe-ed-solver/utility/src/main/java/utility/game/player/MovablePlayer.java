@@ -3,7 +3,7 @@ package utility.game.player;
 /**
  * MovablePlayer
  */
-public abstract class MovablePlayer implements IPlayer, IMovable {
+public abstract class MovablePlayer implements IMovablePlayer {
 
     private int round;
 
