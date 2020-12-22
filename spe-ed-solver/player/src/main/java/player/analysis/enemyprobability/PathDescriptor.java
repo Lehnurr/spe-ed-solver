@@ -67,6 +67,29 @@ public class PathDescriptor {
 	}
 
 	/**
+	 * Returns true if the given {@link PathDescriptor} depends on this
+	 * {@link PathDescriptor} or if both {@link PathDescriptor} objects point are
+	 * equal.
+	 * 
+	 * @param other {@link PathDescriptor} to compare with
+	 * @return result of the calculation
+	 */
+	public boolean dependsOn(final PathDescriptor other) {
+		return (this.getIntegerValue() & other.getMask()) == other.getIntegerValue();
+	}
+
+	/**
+	 * Returns true if the given {@link PathDescriptor} upgrades the current
+	 * {@link PathDescriptor}.
+	 * 
+	 * @param other {@link PathDescriptor} to compare with
+	 * @return result of the calculation
+	 */
+	public boolean upgrades(final PathDescriptor other) {
+		return this.getIntegerValue() == (other.getIntegerValue() & this.getMask()) && this.getMask() > other.getMask();
+	}
+
+	/**
 	 * Returns the integer value of the internal descriptor.
 	 * 
 	 * @return value of the internal descriptor
@@ -91,29 +114,6 @@ public class PathDescriptor {
 	 */
 	public int getDepth() {
 		return depth;
-	}
-
-	/**
-	 * Returns true if the given {@link PathDescriptor} depends on this
-	 * {@link PathDescriptor} or if both {@link PathDescriptor} objects point are
-	 * equal.
-	 * 
-	 * @param other {@link PathDescriptor} to compare with
-	 * @return result of the calculation
-	 */
-	public boolean dependsOn(final PathDescriptor other) {
-		return (this.getIntegerValue() & other.getMask()) == other.getIntegerValue();
-	}
-
-	/**
-	 * Returns true if the given {@link PathDescriptor} upgrades the current
-	 * {@link PathDescriptor}.
-	 * 
-	 * @param other {@link PathDescriptor} to compare with
-	 * @return result of the calculation
-	 */
-	public boolean upgrades(final PathDescriptor other) {
-		return this.getIntegerValue() == (other.getIntegerValue() & this.getMask()) && this.getMask() > other.getMask();
 	}
 
 }
