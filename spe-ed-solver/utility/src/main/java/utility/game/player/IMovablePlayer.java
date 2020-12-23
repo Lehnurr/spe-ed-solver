@@ -22,11 +22,6 @@ public interface IMovablePlayer extends IPlayer {
     void doMove();
 
     /**
-     * Returns the current Round number
-     */
-    int getRound();
-
-    /**
      * Creates a Copy of the Movable
      * 
      * @return The Copy of the IMovable
