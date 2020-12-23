@@ -47,7 +47,7 @@ public class PathDescriptor {
 	 * @param actionId unique id for a action (1-7)
 	 * @return the created {@link PathDescriptor}
 	 */
-	public PathDescriptor append(final int actionId) {
+	private PathDescriptor append(final int actionId) {
 		final int newDepth = depth + 1;
 		final int newDescriptor = (actionId << (BITS_PER_FRAGMENT * newDepth)) & integerDescriptor;
 		final int newMask = (mask << BITS_PER_FRAGMENT) + FRAGMENT_BIT_MASK;
