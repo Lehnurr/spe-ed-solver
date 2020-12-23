@@ -8,6 +8,7 @@ import utility.game.board.Board;
 import utility.game.board.Cell;
 import utility.game.player.IPlayer;
 import utility.game.player.PlayerAction;
+import utility.geometry.FloatMatrix;
 import utility.geometry.Point2i;
 
 /**
@@ -54,9 +55,8 @@ public class EnemyForwardPrediction {
 
 	private void doRecursiveStep(final PredictivePlayer player, final PathBoundProbability pathBoundProbability,
 			final int depth, final int maxDepth) {
-
+		
 		final Map<PlayerAction, PredictivePlayer> validActionMap = getValidActionMap(player);
-
 		final float probabilityFactor = 1f / validActionMap.size();
 		final float childProbability = pathBoundProbability.getProbability() * probabilityFactor;
 
@@ -75,7 +75,7 @@ public class EnemyForwardPrediction {
 			}
 
 			if (depth < maxDepth)
-				doRecursiveStep(childPlayer, pathBoundProbability, depth + 1, maxDepth);
+				doRecursiveStep(childPlayer, childResult, depth + 1, maxDepth);
 		}
 	}
 
@@ -87,6 +87,17 @@ public class EnemyForwardPrediction {
 				validActionMap.put(action, child);
 		}
 		return validActionMap;
+	}
+
+	public FloatMatrix getProbabilityMatrix() {
+		final FloatMatrix resultMatrix = new FloatMatrix(board.getWidth(), board.getHeight());
+		for (int y = 0; y < board.getHeight(); y++) {
+			for (int x = 0; x < board.getWidth(); x++) {
+				final float probabilityValue = this.probabilities[y][x].getProbability();
+				resultMatrix.setValue(x, y, probabilityValue);
+			}
+		}
+		return resultMatrix;
 	}
 
 }

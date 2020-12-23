@@ -62,17 +62,18 @@ public class PredictivePlayer implements IPlayer {
 
 		this.playerId = parent.getPlayerId();
 		this.direction = parent.getDirection().doAction(action);
-		this.speed = calculateChildSpeed(action);
-		this.position = calculateChildPosition(direction, speed);
+		this.speed = calculateChildSpeed(parent.getSpeed(), action);
+		this.position = calculateChildPosition(parent.getPosition(), direction, speed);
 		this.round = parent.getRound() + 1;
 
-		this.shortTail = calculateShortTail(parent.getPosition(), position);
+		this.shortTail = calculateShortTail(parent.getPosition(), position, round, speed, direction);
 
-		final Set<Point2i> parentLongTail = parent.getLongTail();
+		final Set<Point2i> parentLongTail = new HashSet<>(parent.getLongTail());
 		parentLongTail.addAll(parent.getShortTail());
 		this.longTail = parentLongTail;
 
-		this.active = parent.isActive() && isSpeedValid() && isOnBoard(board) && (!isTailColliding());
+		this.active = parent.isActive() && isSpeedValid(speed) && isOnBoard(board, position)
+				&& (!isTailColliding(shortTail, longTail, board));
 
 	}
 
@@ -80,11 +81,12 @@ public class PredictivePlayer implements IPlayer {
 	 * Calculates the target speed of the {@link PredictivePlayer} in the next game
 	 * step.
 	 * 
-	 * @param action {@link PlayerAction} action to calculate with
+	 * @param parentSpeed speed of the parent
+	 * @param action      {@link PlayerAction} action to calculate with
 	 * @return speed after the action is performed
 	 */
-	private int calculateChildSpeed(final PlayerAction action) {
-		int nextSpeed = this.speed;
+	private int calculateChildSpeed(final int parentSpeed, final PlayerAction action) {
+		int nextSpeed = parentSpeed;
 		if (action == PlayerAction.SPEED_UP)
 			nextSpeed += 1;
 		else if (action == PlayerAction.SLOW_DOWN)
@@ -96,13 +98,15 @@ public class PredictivePlayer implements IPlayer {
 	 * Calculates the target position of the child with a given
 	 * {@link PlayerDirection} and the speed the child moves with.
 	 * 
+	 * @param parentPosition {@link Point2i} position of the parent
 	 * @param childDirection {@link PlayerDirection} the child moves in
 	 * @param childSpeed     speed the child moves with
 	 * @return {@link Point2i} of the edge end position
 	 */
-	private Point2i calculateChildPosition(final PlayerDirection childDirection, final int childSpeed) {
+	private Point2i calculateChildPosition(final Point2i parentPosition, final PlayerDirection childDirection,
+			final int childSpeed) {
 		final Vector2i childMovementVector = childDirection.getDirectionVector().multiply(childSpeed);
-		final Point2i childPosition = position.translate(childMovementVector);
+		final Point2i childPosition = parentPosition.translate(childMovementVector);
 		return childPosition;
 	}
 
@@ -110,22 +114,30 @@ public class PredictivePlayer implements IPlayer {
 	 * Calculates the short tail of the {@link PreddictivePlayer} as {@link List} of
 	 * {@link Point2i points}.
 	 * 
-	 * @param startPosition  {@link Point2i} position of the parent
-	 * @param targetPosition {@link Point2i} position of the child
+	 * @param parentPosition  {@link Point2i} position of the parent
+	 * @param targetPosition  {@link Point2i} position of the child
+	 * @param targetRound     round of the player
+	 * @param targetSpeed     speed of the player
+	 * @param targetDirection {@link PlayerDirection} of the player
 	 * @return {@link Point2i points} of the tail as {@link List}
 	 */
-	private List<Point2i> calculateShortTail(final Point2i startPosition, final Point2i targetPosition) {
+	private List<Point2i> calculateShortTail(final Point2i parentPosition, final Point2i targetPosition,
+			final int targetRound, final int targetSpeed, final PlayerDirection targetDirection) {
+		final Point2i startPosition = parentPosition.translate(targetDirection.getDirectionVector());
 		final List<Point2i> points = startPosition.pointsInRectangle(targetPosition);
-		if (round % 6 == 0 && speed > 2) {
+		if (targetRound % 6 == 0 && targetSpeed > 2) {
 			return Arrays.asList(points.get(0), points.get(points.size() - 1));
 		}
 		return points;
 	}
 
 	/**
+	 * Tests if the given speed value is valid.
+	 * 
+	 * @param speed speed to test
 	 * @return true if the speed has a valid value
 	 */
-	private boolean isSpeedValid() {
+	private boolean isSpeedValid(final int speed) {
 		if (speed > IPlayer.MAX_SPEED)
 			return false;
 		if (speed < IPlayer.MIN_SPEED)
@@ -135,24 +147,31 @@ public class PredictivePlayer implements IPlayer {
 	}
 
 	/**
-	 * Validates a {@link PredictivePlayer} on the given {@link Board}.
+	 * Validates if a {@link Point2i} position is on the given {@link Board}.
 	 * 
-	 * @param board {@link Board} to validate on
+	 * @param board    {@link Board} to validate on
+	 * @param position {@link Point2i} position on the {@link Board}
 	 * @return result of the calculation
 	 */
-	private boolean isOnBoard(final Board<Cell> board) {
+	private boolean isOnBoard(final Board<Cell> board, final Point2i position) {
 		return board.isOnBoard(position);
 	}
 
 	/**
-	 * Tests if the short tail is colliding with the long tail.
+	 * Tests if the short tail is colliding with the long tail or the {@link Board}.
 	 * 
+	 * @param shortTail short tail as {@link List}
+	 * @param longTail  long tail as {@link Set}
 	 * @return true if a self collision is detected
 	 */
-	private boolean isTailColliding() {
+	private boolean isTailColliding(final List<Point2i> shortTail, final Set<Point2i> longTail,
+			final Board<Cell> board) {
 		for (final Point2i point : shortTail) {
 			if (longTail.contains(point))
 				return true;
+			if (board.isOnBoard(point)) {
+				board.getBoardCellAt(point).isEmpty();
+			}
 		}
 		return false;
 	}
