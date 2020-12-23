@@ -11,7 +11,7 @@ COPY spe-ed-solver/web-communication/pom.xml web-communication/pom.xml
 
 COPY spe-ed-solver/pom.xml .
 
-RUN mvn -B -e  clean package -DskipTests=true
+RUN mvn -B -e -C org.apache.maven.plugins:maven-dependency-plugin:3.1.2:go-offline
 
 FROM maven:3.6.1-jdk-11-slim as BUILDER
 WORKDIR /app
