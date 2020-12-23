@@ -7,7 +7,7 @@ import utility.geometry.Point2i;
 /**
  * Node
  */
-public class Node implements IBoardCell<Cell> {
+public class Node implements IBoardCell<CellValue> {
 
     private static final int PLAYER_DIRECTION_ORDINAL_HIGHEST_ONE_BIT = Integer
             .highestOneBit(PlayerDirection.values().length - 1);
@@ -15,18 +15,18 @@ public class Node implements IBoardCell<Cell> {
     private final Board<Node> board;
     private final Point2i position;
     private final IEdge[] edges;
-    private int value;
+    private CellValue value;
 
     /**
      * Initilizes a {@link Node} with all possible {@link IEdge Edges}
      * 
-     * @param board    The {@link Board} with all {@link Node Nodes}
-     * @param position the position where the {@link Node} is located on the
-     *                 {@link Board}
-     * @param edges    All {@link IEdge Edges} that start at this Node.
+     * @param graphBoard The {@link Board} with all {@link Node Nodes}
+     * @param position   the position where the {@link Node} is located on the
+     *                   {@link Board}
+     * @param edges      All {@link IEdge Edges} that start at this Node.
      */
-    public Node(final Board<Node> board, final Point2i position, final IEdge[] edges) {
-        this.board = board;
+    public Node(final Board<Node> graphBoard, final Point2i position, final IEdge[] edges) {
+        this.board = graphBoard;
         this.position = position;
         this.edges = edges;
     }
@@ -55,32 +55,42 @@ public class Node implements IBoardCell<Cell> {
      * 
      * @return edge-Array-index for the edge matching the passed parameters
      */
-    private static Integer getIntegerIndex(PlayerDirection direction, boolean doJump, int speed) {
+    public static Integer getIntegerIndex(PlayerDirection direction, boolean doJump, int speed) {
         int index = direction.ordinal();
         index += (doJump ? 1 : 0) << PLAYER_DIRECTION_ORDINAL_HIGHEST_ONE_BIT;
         index += (speed - 1) << (PLAYER_DIRECTION_ORDINAL_HIGHEST_ONE_BIT + 1);
         return index;
     }
 
-    public Cell getCellValue() {
-        return new Cell(value);
+    public CellValue getCellValue() {
+        return value;
     }
 
-    public void setCellValue(Cell value) {
-        // if (this.value != value && value != 0) {
-        // TODO: Destroy edges
-        // destroy all edges starting here
-        // destroy all edges ending here (inverted edges)
-        // destroy all edges that pass this node (maybe save performance wehn doing the
-        // half + inversions) (LUT)
-        // }
+    /**
+     * Sets the value of the Cell and deletes affected Edges
+     * 
+     * @param value The new Value for the Cell ({@link CellValue#EMPTY_CELL} is not
+     *              possible)
+     */
+    public void setCellValue(CellValue value) {
+        if (this.value != value && value != CellValue.EMPTY_CELL) {
 
-        // this.value = value;
+            // TODO: .....
+            // destroy all edges starting here
+            // destroy all edges ending here (inverted edges)
+            // destroy all edges that pass this node (maybe save performance when doing the
+            // half + inversions) (LUT)
+            //
 
+            // alle llöschen die hier starten
+            // lookuptabelle für welcher node und welche kante gelöscht werden muss!
+
+            this.value = value;
+        }
     }
 
     public boolean isEmpty() {
-        return value == 0;
+        return value == CellValue.EMPTY_CELL;
     }
 
 }
