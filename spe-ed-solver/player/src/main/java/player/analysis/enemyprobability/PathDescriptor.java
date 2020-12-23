@@ -30,9 +30,11 @@ public class PathDescriptor {
 	 * Internal constructor for a {@link PathDescriptor} which is depending on an
 	 * already existing {@link PathDescriptor}.
 	 * 
-	 * @param integerDescriptor
-	 * @param depth
-	 * @param mask
+	 * @param integerDescriptor integer representation of the {@link PathDescriptor}
+	 * @param depth             amount of actions needed for the
+	 *                          {@link PathDescriptor}
+	 * @param mask              mask of relevant part of the {@link PathDescriptor}
+	 *                          as int
 	 */
 	private PathDescriptor(final int integerDescriptor, final int depth, final int mask) {
 		this.integerDescriptor = integerDescriptor;
@@ -49,10 +51,10 @@ public class PathDescriptor {
 	 */
 	private PathDescriptor append(final int actionId) {
 		final int newDepth = depth + 1;
-		final int newDescriptor = (actionId << (BITS_PER_FRAGMENT * newDepth)) & integerDescriptor;
+		final int newDescriptor = (actionId << (BITS_PER_FRAGMENT * newDepth)) | integerDescriptor;
 		final int newMask = (mask << BITS_PER_FRAGMENT) + FRAGMENT_BIT_MASK;
 
-		return new PathDescriptor(newDescriptor, newMask, newDepth);
+		return new PathDescriptor(newDescriptor, newDepth, newMask);
 	}
 
 	/**
@@ -86,7 +88,8 @@ public class PathDescriptor {
 	 * @return result of the calculation
 	 */
 	public boolean upgrades(final PathDescriptor other) {
-		return this.getIntegerValue() == (other.getIntegerValue() & this.getMask()) && this.getMask() > other.getMask();
+		return (this.getIntegerValue() == (other.getIntegerValue() & this.getMask()))
+				&& this.getDepth() < other.getDepth();
 	}
 
 	/**
