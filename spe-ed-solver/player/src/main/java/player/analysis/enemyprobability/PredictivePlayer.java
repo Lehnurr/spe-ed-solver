@@ -31,20 +31,19 @@ public class PredictivePlayer implements IPlayer {
 	private final Set<Point2i> longTail;
 
 	/**
-	 * Initializes a new {@link PredictivePlayer} from a {@link IPlayer} and a given
-	 * round.
+	 * Initializes a new {@link PredictivePlayer} from a {@link IPlayer}.
 	 * 
 	 * @param player abstract {@link IPlayer} as initialization base
 	 * @param round  round the {@link IPlayer} is relevant for
 	 */
-	public PredictivePlayer(final IPlayer player, final int round) {
+	public PredictivePlayer(final IPlayer player) {
 
 		this.playerId = player.getPlayerId();
 		this.direction = player.getDirection();
 		this.speed = player.getSpeed();
 		this.position = player.getPosition();
 		this.active = player.isActive();
-		this.round = round;
+		this.round = player.getRound();
 
 		this.shortTail = new ArrayList<>();
 		this.longTail = new HashSet<>();
@@ -171,12 +170,11 @@ public class PredictivePlayer implements IPlayer {
 	public Set<Point2i> getLongTail() {
 		return longTail;
 	}
-	
+
 	@Override
 	public int getRound() {
 		return round;
 	}
-
 
 	@Override
 	public int getPlayerId() {

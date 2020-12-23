@@ -18,8 +18,6 @@ public class EnemyForwardPrediction {
 	private final Board<Cell> board;
 
 	private final IPlayer player;
-	private final int round;
-	private final int playerId;
 
 	private final PathBoundProbability[][] probabilities;
 
@@ -31,18 +29,16 @@ public class EnemyForwardPrediction {
 	 * @param player   {@link IPlayer} the calculation is for
 	 * @param playerId any unique id for a player != 0
 	 */
-	public EnemyForwardPrediction(final Board<Cell> board, final IPlayer player, final int round, final int playerId) {
+	public EnemyForwardPrediction(final Board<Cell> board, final IPlayer player) {
 		this.board = board;
 		this.probabilities = new PathBoundProbability[board.getHeight()][board.getWidth()];
 		this.player = player;
-		this.round = round;
-		this.playerId = playerId;
 	}
 
 	public void doCalculation(final int maxDepth) {
 		clearPathBoundProbabilities();
-		final PredictivePlayer startPlayer = new PredictivePlayer(player, round);
-		final PathDescriptor startDescriptor = new PathDescriptor(playerId);
+		final PredictivePlayer startPlayer = new PredictivePlayer(player);
+		final PathDescriptor startDescriptor = new PathDescriptor(player.getPlayerId());
 		final PathBoundProbability startValue = new PathBoundProbability(startDescriptor, 1f);
 		doRecursiveStep(startPlayer, startValue, 0, maxDepth);
 	}
@@ -50,7 +46,7 @@ public class EnemyForwardPrediction {
 	private void clearPathBoundProbabilities() {
 		for (int y = 0; y < board.getHeight(); y++) {
 			for (int x = 0; x < board.getWidth(); x++) {
-				final PathDescriptor pathDescriptor = new PathDescriptor(playerId);
+				final PathDescriptor pathDescriptor = new PathDescriptor(player.getPlayerId());
 				this.probabilities[y][x] = new PathBoundProbability(pathDescriptor, 0f);
 			}
 		}
