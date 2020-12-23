@@ -170,7 +170,8 @@ public class PredictivePlayer implements IPlayer {
 			if (longTail.contains(point))
 				return true;
 			if (board.isOnBoard(point)) {
-				board.getBoardCellAt(point).isEmpty();
+				if (!board.getBoardCellAt(point).isEmpty())
+					return true;
 			}
 		}
 		return false;
