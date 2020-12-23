@@ -45,9 +45,10 @@ public class GameStepParser {
 	 * {@link String} format.
 	 * 
 	 * @param playerAction {@link PlayeAction} to respond with
+	 * @param round        round which has to be parsed
 	 * @return {@link String JSON String} of the answer
 	 */
-	public GameStep parseGameStep(final String jsonString) {
+	public GameStep parseGameStep(final String jsonString, final int round) {
 
 		final JSONGameStep jsonObject = gson.fromJson(jsonString, JSONGameStep.class);
 
@@ -81,13 +82,13 @@ public class GameStepParser {
 
 		final int jsonSelfId = jsonObject.you;
 		final JSONGameStepPlayer jsonSelf = jsonObject.players.remove(Integer.toString(jsonSelfId));
-		final GameStepPlayer self = new GameStepPlayer(jsonSelfId, jsonSelf);
+		final GameStepPlayer self = new GameStepPlayer(jsonSelfId, jsonSelf, round);
 
 		final Map<Integer, IPlayer> enemies = new HashMap<>();
 		for (final Entry<String, JSONGameStepPlayer> entry : jsonObject.players.entrySet()) {
 			final int playerId = Integer.parseInt(entry.getKey());
 			final JSONGameStepPlayer jsonPlayer = entry.getValue();
-			final GameStepPlayer gameStepPlayer = new GameStepPlayer(playerId, jsonPlayer);
+			final GameStepPlayer gameStepPlayer = new GameStepPlayer(playerId, jsonPlayer, round);
 			enemies.put(playerId, gameStepPlayer);
 		}
 

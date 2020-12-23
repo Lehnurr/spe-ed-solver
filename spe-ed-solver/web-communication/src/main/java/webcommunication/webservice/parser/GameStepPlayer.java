@@ -16,6 +16,7 @@ public class GameStepPlayer implements IPlayer {
 	private final PlayerDirection direction;
 	private final int speed;
 	private final Point2i position;
+	private final int round;
 
 	/**
 	 * Creates a {@link GameStepPlayer} with the given values.
@@ -26,14 +27,16 @@ public class GameStepPlayer implements IPlayer {
 	 * @param speed     current speed the player is moving with
 	 * @param position  position as {@link Position2i} of the player on the
 	 *                  {@link Board}
+	 * @param round     round the information is valid for
 	 */
 	public GameStepPlayer(final int playerId, final boolean active, final PlayerDirection direction, final int speed,
-			final Point2i position) {
+			final Point2i position, final int round) {
 		this.playerId = playerId;
 		this.active = active;
 		this.direction = direction;
 		this.speed = speed;
 		this.position = position;
+		this.round = round;
 	}
 
 	/**
@@ -42,13 +45,15 @@ public class GameStepPlayer implements IPlayer {
 	 * 
 	 * @param playerId           unique id of the player
 	 * @param jsonGameStepPlayer {@link JSONGameStepPlayer} received from the server
+	 * @param round              round the information is valid for
 	 */
-	public GameStepPlayer(final int playerId, final JSONGameStepPlayer jsonGameStepPlayer) {
+	public GameStepPlayer(final int playerId, final JSONGameStepPlayer jsonGameStepPlayer, final int round) {
 		this.playerId = playerId;
 		this.active = jsonGameStepPlayer.active;
 		this.direction = PlayerDirection.valueOf(jsonGameStepPlayer.direction.toUpperCase());
 		this.speed = jsonGameStepPlayer.speed;
 		this.position = new Point2i(jsonGameStepPlayer.x, jsonGameStepPlayer.y);
+		this.round = round;
 	}
 
 	@Override
@@ -74,6 +79,11 @@ public class GameStepPlayer implements IPlayer {
 	@Override
 	public Point2i getPosition() {
 		return position;
+	}
+
+	@Override
+	public int getRound() {
+		return round;
 	}
 
 }

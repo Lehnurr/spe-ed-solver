@@ -159,13 +159,6 @@ public class PredictivePlayer implements IPlayer {
 	}
 
 	/**
-	 * @return the round
-	 */
-	public int getRound() {
-		return round;
-	}
-
-	/**
 	 * @return the shortTail
 	 */
 	public List<Point2i> getShortTail() {
@@ -178,6 +171,12 @@ public class PredictivePlayer implements IPlayer {
 	public Set<Point2i> getLongTail() {
 		return longTail;
 	}
+	
+	@Override
+	public int getRound() {
+		return round;
+	}
+
 
 	@Override
 	public int getPlayerId() {

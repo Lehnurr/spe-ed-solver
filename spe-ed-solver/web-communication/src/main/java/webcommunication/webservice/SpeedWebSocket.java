@@ -32,6 +32,8 @@ public class SpeedWebSocket {
 
 	private final CountDownLatch closeLatch = new CountDownLatch(1);
 
+	private int roundCounter = 0;
+
 	/**
 	 * Creates a new {@link SpeedClientSocket} which is able to connect to a spe_ed
 	 * webservice server.
@@ -60,18 +62,19 @@ public class SpeedWebSocket {
 
 	@OnWebSocketMessage
 	public void onMessage(final Session session, final String message) throws MessageSendingException {
-		System.out.println("request:\t" + message);
-		final GameStep gameStep = gameStepParser.parseGameStep(message);
+		System.out.println("request(" + roundCounter + "):\t" + message);
+		final GameStep gameStep = gameStepParser.parseGameStep(message, roundCounter);
 		final PlayerAction responseAction = handleStepFunction.apply(gameStep);
 		String responseText = responseParser.parseResponse(responseAction);
 		System.out.println("response:\t" + responseText);
-		if(gameStep.isRunning()) {
+		if (gameStep.isRunning()) {
 			try {
 				session.getRemote().sendString(responseText);
 			} catch (IOException e) {
 				throw new MessageSendingException("Could not sent response: " + responseText, e);
 			}
 		}
+		roundCounter++;
 	}
 
 	@OnWebSocketClose

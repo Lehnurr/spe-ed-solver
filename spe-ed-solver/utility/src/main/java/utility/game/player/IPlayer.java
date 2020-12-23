@@ -31,6 +31,11 @@ public interface IPlayer {
 	Point2i getPosition();
 
 	/**
+	 * @return the round the {@link IPlayer} is valid for
+	 */
+	int getRound();
+
+	/**
 	 * Indicates if the Player is "alive".
 	 * 
 	 * @return true for alive, false for dead
