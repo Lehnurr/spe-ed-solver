@@ -1,4 +1,4 @@
-name: Windowsx64 Compile & Test
+name: Macosx64 Compile & Test
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
       - name: Setup JDK 11 for x64
