@@ -1,14 +1,3 @@
-#FROM openjdk:8-jdk-alpine
-#VOLUME /tmp
-#ARG JAVA_OPTS
-#ENV JAVA_OPTS=$JAVA_OPTS
-#COPY target/spe-ed-solver-0.0.1-SNAPSHOT.jar speedsolverjava.jar
-#EXPOSE 3000
-#ENTRYPOINT exec java $JAVA_OPTS -jar speedsolverjava.jar
-# For Spring-Boot project, use the entrypoint below to reduce Tomcat startup time.
-#ENTRYPOINT exec java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar speedsolverjava.jar
-
-
 FROM maven:latest as DEPS
 
 WORKDIR /opt/app
@@ -21,16 +10,9 @@ COPY spe-ed-solver/web-communication/pom.xml web-communication/pom.xml
 
 
 COPY spe-ed-solver/pom.xml .
-#RUN mvn -B package --file spe-ed-solver/pom.xml -DskipTests
 
 RUN mvn -B -e -C org.apache.maven.plugins:maven-dependency-plugin:3.1.2:go-offline
-# if you have modules that depends each other, you may use -DexcludeArtifactIds as follows
-# RUN mvn -B -e -C org.apache.maven.plugins:maven-dependency-plugin:3.1.2:go-offline -DexcludeArtifactIds=module1
 
-# Copy the dependencies from the DEPS stage with the advantage
-# of using docker layer caches. If something goes wrong from this
-# line on, all dependencies from DEPS were already downloaded and
-# stored in docker's layers.
 FROM maven:latest as BUILDER
 WORKDIR /opt/app
 COPY --from=deps /root/.m2 /root/.m2
@@ -42,14 +24,17 @@ COPY spe-ed-solver/utility/src /opt/app/utility/src
 COPY spe-ed-solver/visualisation/src /opt/app/visualisation/src 
 COPY spe-ed-solver/web-communication/src /opt/app/web-communication/src 
 
-
-# use -o (--offline) if you didn't need to exclude artifacts.
-# if you have excluded artifacts, then remove -o flag
 RUN mvn -B -e -o clean install -DskipTests=true
 
-# At this point, BUILDER stage should have your .jar or whatever in some path
+
 FROM openjdk:latest
 WORKDIR /opt/app
-COPY --from=builder /opt/app/<path-to-target>/my-1.0.0.jar .
+COPY --from=builder /opt/app/core/target/core-0.0.1-SNAPSHOT.jar .
+COPY --from=builder /opt/app/player/target/player-0.0.1-SNAPSHOT.jar .
+COPY --from=builder /opt/app/simulation/target/simulation-0.0.1-SNAPSHOT.jar .
+COPY --from=builder /opt/app/utility/target/utility-0.0.1-SNAPSHOT.jar .
+COPY --from=builder /opt/app/visualisation/target/visualisation-0.0.1-SNAPSHOT.jar .
+COPY --from=builder /opt/app/web-communication/target/web-communication-0.0.1-SNAPSHOT.jar .
 EXPOSE 8080
-CMD [ "java", "-jar", "/opt/app/my-1.0.0.jar" ]
+ENTRYPOINT [ "java", "-jar", "/opt/app/core-0.0.1-SNAPSHOT.jar", "Main.java" ]
+# Missing external jars...
