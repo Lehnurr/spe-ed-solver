@@ -1,4 +1,4 @@
-package player.analysis.enemyprobability;
+package player.analysis;
 
 import java.util.ArrayList;
 import java.util.Arrays;
