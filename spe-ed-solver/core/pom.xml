@@ -24,24 +24,24 @@
 			<artifactId>web-communication</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>de.lehnurr.spe-ed-solver</groupId>
 			<artifactId>player</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
- 		<dependency>
+		<dependency>
 			<groupId>de.lehnurr.spe-ed-solver</groupId>
 			<artifactId>simulation</artifactId>
 			<version>${project.version}</version>
-    	</dependency>
-    	
-    	<dependency>
+		</dependency>
+
+		<dependency>
 			<groupId>de.lehnurr.spe-ed-solver</groupId>
 			<artifactId>visualisation</artifactId>
 			<version>${project.version}</version>
-    	</dependency>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -58,6 +58,28 @@
 							<mainClass>core.Main</mainClass>
 						</manifest>
 					</archive>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>core.Main</mainClass>
+						</manifest>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
 				</configuration>
 			</plugin>
 		</plugins>

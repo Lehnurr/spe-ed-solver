@@ -1,3 +1,4 @@
+  
 FROM maven:3.6.1-jdk-11-slim as DEPS
 
 WORKDIR /app
@@ -29,12 +30,11 @@ RUN mvn -B -e clean install -DskipTests=true
 
 FROM openjdk:11-jre-slim
 WORKDIR /app
-COPY --from=builder /app/core/target/core-0.0.1-SNAPSHOT.jar .
+COPY --from=builder /app/core/target/core-0.0.1-SNAPSHOT-jar-with-dependencies.jar .
 COPY --from=builder /app/player/target/player-0.0.1-SNAPSHOT.jar .
 COPY --from=builder /app/simulation/target/simulation-0.0.1-SNAPSHOT.jar .
 COPY --from=builder /app/utility/target/utility-0.0.1-SNAPSHOT.jar .
 COPY --from=builder /app/visualisation/target/visualisation-0.0.1-SNAPSHOT.jar .
 COPY --from=builder /app/web-communication/target/web-communication-0.0.1-SNAPSHOT.jar .
-EXPOSE 8080
-ENTRYPOINT [ "java", "-jar", "/app/core-0.0.1-SNAPSHOT.jar", "Main.java" ]
+ENTRYPOINT [ "java", "-jar", "/app/core-0.0.1-SNAPSHOT-jar-with-dependencies.jar"]
 # dependencies und project class files missing
