@@ -14,7 +14,7 @@ public class Node implements IBoardCell<CellValue> {
 
     private final Board<Node> board;
     private final Point2i position;
-    private final IEdge[] edges;
+    private IEdge[] edges;
     private CellValue value;
 
     /**
@@ -35,8 +35,29 @@ public class Node implements IBoardCell<CellValue> {
         return this.position;
     }
 
+    /**
+     * Determines by a Players Location & State the edge he will travel
+     * 
+     * @param direction The Players {@link PlayerDirection#PlayerDirection
+     *                  Direction}
+     * @param doJump    true for jump over the cells (when round % 6 == 0), else
+     *                  false
+     * @param speed     The Players Speed (1 <= speed <= 10)
+     * @return The Concrete Edge or null if the requested Edge is not passable
+     */
     public ConcreteEdge getEdge(PlayerDirection direction, boolean doJump, int speed) {
+
+        // if the edge is not available -> return null
+        if (this.edges == null || value != CellValue.EMPTY_CELL) {
+            return null;
+        }
+
         IEdge edge = this.edges[getIntegerIndex(direction, doJump, speed)];
+
+        // If any passed Node is not Empty -> return null
+        if (edge == null) {
+            return null;
+        }
 
         if (edge instanceof AbstractEdge) {
             edge = ((AbstractEdge) edge).calculatePath(board, this, direction);
@@ -47,7 +68,12 @@ public class Node implements IBoardCell<CellValue> {
     }
 
     public void setEdge(PlayerDirection direction, boolean doJump, int speed, ConcreteEdge edge) {
-        this.edges[getIntegerIndex(direction, doJump, speed)] = edge;
+        setEdge(getIntegerIndex(direction, doJump, speed), edge);
+    }
+
+    public void setEdge(int edgeIntegerIndex, ConcreteEdge edge) {
+        if (this.edges != null)
+            this.edges[edgeIntegerIndex] = edge;
     }
 
     /**
@@ -75,16 +101,17 @@ public class Node implements IBoardCell<CellValue> {
     public void setCellValue(CellValue value) {
         if (this.value != value && value != CellValue.EMPTY_CELL) {
 
-            // TODO: .....
-            // destroy all edges starting here
-            // destroy all edges ending here (inverted edges)
-            // destroy all edges that pass this node (maybe save performance when doing the
-            // half + inversions) (LUT)
-            //
+            // Destroy all edges that pass this node or end here
+            final var passingEdges = AffectedEdgesLookUpTable.getAbstractPassingEdges();
+            for (var edge : passingEdges) {
+                Point2i edgeStartingPosition = this.position.translate(edge.getKey());
+                Node edgeStartingNode = board.getBoardCellAt(edgeStartingPosition);
+                for (int edgeIndex : edge.getValue())
+                    edgeStartingNode.setEdge(edgeIndex, null);
+            }
 
-            // alle llöschen die hier starten
-            // lookuptabelle für welcher node und welche kante gelöscht werden muss!
-
+            // If the value is not empty, this node will not return any edges
+            this.edges = null;
             this.value = value;
         }
     }
