@@ -2,7 +2,7 @@ package player;
 
 import java.util.function.Consumer;
 
-import player.analysis.enemyprobability.EnemyForwardPrediction;
+import player.analysis.enemyprobability.EnemyProbabilityCalculator;
 import utility.game.player.PlayerAction;
 import utility.game.step.GameStep;
 import utility.geometry.ContextualFloatMatrix;
@@ -11,6 +11,10 @@ import utility.geometry.ContextualFloatMatrix;
  * SpeedSolverPlayer
  */
 public class SpeedSolverPlayer {
+
+	private static final int ENEMY_PROBABILITY_SEARCH_DEPTH = 5;
+
+	private final EnemyProbabilityCalculator enemyProbabilityCalculator = new EnemyProbabilityCalculator();
 
 	private final int playerId;
 
@@ -28,10 +32,10 @@ public class SpeedSolverPlayer {
 	 */
 	public PlayerAction calculateAction(GameStep gameStep, Consumer<ContextualFloatMatrix> boardRatingConsumer) {
 
-		var test = new EnemyForwardPrediction(gameStep.getBoard(), gameStep.getSelf());
-		test.doCalculation(5);
-		var matrix = test.getProbabilityMatrix();
-		var namedMatrix = new ContextualFloatMatrix("probability", matrix, 0, 1);
+		var enemyPredictionResult = enemyProbabilityCalculator.performCalculation(gameStep.getEnemies().values(),
+				gameStep.getBoard(), ENEMY_PROBABILITY_SEARCH_DEPTH);
+		
+		var namedMatrix = new ContextualFloatMatrix("probability", enemyPredictionResult.getProbabilityMatrix(), 0, 1);
 		boardRatingConsumer.accept(namedMatrix);
 
 		// Send the Calculated Action
