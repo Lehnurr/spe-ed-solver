@@ -119,4 +119,32 @@ public class PathDescriptor {
 		return depth;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + depth;
+		result = prime * result + integerDescriptor;
+		result = prime * result + mask;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PathDescriptor other = (PathDescriptor) obj;
+		if (depth != other.depth)
+			return false;
+		if (integerDescriptor != other.integerDescriptor)
+			return false;
+		if (mask != other.mask)
+			return false;
+		return true;
+	}
+	
 }
