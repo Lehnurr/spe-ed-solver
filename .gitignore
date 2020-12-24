@@ -19,3 +19,6 @@ hs_err_pid*
 
 # local .todo txt-File
 todo.txt
+
+# local docker environment-variable values
+variables.local.env

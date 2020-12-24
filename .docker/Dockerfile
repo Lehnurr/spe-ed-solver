@@ -37,4 +37,3 @@ COPY --from=builder /app/utility/target/utility-0.0.1-SNAPSHOT.jar .
 COPY --from=builder /app/visualisation/target/visualisation-0.0.1-SNAPSHOT.jar .
 COPY --from=builder /app/web-communication/target/web-communication-0.0.1-SNAPSHOT.jar .
 ENTRYPOINT [ "java", "-jar", "/app/core-0.0.1-SNAPSHOT-jar-with-dependencies.jar"]
-# dependencies und project class files missing
