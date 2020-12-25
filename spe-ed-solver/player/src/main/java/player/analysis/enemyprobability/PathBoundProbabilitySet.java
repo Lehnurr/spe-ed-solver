@@ -17,7 +17,7 @@ public class PathBoundProbabilitySet {
 	private final float successProbability;
 	private final float cuttingProbability;
 
-	private final Set<PathBoundProbability> pathBoundProbabilities;
+	private final Set<PathBoundProbability> containedValues;
 
 	/**
 	 * Creates an empty {@link PathBoundProbabilitySet}.
@@ -25,24 +25,24 @@ public class PathBoundProbabilitySet {
 	public PathBoundProbabilitySet() {
 		this.successProbability = 1f;
 		this.cuttingProbability = 0f;
-		this.pathBoundProbabilities = new HashSet<>();
+		this.containedValues = new HashSet<>();
 	}
 
 	/**
 	 * Private constructor used to create {@link PathBoundProbabilitySet} objects
 	 * from existing data.
 	 * 
-	 * @param successProbability     the new success probability value
-	 * @param cuttingProbability     the new cutting probability value
-	 * @param pathBoundProbabilities a {@link Set} of {@link PathBoundProbability}
-	 *                               objects represented by the new
-	 *                               {@link PathBoundProbabilitySet}
+	 * @param successProbability the new success probability value
+	 * @param cuttingProbability the new cutting probability value
+	 * @param containedValues    a {@link Set} of {@link PathBoundProbability}
+	 *                           objects represented by the new
+	 *                           {@link PathBoundProbabilitySet}
 	 */
 	private PathBoundProbabilitySet(final float successProbability, final float cuttingProbability,
-			final Set<PathBoundProbability> pathBoundProbabilities) {
+			final Set<PathBoundProbability> containedValues) {
 		this.successProbability = successProbability;
 		this.cuttingProbability = cuttingProbability;
-		this.pathBoundProbabilities = pathBoundProbabilities;
+		this.containedValues = containedValues;
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class PathBoundProbabilitySet {
 			return this;
 		}
 
-		final Set<PathBoundProbability> nextPathBoundProbabilities = new HashSet<>(pathBoundProbabilities);
+		final Set<PathBoundProbability> nextPathBoundProbabilities = new HashSet<>();
 		float nextSuccessProbability = successProbability;
 		float nextCuttingProbability = cuttingProbability;
 
