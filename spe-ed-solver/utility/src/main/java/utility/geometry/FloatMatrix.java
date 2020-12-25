@@ -164,7 +164,7 @@ public class FloatMatrix {
 		float minValue = Float.MAX_VALUE;
 		for (int y = 0; y < values.length; y++) {
 			for (int x = 0; x < values[0].length; x++) {
-				minValue = Math.max(values[y][x], minValue);
+				minValue = Math.min(values[y][x], minValue);
 			}
 		}
 		return minValue;

@@ -8,6 +8,7 @@ import utility.game.board.Board;
 import utility.game.board.Cell;
 import utility.game.player.IPlayer;
 import utility.geometry.FloatMatrix;
+import utility.geometry.Point2i;
 
 /**
  * Performs the {@link SingleEnemyPrediction} for each given player and combines
@@ -51,9 +52,20 @@ public class EnemyProbabilityCalculator {
 		final SingleEnemyPrediction firstElement = predictions.remove(0);
 		probabilities = firstElement.getProbabilitiesMatrix();
 		minSteps = firstElement.getMinStepsMatrix();
+
 		for (final SingleEnemyPrediction prediction : predictions) {
 			probabilities = probabilities.max(prediction.getProbabilitiesMatrix());
 			minSteps = minSteps.min(prediction.getMinStepsMatrix());
+		}
+
+		for (int y = 0; y < board.getHeight(); y++) {
+			for (int x = 0; x < board.getWidth(); x++) {
+				final Point2i position = new Point2i(x, y);
+				if (!board.getBoardCellAt(position).isEmpty()) {
+					probabilities.setValue(position, 1);
+					minSteps.setValue(position, 0);
+				}
+			}
 		}
 	}
 
@@ -73,7 +85,7 @@ public class EnemyProbabilityCalculator {
 	 * @return min steps {@link FloatMatrix}
 	 */
 	public FloatMatrix getMinStepsMatrix() {
-		return probabilities;
+		return minSteps;
 	}
 
 }

@@ -117,7 +117,7 @@ public class SingleEnemyPrediction {
 	 * @return min steps {@link FloatMatrix}
 	 */
 	public FloatMatrix getMinStepsMatrix() {
-		return probabilities;
+		return minSteps;
 	}
 
 }

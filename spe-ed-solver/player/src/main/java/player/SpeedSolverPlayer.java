@@ -35,9 +35,10 @@ public class SpeedSolverPlayer {
 		enemyProbabilityCalculator.performCalculation(gameStep.getEnemies().values(), gameStep.getBoard(),
 				ENEMY_PROBABILITY_SEARCH_DEPTH);
 
-		var probabilitiesNamedMatrix = new ContextualFloatMatrix("probability", enemyProbabilityCalculator.getProbabilitiesMatrix(), 0, 1);
+		var probabilitiesNamedMatrix = new ContextualFloatMatrix("probability",
+				enemyProbabilityCalculator.getProbabilitiesMatrix(), 0, 1);
 		boardRatingConsumer.accept(probabilitiesNamedMatrix);
-		
+
 		var minStepsNamedMatrix = new ContextualFloatMatrix("min steps", enemyProbabilityCalculator.getMinStepsMatrix());
 		boardRatingConsumer.accept(minStepsNamedMatrix);
 
