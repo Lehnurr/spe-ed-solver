@@ -1,14 +1,14 @@
 package player.analysis.enemyprobability;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.List;
 
 import player.analysis.PredictivePlayer;
 import utility.game.board.Board;
 import utility.game.board.Cell;
 import utility.game.player.IPlayer;
 import utility.game.player.PlayerAction;
+import utility.geometry.FloatMatrix;
 import utility.geometry.Point2i;
 
 /**
@@ -20,19 +20,18 @@ public class SingleEnemyPrediction {
 
 	private final IPlayer player;
 
-	private final PathBoundProbability[][] probabilities;
+	private FloatMatrix probabilities;
+	private FloatMatrix minSteps;
 
 	/**
 	 * Creates a new {@link SingleEnemyForwardPrediction} calculation object for the
 	 * given {@link IPlayer}.
 	 * 
-	 * @param board    {@link Board} the player moves on
-	 * @param player   {@link IPlayer} the calculation is for
-	 * @param playerId any unique id for a player != 0
+	 * @param board  {@link Board} the player moves on
+	 * @param player {@link IPlayer} the calculation is for
 	 */
 	public SingleEnemyPrediction(final Board<Cell> board, final IPlayer player) {
 		this.board = board;
-		this.probabilities = new PathBoundProbability[board.getHeight()][board.getWidth()];
 		this.player = player;
 	}
 
@@ -43,87 +42,82 @@ public class SingleEnemyPrediction {
 	 * @param maxDepth the depth to search with
 	 */
 	public void doCalculation(final int maxDepth) {
-		clearPathBoundProbabilities();
+		clearResults(maxDepth + 1);
 		final PredictivePlayer startPlayer = new PredictivePlayer(player);
-		final PathDescriptor startDescriptor = new PathDescriptor(player.getPlayerId());
-		final PathBoundProbability startValue = new PathBoundProbability(startDescriptor, 1f);
-		doRecursiveStep(startPlayer, startValue, 0, maxDepth);
+		doRecursiveStep(startPlayer, 1f, 1, maxDepth);
 	}
 
 	/**
-	 * Clears all {@link PathBoundProbability} objects and initializes them with a
-	 * probability of zero.
+	 * Clears the result of the contained matrixes. The probabilities matrix is
+	 * initialized with 0s. The minSteps matrix is initialized with the given value.
+	 * 
+	 * @param maxStepsValue value to initialize the minSteps matrix with
 	 */
-	private void clearPathBoundProbabilities() {
-		for (int y = 0; y < board.getHeight(); y++) {
-			for (int x = 0; x < board.getWidth(); x++) {
-				final PathDescriptor pathDescriptor = new PathDescriptor(player.getPlayerId());
-				this.probabilities[y][x] = new PathBoundProbability(pathDescriptor, 0f);
+	private void clearResults(final float maxStepsValue) {
+		this.probabilities = new FloatMatrix(board.getWidth(), board.getHeight(), 0);
+		this.minSteps = new FloatMatrix(board.getWidth(), board.getHeight(), maxStepsValue);
+	}
+
+	/**
+	 * Performs a single recursive step of the calculation and calls more recursive
+	 * steps for the generated children if the max depth is not reached.
+	 * 
+	 * @param player           {@link PredictivePlayer} to generate children with
+	 * @param startProbability float probability value of the given
+	 *                         {@link PredictivePlayer}
+	 * @param depth            current depth of the calculation
+	 * @param maxDepth         max depth the calculation should reach
+	 */
+	private void doRecursiveStep(final PredictivePlayer player, final float startProbability, final int depth,
+			final int maxDepth) {
+
+		final List<PredictivePlayer> validChildren = getValidChildren(player);
+		final float probabilityFactor = 1f / validChildren.size();
+		final float childProbability = startProbability * probabilityFactor;
+
+		for (final PredictivePlayer child : validChildren) {
+
+			for (final Point2i point : child.getShortTail()) {
+				probabilities.add(point, childProbability);
+				minSteps.min(point, depth);
 			}
+
+			if (depth <= maxDepth)
+				doRecursiveStep(child, childProbability, depth + 1, maxDepth);
 		}
 	}
 
 	/**
-	 * Does performs a recursive search step on the given depth level.
+	 * Returns all valid children of a given {@link PredictivePlayer}.
 	 * 
-	 * @param player               {@link PredictivePlayer} to start the step with
-	 * @param pathBoundProbability {@link PathBoundProbability} to start the step
-	 *                             with
-	 * @param depth                current depth of the search step
-	 * @param maxDepth             maximum depth of the search
+	 * @param player {@link PredictivePlayer} to generate children with
+	 * @return {@link List} of {@link PredictivePlayer} objects
 	 */
-	private void doRecursiveStep(final PredictivePlayer player, final PathBoundProbability pathBoundProbability,
-			final int depth, final int maxDepth) {
-
-		final Map<PlayerAction, PredictivePlayer> validActionMap = getValidActionMap(player);
-		final float probabilityFactor = 1f / validActionMap.size();
-		final float childProbability = pathBoundProbability.getProbability() * probabilityFactor;
-
-		for (final Entry<PlayerAction, PredictivePlayer> entry : validActionMap.entrySet()) {
-
-			final PlayerAction childAction = entry.getKey();
-			final PredictivePlayer childPlayer = entry.getValue();
-
-			final PathDescriptor childDescriptor = pathBoundProbability.getPathDescriptor().append(childAction);
-			final PathBoundProbability childResult = new PathBoundProbability(childDescriptor, childProbability);
-
-			for (final Point2i point : childPlayer.getShortTail()) {
-				final int x = point.getX();
-				final int y = point.getY();
-				probabilities[y][x] = probabilities[y][x].combine(childResult);
-			}
-
-			if (depth < maxDepth)
-				doRecursiveStep(childPlayer, childResult, depth + 1, maxDepth);
-		}
-	}
-
-	/**
-	 * Returns a {@link Map} mapping a {@link PlayerAction} to a
-	 * {@link PredictivePlayer} when the given {@link PlayerAction} is valid for the
-	 * given {@link PredictivePlayer}.
-	 * 
-	 * @param player {@link PredictivePlayer} to validate with
-	 * @return {@link Map} mapping valid {@link PlayerAction actions} to
-	 *         {@link PredictivePlayer} objects
-	 */
-	private Map<PlayerAction, PredictivePlayer> getValidActionMap(final PredictivePlayer player) {
-		final Map<PlayerAction, PredictivePlayer> validActionMap = new HashMap<>();
+	private List<PredictivePlayer> getValidChildren(final PredictivePlayer player) {
+		final List<PredictivePlayer> validChildren = new ArrayList<>();
 		for (final PlayerAction action : PlayerAction.values()) {
 			final PredictivePlayer child = new PredictivePlayer(player, action, board);
 			if (child.isActive())
-				validActionMap.put(action, child);
+				validChildren.add(child);
 		}
-		return validActionMap;
+		return validChildren;
 	}
 
 	/**
-	 * Returns the {@link PredictionResult} of the last performed search.
+	 * Returns the probability result of the calculation as {@link FloatMatrix}.
 	 * 
-	 * @return last {@link PredictionResult}
+	 * @return probability result as {@link FloatMatrix}
 	 */
-	public PredictionResult getPredictionResult() {
-		return new PredictionResult(probabilities);
+	public FloatMatrix getProbabilitiesMatrix() {
+		return probabilities;
+	}
+
+	/**
+	 * Returns the minimum step amount for each position as {@link FloatMatrix}
+	 * @return min steps {@link FloatMatrix}
+	 */
+	public FloatMatrix getMinStepsMatrix() {
+		return probabilities;
 	}
 
 }

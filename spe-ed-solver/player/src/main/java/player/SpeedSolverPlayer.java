@@ -32,11 +32,14 @@ public class SpeedSolverPlayer {
 	 */
 	public PlayerAction calculateAction(GameStep gameStep, Consumer<ContextualFloatMatrix> boardRatingConsumer) {
 
-		var enemyPredictionResult = enemyProbabilityCalculator.performCalculation(gameStep.getEnemies().values(),
-				gameStep.getBoard(), ENEMY_PROBABILITY_SEARCH_DEPTH);
+		enemyProbabilityCalculator.performCalculation(gameStep.getEnemies().values(), gameStep.getBoard(),
+				ENEMY_PROBABILITY_SEARCH_DEPTH);
+
+		var probabilitiesNamedMatrix = new ContextualFloatMatrix("probability", enemyProbabilityCalculator.getProbabilitiesMatrix(), 0, 1);
+		boardRatingConsumer.accept(probabilitiesNamedMatrix);
 		
-		var namedMatrix = new ContextualFloatMatrix("probability", enemyPredictionResult.getProbabilityMatrix(), 0, 1);
-		boardRatingConsumer.accept(namedMatrix);
+		var minStepsNamedMatrix = new ContextualFloatMatrix("min steps", enemyProbabilityCalculator.getMinStepsMatrix());
+		boardRatingConsumer.accept(minStepsNamedMatrix);
 
 		// Send the Calculated Action
 		return PlayerAction.CHANGE_NOTHING;

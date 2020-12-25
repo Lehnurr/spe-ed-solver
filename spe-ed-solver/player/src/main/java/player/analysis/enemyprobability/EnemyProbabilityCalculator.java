@@ -7,25 +7,26 @@ import java.util.List;
 import utility.game.board.Board;
 import utility.game.board.Cell;
 import utility.game.player.IPlayer;
+import utility.geometry.FloatMatrix;
 
 /**
- * Calculator class that can calculate a {@link PredictionResult} for the future
- * enemy behavior.
+ * Performs the {@link SingleEnemyPrediction} for each given player and combines
+ * the results. The results are stored locally until they are updated.
  */
 public class EnemyProbabilityCalculator {
 
+	private FloatMatrix probabilities;
+	private FloatMatrix minSteps;
+
 	/**
-	 * Returns a {@link PredictionResult} for the given {@link Collection} of
-	 * {@link IPlayer players} on the {@link Board}. The search depth determines how
-	 * many future rounds the calculation uses.
+	 * Calculates the probabilities and min steps for each of the given
+	 * {@link IPlayer} enemies.
 	 * 
-	 * @param enemies     {@link Collection} of {@link IPlayer} enemies
-	 * @param board       {@link Board} the enemies move on
-	 * @param searchDepth future rounds to use for the calculation
-	 * @return {@link PredictionResult} of the calculation
+	 * @param enemies     {@link IPlayer players} to calculate the probabilities for
+	 * @param board       {@link Board} to check for collisions
+	 * @param searchDepth amount of recursive steps to be taken for each player
 	 */
-	public PredictionResult performCalculation(final Collection<IPlayer> enemies, final Board<Cell> board,
-			final int searchDepth) {
+	public void performCalculation(final Collection<IPlayer> enemies, final Board<Cell> board, final int searchDepth) {
 
 		final List<SingleEnemyPrediction> predictions = new ArrayList<>();
 		final List<Thread> threads = new ArrayList<>();
@@ -46,15 +47,33 @@ public class EnemyProbabilityCalculator {
 				e.printStackTrace();
 			}
 		}
-		
-		predictions.get(0).getPredictionResult();
-		
-		PredictionResult combinedResult = predictions.remove(0).getPredictionResult();
-		for (final SingleEnemyPrediction prediction : predictions) {
-			combinedResult = new PredictionResult(combinedResult, prediction.getPredictionResult());
-		}
-		return combinedResult;
 
+		final SingleEnemyPrediction firstElement = predictions.remove(0);
+		probabilities = firstElement.getProbabilitiesMatrix();
+		minSteps = firstElement.getMinStepsMatrix();
+		for (final SingleEnemyPrediction prediction : predictions) {
+			probabilities = probabilities.max(prediction.getProbabilitiesMatrix());
+			minSteps = minSteps.min(prediction.getMinStepsMatrix());
+		}
+	}
+
+	/**
+	 * Returns the probability result of the combined calculations as
+	 * {@link FloatMatrix}.
+	 * 
+	 * @return probability result as {@link FloatMatrix}
+	 */
+	public FloatMatrix getProbabilitiesMatrix() {
+		return probabilities;
+	}
+
+	/**
+	 * Returns the minimum step amount for each position as {@link FloatMatrix}
+	 * 
+	 * @return min steps {@link FloatMatrix}
+	 */
+	public FloatMatrix getMinStepsMatrix() {
+		return probabilities;
 	}
 
 }

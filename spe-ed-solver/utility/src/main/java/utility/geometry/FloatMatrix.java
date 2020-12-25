@@ -239,4 +239,40 @@ public class FloatMatrix {
 		return resultMatrix;
 	}
 
+	/**
+	 * Adds a value to the matrix at a given position.
+	 * 
+	 * @param position {@link Point2i} of the position
+	 * @param value    float value to add
+	 */
+	public void add(final Point2i position, final float value) {
+		setValue(position, getValue(position) + value);
+	}
+
+	/**
+	 * Replaces the existing value at a given position with the new one if the new
+	 * value is smaller.
+	 * 
+	 * @param position {@link Point2i} of the position
+	 * @param value    float value to compare and possibly set
+	 */
+	public void min(final Point2i position, final int value) {
+		if(value < getValue(position)) {
+			setValue(position, value);
+		}
+	}
+	
+	/**
+	 * Replaces the existing value at a given position with the new one if the new
+	 * value is bigger.
+	 * 
+	 * @param position {@link Point2i} of the position
+	 * @param value    float value to compare and possibly set
+	 */
+	public void max(final Point2i position, final int value) {
+		if(value > getValue(position)) {
+			setValue(position, value);
+		}
+	}
+
 }
