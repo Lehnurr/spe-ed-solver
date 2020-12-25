@@ -63,5 +63,36 @@ public class FloatMatrixTest {
 		FloatMatrix m3 = m1.sum(m2);
 		assertEquals(12f, m3.getValue(6, 3), TEST_DOUBLE_DELTA);
 	}
+	
+	@Test
+	public void testFloatMatrixAddPoint() {
+		FloatMatrix m1 = new FloatMatrix(10, 5, 0f);
+
+		m1.add(new Point2i(0, 1), 5);
+
+		assertEquals(5f, m1.getValue(0, 1), TEST_DOUBLE_DELTA);
+	}
+	
+	@Test
+	public void testFloatMatrixMinPoint() {
+		FloatMatrix m1 = new FloatMatrix(10, 5, 10f);
+
+		m1.min(new Point2i(0, 1), 5);
+		m1.min(new Point2i(1, 1), 15);
+
+		assertEquals(5f, m1.getValue(0, 1), TEST_DOUBLE_DELTA);
+		assertEquals(10f, m1.getValue(1, 1), TEST_DOUBLE_DELTA);
+	}
+	
+	@Test
+	public void testFloatMatrixMaxPoint() {
+		FloatMatrix m1 = new FloatMatrix(10, 5, 10f);
+
+		m1.max(new Point2i(0, 1), 5);
+		m1.max(new Point2i(1, 1), 15);
+
+		assertEquals(10f, m1.getValue(0, 1), TEST_DOUBLE_DELTA);
+		assertEquals(15f, m1.getValue(1, 1), TEST_DOUBLE_DELTA);
+	}
 
 }
