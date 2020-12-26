@@ -34,7 +34,7 @@ public class ViewerWindow {
 
 	// paddings for board ratings
 	private static final int BOARD_RATING_PADDING_HORIZONTAL = 32;
-	private static final int BOARD_RATING_PADDING_VERTICAL = 32;
+	private static final int BOARD_RATING_PADDING_VERTICAL = 8;
 
 	// parent JFrame
 	private final JFrame jFrame = new JFrame();
@@ -171,12 +171,12 @@ public class ViewerWindow {
 		if (displayedBoards > 0) {
 			// recalculate grid layout
 			final int xGridElements = (int) Math.ceil(Math.sqrt(displayedBoards));
-			final int yGridElements = (int) Math.ceil(displayedBoards / xGridElements);
+			final int yGridElements = (int) Math.ceil(displayedBoards * 1. / xGridElements);
 			boardPanel.setLayout(new GridLayout(yGridElements, xGridElements));
 
 			// calculates max size in each dimension for board rating
-			final float maxElementWidth = (boardPanel.getWidth() + BOARD_RATING_PADDING_HORIZONTAL) / xGridElements;
-			final float maxElementHeight = (boardPanel.getHeight() + BOARD_RATING_PADDING_VERTICAL) / yGridElements;
+			final float maxElementWidth = boardPanel.getWidth() / xGridElements - BOARD_RATING_PADDING_HORIZONTAL;
+			final float maxElementHeight = boardPanel.getHeight() / yGridElements - BOARD_RATING_PADDING_VERTICAL;
 
 			// update graphics
 			boardPanel.removeAll();
