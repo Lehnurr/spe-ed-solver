@@ -4,27 +4,22 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.nio.charset.Charset;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import utility.game.player.IMovablePlayer;
-import utility.game.step.GameStep;
-
 /**
  * A Logger for Console or File output. Logs nothing by Default.
  */
-public final class LehnurrLogger {
+public final class ApplicationLogger {
     private static boolean logInConsole = false;
     private static FileWriter logFileWriter = null;
 
-    private LehnurrLogger() {
+    private ApplicationLogger() {
     }
 
-    private static boolean isLoggingEnabled() {
-        return logInConsole || LehnurrLogger.logFileWriter != null;
+    static boolean isLoggingEnabled() {
+        return logInConsole || ApplicationLogger.logFileWriter != null;
     }
 
     /**
@@ -34,7 +29,7 @@ public final class LehnurrLogger {
      *                     Default is false.
      */
     public static void setLogInConsole(boolean logInConsole) {
-        LehnurrLogger.logInConsole = logInConsole;
+        ApplicationLogger.logInConsole = logInConsole;
     }
 
     /**
@@ -61,76 +56,6 @@ public final class LehnurrLogger {
                 logFileWriter.close();
             logFileWriter = new FileWriter(logFilePath, false);
         }
-    }
-
-    /**
-     * Logs the Data of a GameStep
-     * 
-     * @param step The {@link GameStep#GameStep Steps} to log
-     */
-    public static void logGameStep(GameStep step) {
-        if (!isLoggingEnabled())
-            return;
-
-        String running;
-        if (step.isRunning())
-            running = "is running";
-        else
-            running = "finished";
-
-        // Log the general state
-        StringBuilder gameStep = new StringBuilder(String.format(
-                "%s: {you=%d, playerCount=%d, remainingMilliseconds=%s}%n", running, step.getSelf().getPlayerId(),
-                step.getPlayerCount(), step.getDeadline().getRemainingMilliseconds()));
-
-        // Log the Board
-        gameStep.append(String.format("board=%s%n", step.getBoard().toString()));
-
-        // Log the Player
-        var currentPlayer = step.getSelf();
-        var iterator = step.getEnemies().values().iterator();
-        do {
-            String active;
-            if (currentPlayer.isActive())
-                active = "alive";
-            else
-                active = "dead";
-
-            String player = String.format("Player %d {%s, %s, %s, %d} in Round %d%n", currentPlayer.getPlayerId(),
-                    active, currentPlayer.getDirection().name(), currentPlayer.getPosition().toString(),
-                    currentPlayer.getSpeed(), currentPlayer.getRound());
-
-            gameStep.append(player);
-
-            if (iterator.hasNext())
-                currentPlayer = iterator.next();
-            else
-                currentPlayer = null;
-        } while (currentPlayer != null);
-
-        logMessage(LoggingTag.GAME_INFO, gameStep.toString());
-    }
-
-    /**
-     * Logs the data of a Player State
-     * 
-     * @param player The {@link IMovablePlayer#IMovablePlayer Player} to log
-     */
-    public static void logPlayerAction(IMovablePlayer player) {
-        if (!isLoggingEnabled())
-            return;
-
-        String action;
-        if (player.getNextAction() != null)
-            action = player.getNextAction().getName();
-        else
-            action = "NO ACTION";
-
-        String playerState = String.format("action {%s} by Player %d {%s, %s, %d} in Round %d", action,
-                player.getPlayerId(), player.getDirection().name(), player.getPosition().toString(), player.getSpeed(),
-                player.getRound());
-
-        logMessage(LoggingTag.GAME_INFO, playerState);
     }
 
     /**
@@ -203,7 +128,7 @@ public final class LehnurrLogger {
      *                   Info, Warning, etc.
      * @param logMessage The message to be output
      */
-    private static void logMessage(LoggingTag typeTag, String logMessage) {
+    static void logMessage(LoggingTag typeTag, String logMessage) {
         if (!isLoggingEnabled())
             return;
 
@@ -215,7 +140,7 @@ public final class LehnurrLogger {
             System.out.println(outputMessage);
         }
 
-        if (LehnurrLogger.logFileWriter != null) {
+        if (ApplicationLogger.logFileWriter != null) {
             try {
                 logFileWriter.append(String.format("%s%n", outputMessage));
             } catch (IOException ex) {

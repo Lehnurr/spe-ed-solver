@@ -1,5 +1,8 @@
 package utility.game.board;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import utility.geometry.Point2i;
 
 /**
@@ -46,6 +49,11 @@ public class Board<CellType extends IBoardCell<?>> {
 
     public int getHeight() {
         return height;
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.stream(cells).map(Arrays::toString).collect(Collectors.joining(System.lineSeparator()));
     }
 
 }
