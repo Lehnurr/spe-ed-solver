@@ -2,6 +2,7 @@ package core.modes;
 
 import core.player.GameController;
 import simulation.Game;
+import utility.logging.ApplicationLogger;
 
 /**
  * {@link Runnable} for the live play mode to play spe_ed in an offline
@@ -28,7 +29,7 @@ public class SimulationMode implements Runnable {
 
 	@Override
 	public void run() {
-		System.out.println("RUNNING SIMULATED");
+		ApplicationLogger.logInformation("RUNNING SIMULATED");
 
 		// Start the Simulation and get the initial GameSteps for each Player
 		var gameSteps = game.startSimulation();
@@ -49,7 +50,7 @@ public class SimulationMode implements Runnable {
 			gameSteps.addAll(nextGameSteps);
 		}
 
-		System.out.println("FINISHED SIMULATED");
+		ApplicationLogger.logInformation("FINISHED SIMULATED");
 	}
 
 }

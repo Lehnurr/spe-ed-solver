@@ -5,6 +5,7 @@ import java.net.URI;
 import core.parser.EnvironmentVariableParser;
 import core.parser.EnvrionmentVariableParseException;
 import core.player.GameController;
+import utility.logging.ApplicationLogger;
 import webcommunication.webservice.ConnectionInitializationException;
 import webcommunication.webservice.ConnectionTerminationException;
 import webcommunication.webservice.SpeedConnectionManager;
@@ -15,7 +16,7 @@ import webcommunication.webservice.WebserviceConnectionURI;
  * webservice.
  */
 public class LiveMode implements Runnable {
-	
+
 	private final boolean viewerEnabled;
 
 	/**
@@ -47,7 +48,7 @@ public class LiveMode implements Runnable {
 
 		} catch (ConnectionInitializationException | EnvrionmentVariableParseException
 				| ConnectionTerminationException e) {
-			e.printStackTrace();
+			ApplicationLogger.logException(e);
 		}
 	}
 

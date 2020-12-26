@@ -13,6 +13,7 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import utility.game.player.PlayerAction;
 import utility.game.step.GameStep;
+import utility.logging.ApplicationLogger;
 import webcommunication.webservice.parser.GameStepParser;
 import webcommunication.webservice.parser.ResponseParser;
 
@@ -57,16 +58,16 @@ public class SpeedWebSocket {
 	@OnWebSocketConnect
 	public void onOpen(final Session session) {
 		session.setIdleTimeout(JETTY_WEBSOCKET_TIMEOUT);
-		System.out.println("Connection opened!");
+		ApplicationLogger.logInformation("Connection opened");
 	}
 
 	@OnWebSocketMessage
 	public void onMessage(final Session session, final String message) throws MessageSendingException {
-		System.out.println("request(" + roundCounter + "):\t" + message);
+		ApplicationLogger.logInformation("request(" + roundCounter + "):\t" + message);
 		final GameStep gameStep = gameStepParser.parseGameStep(message, roundCounter);
 		final PlayerAction responseAction = handleStepFunction.apply(gameStep);
 		String responseText = responseParser.parseResponse(responseAction);
-		System.out.println("response:\t" + responseText);
+		ApplicationLogger.logInformation("response:\t" + responseText);
 		if (gameStep.isRunning()) {
 			try {
 				session.getRemote().sendString(responseText);
@@ -80,12 +81,12 @@ public class SpeedWebSocket {
 	@OnWebSocketClose
 	public void onClose(final Session session, final int closeCode, final String closeReason) {
 		closeLatch.countDown();
-		System.out.println("Connection closed!");
+		ApplicationLogger.logInformation("Connection closed!");
 	}
 
 	@OnWebSocketError
 	public void onError(final Session session, final Throwable t) {
-		t.printStackTrace();
+		ApplicationLogger.logException(t);
 	}
 
 	/**

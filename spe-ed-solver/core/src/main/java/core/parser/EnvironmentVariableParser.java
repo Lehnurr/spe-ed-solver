@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
+import utility.logging.ApplicationLogger;
 import webcommunication.webservice.MalformedURLException;
 import webcommunication.webservice.WebserviceConnectionURI;
 
@@ -38,8 +39,9 @@ public class EnvironmentVariableParser {
 	 */
 	private String getEnvironmentVariableAsString(final String name) throws EnvrionmentVariableParseException {
 		final String variable = environmentVariables.getOrDefault(name, "");
-		if (variable.equals("")) {
-			throw new EnvrionmentVariableParseException("The environment variable \"" + name + "\" cannot be found!");
+		if ("".equals(variable)) {
+			ApplicationLogger.logAndThrowException(new EnvrionmentVariableParseException(
+					"The environment variable \"" + name + "\" cannot be found!"));
 		}
 		return variable;
 	}
@@ -56,8 +58,10 @@ public class EnvironmentVariableParser {
 		try {
 			parsedValue = new URI(stringValue);
 		} catch (URISyntaxException e) {
-			throw new EnvrionmentVariableParseException(
+			var exception = new EnvrionmentVariableParseException(
 					"The environment variable \"" + WEBSERVICE_URL_ENV_NAME + "\" is not an valid URI!");
+			ApplicationLogger.logException(exception);
+			throw exception;
 		}
 		return parsedValue;
 	}
@@ -87,9 +91,11 @@ public class EnvironmentVariableParser {
 		try {
 			return new WebserviceConnectionURI(webserviceURI, apiKey);
 		} catch (MalformedURLException e) {
-			throw new EnvrionmentVariableParseException(
+			var exception = new EnvrionmentVariableParseException(
 					"The environment variables for the URL and API Key of the webservice are not formatted a valid way.",
 					e);
+			ApplicationLogger.logException(exception);
+			throw exception;
 		}
 	}
 
@@ -105,8 +111,10 @@ public class EnvironmentVariableParser {
 		try {
 			parsedValue = new URI(stringValue);
 		} catch (URISyntaxException e) {
-			throw new EnvrionmentVariableParseException(
+			var exception = new EnvrionmentVariableParseException(
 					"The environment variable \"" + TIME_URL_ENV_NAME + "\" is not an valid URI!");
+			ApplicationLogger.logException(exception);
+			throw exception;
 		}
 		return parsedValue;
 	}

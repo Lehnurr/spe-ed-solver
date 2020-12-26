@@ -22,3 +22,6 @@ todo.txt
 
 # local docker environment-variable values
 variables.local.env
+
+# log Files
+*.log
