@@ -6,6 +6,7 @@ import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 
+import utility.logging.ApplicationLogger;
 import webcommunication.JettyHttpClientFactory;
 
 public class SpeedWebSocketClient {
@@ -40,7 +41,8 @@ public class SpeedWebSocketClient {
 			try {
 				websocketClient.start();
 			} catch (Exception e) {
-				throw new ConnectionInitializationException("Starting the spe_ed socket not possible!", e);
+				ApplicationLogger.logAndThrowException(
+						new ConnectionInitializationException("Starting the spe_ed socket not possible!", e));
 			}
 		}
 	}
@@ -59,8 +61,8 @@ public class SpeedWebSocketClient {
 		try {
 			websocketClient.stop();
 		} catch (Exception e) {
-			throw new ConnectionTerminationException(
-					"Unable to close stop the websocket client after no session was opened!", e);
+			ApplicationLogger.logAndThrowException(new ConnectionTerminationException(
+					"Unable to close stop the websocket client after no session was opened!", e));
 		}
 	}
 
@@ -82,8 +84,8 @@ public class SpeedWebSocketClient {
 		try {
 			websocketClient.connect(speedWebSocket, webserviceConnectionURI.getURI());
 		} catch (IOException e) {
-			throw new ConnectionInitializationException("Initializing connection to spe_ed webservice not possible!",
-					e);
+			ApplicationLogger.logAndThrowException(new ConnectionInitializationException(
+					"Initializing connection to spe_ed webservice not possible!", e));
 		}
 
 	}

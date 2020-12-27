@@ -1,4 +1,4 @@
-  
+
 package webcommunication.time;
 
 import java.net.URI;
@@ -9,6 +9,7 @@ import java.util.concurrent.TimeoutException;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
 
+import utility.logging.ApplicationLogger;
 import webcommunication.JettyHttpClientFactory;
 import webcommunication.time.parser.ServerTimeParser;
 
@@ -18,7 +19,7 @@ import webcommunication.time.parser.ServerTimeParser;
 public class TimeAPIClient {
 
 	private final ServerTimeParser serverTimeParser;
-	
+
 	private final URI targetUri;
 
 	/**
@@ -68,8 +69,8 @@ public class TimeAPIClient {
 		try {
 			client.start();
 		} catch (Exception e) {
-			throw new TimeRequestException(
-					"The jetty http client could not get started with the following reason: " + e.getMessage(), e);
+			ApplicationLogger.logAndThrowException(new TimeRequestException(
+					"The jetty http client could not get started with the following reason: " + e.getMessage(), e));
 		}
 
 		return client;
@@ -90,11 +91,13 @@ public class TimeAPIClient {
 		try {
 			response = client.GET(uri);
 		} catch (InterruptedException e) {
-			throw new TimeRequestException("The time request was interrupted!", e);
+			throw ApplicationLogger
+					.logAndThrowException(new TimeRequestException("The time request was interrupted!", e));
 		} catch (ExecutionException e) {
-			throw new TimeRequestException("The time request could not be executed!", e);
+			throw ApplicationLogger
+					.logAndThrowException(new TimeRequestException("The time request could not be executed!", e));
 		} catch (TimeoutException e) {
-			throw new TimeRequestException("The time request timed out!", e);
+			throw ApplicationLogger.logAndThrowException(new TimeRequestException("The time request timed out!", e));
 		}
 
 		return response.getContentAsString();
@@ -111,7 +114,8 @@ public class TimeAPIClient {
 		try {
 			client.stop();
 		} catch (Exception e) {
-			throw new TimeRequestException("The jetty http client could not get closed!", e);
+			ApplicationLogger
+					.logAndThrowException(new TimeRequestException("The jetty http client could not get closed!", e));
 		}
 
 	}

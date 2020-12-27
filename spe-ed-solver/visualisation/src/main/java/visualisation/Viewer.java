@@ -5,6 +5,7 @@ import java.util.List;
 
 import utility.game.player.PlayerAction;
 import utility.geometry.ContextualFloatMatrix;
+import utility.logging.ApplicationLogger;
 
 /**
  * Reference implementation for the {@link IViewer} interface.
@@ -67,10 +68,12 @@ public class Viewer implements IViewer {
 	public void showRound(int roundIdx) {
 
 		if (roundIdx < 0) {
-			throw new IllegalArgumentException("referenced round index is below zero");
+			ApplicationLogger
+					.logAndThrowException(new IllegalArgumentException("referenced round index is below zero"));
 		}
 		if (roundIdx > maxRoundIdx) {
-			throw new IllegalArgumentException("referenced round index is higher than the stored rounds");
+			ApplicationLogger.logAndThrowException(
+					new IllegalArgumentException("referenced round index is higher than the stored rounds"));
 		}
 
 		displayedRoundIdx = roundIdx;

@@ -1,5 +1,7 @@
 package utility.geometry;
 
+import utility.logging.ApplicationLogger;
+
 public class FloatMatrix {
 
 	private final float[][] values;
@@ -141,7 +143,8 @@ public class FloatMatrix {
 	public FloatMatrix max(FloatMatrix other) {
 
 		if (!isSameSize(other)) {
-			throw new IllegalArgumentException("Both matrices need to have the same size");
+			ApplicationLogger
+					.logAndThrowException(new IllegalArgumentException("Both matrices need to have the same size"));
 		}
 
 		FloatMatrix resultMatrix = new FloatMatrix(getWidth(), getHeight());
@@ -179,7 +182,8 @@ public class FloatMatrix {
 	public FloatMatrix min(FloatMatrix other) {
 
 		if (!isSameSize(other)) {
-			throw new IllegalArgumentException("Both matrices need to have the same size");
+			ApplicationLogger
+					.logAndThrowException(new IllegalArgumentException("Both matrices need to have the same size"));
 		}
 
 		FloatMatrix resultMatrix = new FloatMatrix(getWidth(), getHeight());
@@ -202,7 +206,8 @@ public class FloatMatrix {
 	public FloatMatrix mul(FloatMatrix other) {
 
 		if (!isSameSize(other)) {
-			throw new IllegalArgumentException("Both matrices need to have the same size");
+			ApplicationLogger
+					.logAndThrowException(new IllegalArgumentException("Both matrices need to have the same size"));
 		}
 
 		FloatMatrix resultMatrix = new FloatMatrix(getWidth(), getHeight());
@@ -225,7 +230,8 @@ public class FloatMatrix {
 	public FloatMatrix sum(FloatMatrix other) {
 
 		if (!isSameSize(other)) {
-			throw new IllegalArgumentException("Both matrices need to have the same size");
+			ApplicationLogger
+					.logAndThrowException(new IllegalArgumentException("Both matrices need to have the same size"));
 		}
 
 		FloatMatrix resultMatrix = new FloatMatrix(getWidth(), getHeight());
@@ -257,11 +263,11 @@ public class FloatMatrix {
 	 * @param value    float value to compare and possibly set
 	 */
 	public void min(final Point2i position, final int value) {
-		if(value < getValue(position)) {
+		if (value < getValue(position)) {
 			setValue(position, value);
 		}
 	}
-	
+
 	/**
 	 * Replaces the existing value at a given position with the new one if the new
 	 * value is bigger.
@@ -270,7 +276,7 @@ public class FloatMatrix {
 	 * @param value    float value to compare and possibly set
 	 */
 	public void max(final Point2i position, final int value) {
-		if(value > getValue(position)) {
+		if (value > getValue(position)) {
 			setValue(position, value);
 		}
 	}

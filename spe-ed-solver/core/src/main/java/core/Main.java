@@ -15,14 +15,10 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		// Enable Logging
+		// Enable Console Logging
 		ApplicationLogger.setLogInConsole(true);
-		try {
-			ApplicationLogger.setLogFilePath("log/", ZonedDateTime.now());
-		} catch (IOException ex) {
-			ApplicationLogger.logError("Writing a log file is not possible");
-			ex.printStackTrace();
-		}
+		// Enable Log-File Logging
+		ApplicationLogger.setLogFilePath("log/", ZonedDateTime.now());
 
 		CommandLineParser commandLineParser = new CommandLineParser();
 		new CommandLine(commandLineParser).execute(args);

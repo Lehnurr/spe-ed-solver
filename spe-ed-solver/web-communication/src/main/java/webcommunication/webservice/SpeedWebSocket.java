@@ -72,7 +72,8 @@ public class SpeedWebSocket {
 			try {
 				session.getRemote().sendString(responseText);
 			} catch (IOException e) {
-				throw new MessageSendingException("Could not sent response: " + responseText, e);
+				ApplicationLogger.logAndThrowException(
+						new MessageSendingException("Could not sent response: " + responseText, e));
 			}
 		}
 		roundCounter++;
@@ -98,7 +99,7 @@ public class SpeedWebSocket {
 			closeLatch.await();
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
-			throw new RuntimeException(e);
+			ApplicationLogger.logAndThrowException(new RuntimeException(e));
 		}
 	}
 

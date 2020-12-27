@@ -45,19 +45,33 @@ public final class ApplicationLogger {
      *                             unique name to the log file.
      * @throws IOException
      */
-    public static void setLogFilePath(String logFileDirectory, ZonedDateTime applicationStartTime) throws IOException {
+    public static void setLogFilePath(String logFileDirectory, ZonedDateTime applicationStartTime) {
 
+        if (logFileDirectory == null || applicationStartTime == null) {
+            // Disable File Logging
+            logFilePath = null;
+            return;
+        }
+
+        // Get Log-File path
         String dateTimeString = DateTimeFormatter.ofPattern("'lehnurr_speed_'yyyyMMddHHmm'.log'")
                 .format(applicationStartTime);
         logFilePath = Paths.get(logFileDirectory, dateTimeString).toAbsolutePath().toString();
 
-        // Create directory if necessary
-        Path logDirectoryPath = Paths.get(logFileDirectory);
-        if (!Files.exists(logDirectoryPath))
-            Files.createDirectory(logDirectoryPath);
+        try {
+            // Create directory if necessary
+            Path logDirectoryPath = Paths.get(logFileDirectory);
+            if (!Files.exists(logDirectoryPath))
+                Files.createDirectory(logDirectoryPath);
 
-        // crete File if necessary (should be)
-        new File(logFilePath).createNewFile();
+            // crete File if necessary (should be)
+            new File(logFilePath).createNewFile();
+
+        } catch (IOException ex) {
+            logFilePath = null;
+            ApplicationLogger.logError("Writing a log file is not possible");
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -125,9 +139,15 @@ public final class ApplicationLogger {
      * Logs a Exception with the Fatal-Error-Tag and a Time-Stamp and throws the
      * Exception
      * 
-     * @param exception The occurred exception
+     * @param <ExceptionType> The type of the occurred exception
+     * @param exception       The occurred exception
+     * @return an exception to make it possible to set the keyword {@code throw}
+     *         before the call of this method, so that the compiler knows, after the
+     *         call of this method nothing is executed anymore. Since this method
+     *         itself always throws an exception, nothing is ever returned.
+     * @throws ExceptionType Throws always the passed exception after passing it
      */
-    public static <ExceptionType extends Throwable> void logAndThrowException(ExceptionType exception)
+    public static <ExceptionType extends Throwable> ExceptionType logAndThrowException(ExceptionType exception)
             throws ExceptionType {
         logException(exception);
         throw exception;

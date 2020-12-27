@@ -58,10 +58,8 @@ public class EnvironmentVariableParser {
 		try {
 			parsedValue = new URI(stringValue);
 		} catch (URISyntaxException e) {
-			var exception = new EnvrionmentVariableParseException(
-					"The environment variable \"" + WEBSERVICE_URL_ENV_NAME + "\" is not an valid URI!");
-			ApplicationLogger.logException(exception);
-			throw exception;
+			throw ApplicationLogger.logAndThrowException(new EnvrionmentVariableParseException(
+					"The environment variable \"" + WEBSERVICE_URL_ENV_NAME + "\" is not an valid URI!"));
 		}
 		return parsedValue;
 	}
@@ -91,11 +89,9 @@ public class EnvironmentVariableParser {
 		try {
 			return new WebserviceConnectionURI(webserviceURI, apiKey);
 		} catch (MalformedURLException e) {
-			var exception = new EnvrionmentVariableParseException(
+			throw ApplicationLogger.logAndThrowException(new EnvrionmentVariableParseException(
 					"The environment variables for the URL and API Key of the webservice are not formatted a valid way.",
-					e);
-			ApplicationLogger.logException(exception);
-			throw exception;
+					e));
 		}
 	}
 
@@ -111,10 +107,8 @@ public class EnvironmentVariableParser {
 		try {
 			parsedValue = new URI(stringValue);
 		} catch (URISyntaxException e) {
-			var exception = new EnvrionmentVariableParseException(
-					"The environment variable \"" + TIME_URL_ENV_NAME + "\" is not an valid URI!");
-			ApplicationLogger.logException(exception);
-			throw exception;
+			throw ApplicationLogger.logAndThrowException(new EnvrionmentVariableParseException(
+					"The environment variable \"" + TIME_URL_ENV_NAME + "\" is not an valid URI!"));
 		}
 		return parsedValue;
 	}

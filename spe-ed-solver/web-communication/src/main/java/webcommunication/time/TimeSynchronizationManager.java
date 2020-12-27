@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.ZonedDateTime;
 
 import utility.game.step.Deadline;
+import utility.logging.ApplicationLogger;
 
 /**
  * Responsible for the synchronization of server time and client time.
@@ -30,7 +31,7 @@ public class TimeSynchronizationManager {
 			ZonedDateTime serverTime = timeApiClient.getServerTime();
 			serverTimeOffset = Duration.between(clientTime, serverTime);
 		} catch (TimeRequestException e) {
-			// TODO LOGGING WARNING
+			ApplicationLogger.logException(e);
 			serverTimeOffset = Duration.ZERO;
 		}
 		this.serverTimeOffset = serverTimeOffset;
