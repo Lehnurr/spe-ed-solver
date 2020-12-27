@@ -262,7 +262,7 @@ public class FloatMatrix {
 	 * @param position {@link Point2i} of the position
 	 * @param value    float value to compare and possibly set
 	 */
-	public void min(final Point2i position, final int value) {
+	public void min(final Point2i position, final float value) {
 		if (value < getValue(position)) {
 			setValue(position, value);
 		}
@@ -275,7 +275,7 @@ public class FloatMatrix {
 	 * @param position {@link Point2i} of the position
 	 * @param value    float value to compare and possibly set
 	 */
-	public void max(final Point2i position, final int value) {
+	public void max(final Point2i position, final float value) {
 		if (value > getValue(position)) {
 			setValue(position, value);
 		}
