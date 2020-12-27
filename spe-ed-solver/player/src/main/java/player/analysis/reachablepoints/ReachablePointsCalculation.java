@@ -95,4 +95,22 @@ public class ReachablePointsCalculation {
 		}
 	}
 
+	/**
+	 * Returns the {@link FloatMatrix} of the success rating calculation.
+	 * 
+	 * @return success {@link FloatMatrix} result
+	 */
+	public FloatMatrix getSuccessMatrixResult() {
+		return successMatrixResult;
+	}
+
+	/**
+	 * Returns the {@link FloatMatrix} of the cut off rating calculation.
+	 * 
+	 * @return cut off {@link FloatMatrix} result
+	 */
+	public FloatMatrix getCutOffMatrixResult() {
+		return cutOffMatrixResult;
+	}
+
 }

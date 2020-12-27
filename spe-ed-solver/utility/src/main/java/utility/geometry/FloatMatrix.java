@@ -246,6 +246,21 @@ public class FloatMatrix {
 	}
 
 	/**
+	 * Returns the sum of each element.
+	 * 
+	 * @return sum of each element
+	 */
+	public float sum() {
+		float sum = 0;
+		for (int y = 0; y < values.length; y++) {
+			for (int x = 0; x < values[0].length; x++) {
+				sum += getValue(x, y);
+			}
+		}
+		return sum;
+	}
+
+	/**
 	 * Adds a value to the matrix at a given position.
 	 * 
 	 * @param position {@link Point2i} of the position
