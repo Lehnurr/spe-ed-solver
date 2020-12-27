@@ -3,6 +3,7 @@ package player;
 import java.util.function.Consumer;
 
 import player.analysis.enemyprobability.EnemyProbabilityCalculator;
+import player.analysis.reachablepoints.ReachablePointsCalculator;
 import utility.game.player.PlayerAction;
 import utility.game.step.GameStep;
 import utility.geometry.ContextualFloatMatrix;
@@ -15,6 +16,7 @@ public class SpeedSolverPlayer {
 	private static final int ENEMY_PROBABILITY_SEARCH_DEPTH = 5;
 
 	private final EnemyProbabilityCalculator enemyProbabilityCalculator = new EnemyProbabilityCalculator();
+	private final ReachablePointsCalculator reachablePointsCalculator = new ReachablePointsCalculator();
 
 	private final int playerId;
 
@@ -35,15 +37,30 @@ public class SpeedSolverPlayer {
 		enemyProbabilityCalculator.performCalculation(gameStep.getEnemies().values(), gameStep.getBoard(),
 				ENEMY_PROBABILITY_SEARCH_DEPTH);
 
+		reachablePointsCalculator.performCalculation(gameStep.getSelf(), gameStep.getBoard(),
+				enemyProbabilityCalculator.getProbabilitiesMatrix(), enemyProbabilityCalculator.getMinStepsMatrix(),
+				gameStep.getDeadline());
+
+		final PlayerAction actionToTake = reachablePointsCalculator.getSuccessRatingsResult().maxAction();
+
 		var probabilitiesNamedMatrix = new ContextualFloatMatrix("probability",
 				enemyProbabilityCalculator.getProbabilitiesMatrix(), 0, 1);
 		boardRatingConsumer.accept(probabilitiesNamedMatrix);
 
-		var minStepsNamedMatrix = new ContextualFloatMatrix("min steps", enemyProbabilityCalculator.getMinStepsMatrix());
+		var minStepsNamedMatrix = new ContextualFloatMatrix("min steps",
+				enemyProbabilityCalculator.getMinStepsMatrix());
 		boardRatingConsumer.accept(minStepsNamedMatrix);
 
+		var successNamedMatrix = new ContextualFloatMatrix("success",
+				reachablePointsCalculator.getSuccessMatrixResult().get(actionToTake), 0, 1);
+		boardRatingConsumer.accept(successNamedMatrix);
+
+		var cutOffNamedMatrix = new ContextualFloatMatrix("cut off",
+				reachablePointsCalculator.getCutOffMatrixResult().get(actionToTake));
+		boardRatingConsumer.accept(cutOffNamedMatrix);
+
 		// Send the Calculated Action
-		return PlayerAction.CHANGE_NOTHING;
+		return actionToTake;
 	}
 
 	public int getPlayerId() {
