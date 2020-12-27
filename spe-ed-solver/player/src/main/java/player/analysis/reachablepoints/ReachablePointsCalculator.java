@@ -1,6 +1,7 @@
 package player.analysis.reachablepoints;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
@@ -43,19 +44,64 @@ public class ReachablePointsCalculator {
 	public void performCalculation(final IPlayer self, final Board<Cell> board, final FloatMatrix probabilities,
 			final FloatMatrix minSteps, final Deadline deadline) {
 
-		final Map<PlayerAction, ReachablePointsCalculation> calculations = new EnumMap<>(PlayerAction.class);
-		final List<Thread> threads = new ArrayList<>();
-
 		final RatedPredictivePlayer startPlayer = new RatedPredictivePlayer(self);
+
+		final Map<PlayerAction, ReachablePointsCalculation> calculations = getCalculations(startPlayer, board,
+				probabilities, minSteps, deadline);
+
+		calculateMultithreaded(calculations.values());
+
+		updateResults(calculations);
+	}
+
+	/**
+	 * Generates {@link ReachablePointsCalculation} objects for each possible
+	 * {@link PlayerAction} a given {@link RatedPredictivePlayer} can make. The
+	 * objects are mapped to the performed {@link PlayerAction} and returned.
+	 * 
+	 * @param startPlayer   {@link RatedPredictivePlayer} to start the calculations
+	 *                      with
+	 * @param board         {@link Board} to check for collisions
+	 * @param probabilities {@link FloatMatrix} containing the enemy probability
+	 *                      values
+	 * @param minSteps      {@link FloatMatrix} containing the minimum enemy steps
+	 *                      for each element
+	 * @param deadline      {@link Deadline} which must not be exceeded
+	 * @return {@link ReachablePointsCalculation} objects mapped to the taken child
+	 *         {@link PlayerAction}
+	 */
+	private Map<PlayerAction, ReachablePointsCalculation> getCalculations(final RatedPredictivePlayer startPlayer,
+			final Board<Cell> board, final FloatMatrix probabilities, final FloatMatrix minSteps,
+			final Deadline deadline) {
+
+		final Map<PlayerAction, ReachablePointsCalculation> result = new EnumMap<>(PlayerAction.class);
 
 		for (final PlayerAction action : PlayerAction.values()) {
 			final RatedPredictivePlayer child = new RatedPredictivePlayer(startPlayer, action, board, probabilities,
 					minSteps);
 			final ReachablePointsCalculation calculation = new ReachablePointsCalculation(board, probabilities,
 					minSteps, child, deadline);
-			calculations.put(action, calculation);
+			result.put(action, calculation);
+		}
+
+		return result;
+	}
+
+	/**
+	 * Calculates each given {@link ReachablePointsCalculation} in a separate
+	 * threads and joins all of them.
+	 * 
+	 * @param calculations {@link ReachablePointsCalculation} objects to execute the
+	 *                     calculation for
+	 */
+	private void calculateMultithreaded(final Collection<ReachablePointsCalculation> calculations) {
+
+		final List<Thread> threads = new ArrayList<>();
+
+		for (final ReachablePointsCalculation calculation : calculations) {
 			final Thread thread = new Thread(calculation::execute);
 			threads.add(thread);
+			thread.start();
 		}
 
 		for (final Thread thread : threads) {
@@ -66,12 +112,18 @@ public class ReachablePointsCalculator {
 				ApplicationLogger.logException(e);
 			}
 		}
+	}
 
-		successMatrixResult = new EnumMap<>(PlayerAction.class);
-		cutOffMatrixResult = new EnumMap<>(PlayerAction.class);
+	/**
+	 * Updates all the locally stored results by collecting all result of the
+	 * {@link ReachablePointsCalculation} objects.
+	 * 
+	 * @param calculations {@link ReachablePointsCalculation} objects mapped to the
+	 *                     taken {@link PlayerAction}
+	 */
+	private void updateResults(final Map<PlayerAction, ReachablePointsCalculation> calculations) {
 
-		successRatingsResult = new ActionsRating();
-		cutOffRatingsResult = new ActionsRating();
+		clearResults();
 
 		for (final PlayerAction action : PlayerAction.values()) {
 			final ReachablePointsCalculation calculation = calculations.get(action);
@@ -87,6 +139,16 @@ public class ReachablePointsCalculator {
 
 		successRatingsResult.normalize();
 		cutOffRatingsResult.normalize();
+	}
+
+	/**
+	 * Clears all locally stored results.
+	 */
+	private void clearResults() {
+		successMatrixResult = new EnumMap<>(PlayerAction.class);
+		cutOffMatrixResult = new EnumMap<>(PlayerAction.class);
+		successRatingsResult = new ActionsRating();
+		cutOffRatingsResult = new ActionsRating();
 	}
 
 	/**
