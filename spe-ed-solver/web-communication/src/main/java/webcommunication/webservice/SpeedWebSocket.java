@@ -25,7 +25,7 @@ import webcommunication.webservice.parser.ResponseParser;
 public class SpeedWebSocket {
 
 	private static final long JETTY_WEBSOCKET_TIMEOUT = 3600000;
-	
+
 	private final GameStepParser gameStepParser;
 	private final ResponseParser responseParser;
 
@@ -88,7 +88,7 @@ public class SpeedWebSocket {
 	@OnWebSocketError
 	public void onError(final Throwable t) {
 		ApplicationLogger.logError(
-				"An error was thrown while handeling a websocket message! The connection will be terminated!");
+				"An error was thrown while communicating with the spe_ed server! The connection will be terminated!");
 		ApplicationLogger.logException(t);
 		closeLatch.countDown();
 	}
