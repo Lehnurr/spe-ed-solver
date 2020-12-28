@@ -47,6 +47,7 @@ public class Game {
         this.board = new Board<>(cells);
         this.players = new SimulationPlayer[playerCount];
         this.random = new Random();
+        this.deadline = new SimulationDeadline();
     }
 
     /**
@@ -110,7 +111,7 @@ public class Game {
             // return the new GameState as JSON
             return generateGameSteps();
         } else {
-            // return null, because no new gameState is available
+            // return new list, because no new gameState is available
             return new ArrayList<>();
         }
     }
