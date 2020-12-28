@@ -11,6 +11,8 @@ import utility.logging.ApplicationLogger;
  */
 public class TimeSynchronizationManager {
 
+	private static final long BUFFER_NANOSECONDS = 500000000;
+
 	private final Duration serverTimeOffset;
 
 	/**
@@ -56,7 +58,7 @@ public class TimeSynchronizationManager {
 
 		return new Deadline() {
 
-			final ZonedDateTime targetTime = deadlineTime.plus(serverTimeOffset);
+			final ZonedDateTime targetTime = deadlineTime.plus(serverTimeOffset).plusNanos(BUFFER_NANOSECONDS);
 
 			@Override
 			public long getRemainingMilliseconds() {
