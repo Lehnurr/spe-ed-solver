@@ -1,1 +1,1 @@
-docker run --env-file=".docker/variables.local.env" spe-ed-solver-lehnurr
+docker run --env-file=".docker/variables.local.env" teamlehnurr/spe-ed-solver
