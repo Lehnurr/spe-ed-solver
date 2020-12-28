@@ -7,7 +7,7 @@
 - Information about the informaticup
 
 - Hints for docker Build / Run
-  - `docker pull teamlehnurr/informaticup2020:latest`
+  - `docker pull teamlehnurr/spe-ed-solver:latest`
 - Hints for dependencies, licenses (Maven Goal) & maven build
 - Architecture / Project/Repo structure
 
