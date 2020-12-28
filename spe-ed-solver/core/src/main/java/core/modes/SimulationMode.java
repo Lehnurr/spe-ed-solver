@@ -35,7 +35,7 @@ public class SimulationMode implements Runnable {
 		var gameSteps = game.startSimulation();
 
 		// Iterate through all GameSteps
-		for (int i = 0; i < gameSteps.size(); i++) {
+		for (int i = 0; i < gameSteps.size() && gameSteps.get(i).isRunning(); i++) {
 			// Determine the current GameStep for a specific Player
 			var gameStep = gameSteps.get(i);
 
