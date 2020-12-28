@@ -1,8 +1,8 @@
 package player.analysis.reachablepoints;
 
 import java.util.Collection;
-import java.util.PriorityQueue;
-import java.util.Random;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import player.analysis.RatedPredictivePlayer;
 import utility.game.board.Board;
@@ -51,8 +51,8 @@ public class ReachablePointsCalculation {
 
 		this.deadline = deadline;
 
-		this.successMatrixResult = new FloatMatrix(board.getWidth(), board.getHeight());
-		this.cutOffMatrixResult = new FloatMatrix(board.getWidth(), board.getHeight());
+		this.successMatrixResult = new FloatMatrix(board.getWidth(), board.getHeight(), 0);
+		this.cutOffMatrixResult = new FloatMatrix(board.getWidth(), board.getHeight(), 0);
 	}
 
 	/**
@@ -60,37 +60,24 @@ public class ReachablePointsCalculation {
 	 */
 	public void execute() {
 
-		final Random random = new Random();
+		final Queue<RatedPredictivePlayer> queue = new LinkedList<>();
 
-		final PriorityQueue<PriorityObject<RatedPredictivePlayer>> calculationPlayers = new PriorityQueue<>();
+		final RatedPredictivePlayer initialQueueObject = this.startPlayer;
+		if (this.startPlayer.isActive())
+			queue.add(initialQueueObject);
 
-		final PriorityObject<RatedPredictivePlayer> initialQueueObject = new PriorityObject<>(0, this.startPlayer);
-		calculationPlayers.add(initialQueueObject);
-
-		while (calculationPlayers.size() > 0 && deadline.getRemainingMilliseconds() > DEADLINE_MILLISECOND_BUFFER) {
-			final RatedPredictivePlayer calculationPlayer = calculationPlayers.remove().getValue();
+		while (queue.size() > 0 && deadline.getRemainingMilliseconds() > DEADLINE_MILLISECOND_BUFFER) {
+			final RatedPredictivePlayer calculationPlayer = queue.poll();
 			final Collection<RatedPredictivePlayer> children = calculationPlayer.getValidChildren(board, probabilities,
 					minSteps);
 
 			for (final RatedPredictivePlayer child : children) {
 				final Point2i position = child.getPosition();
 
-				final float oldSuccessRating = successMatrixResult.getValue(position);
-				final float oldCutOffRating = cutOffMatrixResult.getValue(position);
+				successMatrixResult.max(position, child.getSuccessRating());
+				cutOffMatrixResult.max(position, child.getCutOffRating());
 
-				final float newSuccessRating = child.getSuccessRating();
-				final float newCutOffRating = child.getCutOffRating();
-
-				successMatrixResult.max(position, newSuccessRating);
-				cutOffMatrixResult.max(position, newCutOffRating);
-
-				final float successDelta = oldSuccessRating - newSuccessRating;
-				final float cutOffDelta = oldCutOffRating - newCutOffRating;
-
-				final float randomPriorityOffset = (float) (random.nextGaussian() * 0.1);
-				final float priority = successDelta + cutOffDelta + randomPriorityOffset;
-
-				calculationPlayers.add(new PriorityObject<RatedPredictivePlayer>(priority, child));
+				queue.add(child);
 			}
 		}
 	}

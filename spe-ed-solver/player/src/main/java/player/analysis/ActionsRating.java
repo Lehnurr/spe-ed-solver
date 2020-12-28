@@ -105,5 +105,10 @@ public class ActionsRating {
 		}
 		return returnValue;
 	}
+	
+	@Override
+	public String toString() {
+		return ratingMap.toString();
+	}
 
 }

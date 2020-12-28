@@ -56,9 +56,9 @@ public class RatedPredictivePlayer extends PredictivePlayer {
 
 		if (isActive()) {
 			this.successRating = calculateSuccessRating(parent.getSuccessRating(), probabilities, minSteps,
-					parent.getShortTail(), relativeRound);
-			this.cutOffRating = calculateCutOffRating(parent.getCutOffRating(), probabilities, minSteps,
-					parent.getShortTail(), relativeRound);
+					getShortTail(), relativeRound);
+			this.cutOffRating = calculateCutOffRating(parent.getCutOffRating(), probabilities, minSteps, getShortTail(),
+					relativeRound);
 		} else {
 			this.successRating = 0;
 			this.cutOffRating = 0;
