@@ -3,6 +3,8 @@ package visualisation;
 import java.util.ArrayList;
 import java.util.List;
 
+import utility.game.board.Board;
+import utility.game.board.Cell;
 import utility.game.player.PlayerAction;
 import utility.geometry.ContextualFloatMatrix;
 import utility.logging.ApplicationLogger;
@@ -42,12 +44,13 @@ public class Viewer implements IViewer {
 	}
 
 	@Override
-	public void commitRound(double availableTime, PlayerAction performedAction, double requiredTime,
+	public void commitRound(double availableTime, PlayerAction performedAction, double requiredTime, Board<Cell> board,
 			List<ContextualFloatMatrix> boardRatings) {
 
 		maxRoundIdx++;
 
 		ViewerSlice slice = new ViewerSlice(maxRoundIdx, availableTime, performedAction, requiredTime);
+		slice.addImage(ImageGeneration.generateImageFromBoard(board));
 		boardRatings.stream().map((rating) -> ImageGeneration.generateImageFromMatrix(rating, DEFAULT_COLOR_GRADIENT))
 				.forEachOrdered((image) -> slice.addImage(image));
 		slices.add(slice);

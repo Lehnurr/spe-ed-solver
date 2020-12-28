@@ -32,23 +32,25 @@ public class PlayerController {
 	}
 
 	/**
-	 * Sends the new GameStep to the Player and returns the chosen Action
+	 * Sends the new {@link GameStep} to the {@link SpeedSolverPlayer} and returns
+	 * the chosen {@link PlayerAction}.
 	 * 
-	 * @param gameStep The current Game Step
-	 * @return The action chosen by the player
+	 * @param gameStep the current {@link GameStep}
+	 * @return the {@link PlayerAction} chosen by the player
 	 */
 	public PlayerAction calculateAction(GameStep gameStep) {
 
 		final long availableMilliseconds = gameStep.getDeadline().getRemainingMilliseconds();
+		final float availableSeconds = availableMilliseconds / 1000f;
 
 		final List<ContextualFloatMatrix> boardRatings = new ArrayList<>();
-		boardRatings.add(gameStep.getBoardAsMatrix("Board"));
 
 		final PlayerAction action = player.calculateAction(gameStep, boardRatings::add);
 
 		final long requiredMilliseconds = availableMilliseconds - gameStep.getDeadline().getRemainingMilliseconds();
+		final float requiredSeconds = requiredMilliseconds / 1000f;
 
-		viewer.commitRound(availableMilliseconds / 1000., action, requiredMilliseconds / 1000., boardRatings);
+		viewer.commitRound(availableSeconds, action, requiredSeconds, gameStep.getBoard(), boardRatings);
 
 		return action;
 	}

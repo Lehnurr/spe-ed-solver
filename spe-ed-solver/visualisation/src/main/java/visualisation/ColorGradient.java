@@ -1,5 +1,7 @@
 package visualisation;
 
+import java.awt.Color;
+
 /**
  * Color Gradient for generating RGB values for float values between 0 and 1.
  */
@@ -16,6 +18,15 @@ public enum ColorGradient {
 			final int bValue = (int) (0xFF * Math.max(0, Math.min(1 / 3f, value - 0.66)) * 3);
 			final int rgbValue = (rValue << 16) | (gValue << 8) | bValue;
 			return rgbValue;
+		}
+	},
+	/**
+	 * Gradient at the outer edge of the color circle.
+	 */
+	RAINBOW {
+		@Override
+		protected int applyUnbounded(final float value) {
+			return Color.HSBtoRGB(value, 1, 1);
 		}
 	};
 

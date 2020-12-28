@@ -1,6 +1,5 @@
 package core;
 
-import java.io.IOException;
 import java.time.ZonedDateTime;
 
 import core.parser.CommandLineParser;

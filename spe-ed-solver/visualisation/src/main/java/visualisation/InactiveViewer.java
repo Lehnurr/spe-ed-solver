@@ -2,6 +2,8 @@ package visualisation;
 
 import java.util.List;
 
+import utility.game.board.Board;
+import utility.game.board.Cell;
 import utility.game.player.PlayerAction;
 import utility.geometry.ContextualFloatMatrix;
 
@@ -12,7 +14,7 @@ import utility.geometry.ContextualFloatMatrix;
 public class InactiveViewer implements IViewer {
 
 	@Override
-	public void commitRound(double availableTime, PlayerAction performedAction, double requiredTime,
+	public void commitRound(double availableTime, PlayerAction performedAction, double requiredTime, Board<Cell> board,
 			List<ContextualFloatMatrix> boardRatings) {
 	}
 

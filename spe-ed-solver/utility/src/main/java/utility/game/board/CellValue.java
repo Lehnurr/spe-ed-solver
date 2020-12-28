@@ -6,23 +6,43 @@ import utility.logging.ApplicationLogger;
  * A possible Cell-Value for the Game (PlayerId, 0 or -1)
  */
 public enum CellValue {
-	MULTIPLE_PLAYER(-1), EMPTY_CELL(0), PLAYER_ONE(1), PLAYER_TWO(2), PLAYER_THREE(3), PLAYER_FOUR(4), PLAYER_FIVE(5),
-	PLAYER_SIX(6);
+	MULTIPLE_PLAYER(-1, 0xFFFFFF), EMPTY_CELL(0, 0x000000), PLAYER_ONE(1, 0xFF0000), PLAYER_TWO(2, 0x00FF00),
+	PLAYER_THREE(3, 0x0000FF), PLAYER_FOUR(4, 0xFFFF00), PLAYER_FIVE(5, 0x00FFFF), PLAYER_SIX(6, 0xFF00FF);
 
-	private final int value;
+	private final int integerValue;
+	private final int rgbValue;
 
-	private CellValue(int value) {
-		this.value = value;
+	private CellValue(final int integerValue, final int rgbValue) {
+		this.integerValue = integerValue;
+		this.rgbValue = rgbValue;
 	}
 
 	/**
-	 * Returns the Cells value
+	 * Returns the unique integer value for the {@link CellValue}.
+	 * 
+	 * @return the integer value of the {@link CellValue}
 	 */
 	public int getIntegerValue() {
-		return this.value;
+		return this.integerValue;
 	}
 
-	public static CellValue fromInteger(int intValue) {
+	/**
+	 * Returns a unique RGB integer value for the {@link CellValue}.
+	 * 
+	 * @return the RGB value of the {@link CellValue}
+	 */
+	public int getRgbValue() {
+		return this.rgbValue;
+	}
+
+	/**
+	 * Returns the {@link CellValue} for a given integer value. If no
+	 * {@link CellValue} was found a {@link IllegalArgumentException} is thrown.
+	 * 
+	 * @param intValue integer value
+	 * @return {@link CellValue}
+	 */
+	public static CellValue fromInteger(final int intValue) {
 		if (intValue > 6 || intValue < -1) {
 			ApplicationLogger
 					.logAndThrowException(new IllegalArgumentException("Cell value " + intValue + " does not exist!"));
