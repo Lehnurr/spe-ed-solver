@@ -119,7 +119,7 @@ public final class ApplicationLogger {
         if (!isLoggingEnabled())
             return;
 
-        final StringBuilder exceptionOutput = new StringBuilder(exception.getMessage() + ": ");
+        final StringBuilder exceptionOutput = new StringBuilder();
 
         // Performance can be disregarded, as we have a much worse problem here with an
         // exception

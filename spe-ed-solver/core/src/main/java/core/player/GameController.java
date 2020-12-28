@@ -32,9 +32,8 @@ public class GameController {
 	 */
 	public PlayerAction sendGameStep(GameStep gameStep) {
 		final int playerId = gameStep.getSelf().getPlayerId();
-		
-		if(!playerControllers.containsKey(playerId))
-			playerControllers.put(playerId, new PlayerController(playerId, viewerEnabled));
+
+		playerControllers.computeIfAbsent(playerId, key -> new PlayerController(key, viewerEnabled));
 
 		return this.playerControllers.get(playerId).calculateAction(gameStep);
 	}

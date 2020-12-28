@@ -95,7 +95,7 @@ public class SimulationPlayer extends MovablePlayer {
         else if (this.lastSetAction == PlayerAction.SLOW_DOWN)
             this.speed--;
         else
-            this.direction.doAction(this.lastSetAction);
+            this.direction = this.direction.doAction(this.lastSetAction);
 
         this.lastSetAction = null;
     }
