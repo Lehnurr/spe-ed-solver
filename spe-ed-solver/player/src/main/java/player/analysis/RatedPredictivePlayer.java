@@ -57,8 +57,7 @@ public class RatedPredictivePlayer extends PredictivePlayer {
 		if (isActive()) {
 			this.successRating = calculateSuccessRating(parent.getSuccessRating(), probabilities, minSteps,
 					getShortTail(), relativeRound);
-			this.cutOffRating = calculateCutOffRating(parent.getCutOffRating(), probabilities, minSteps, getShortTail(),
-					relativeRound);
+			this.cutOffRating = calculateCutOffRating(probabilities, minSteps, getShortTail(), relativeRound);
 		} else {
 			this.successRating = 0;
 			this.cutOffRating = 0;
@@ -89,27 +88,28 @@ public class RatedPredictivePlayer extends PredictivePlayer {
 	}
 
 	/**
-	 * Calculates the new cut off rating based on the cut off rating of the parent.
+	 * Calculates the cut off rating based on the probabilities on the short tail.
 	 * 
-	 * @param parentSuccessRating cut off rating of the parent
-	 * @param probabilities       {@link FloatMatrix} with enemy probabilities to
-	 *                            consider
-	 * @param minSteps            {@link FloatMatrix} with the enemy minimum steps
-	 *                            to consider
-	 * @param shortTail           {@link Point2i points} of the last step from the
-	 *                            parent to the child
-	 * @param relativeRound       amount of round which are predictive
+	 * @param probabilities {@link FloatMatrix} with enemy probabilities to consider
+	 * @param minSteps      {@link FloatMatrix} with the enemy minimum steps to
+	 *                      consider
+	 * @param shortTail     {@link Point2i points} of the last step from the parent
+	 *                      to the child
+	 * @param relativeRound amount of round which are predictive
 	 * @return new cut off rating for the child
 	 */
-	private float calculateCutOffRating(final float parentCutOffRating, final FloatMatrix probabilities,
-			final FloatMatrix minSteps, final Collection<Point2i> shortTail, final int relativeRound) {
+	private float calculateCutOffRating(final FloatMatrix probabilities, final FloatMatrix minSteps,
+			final Collection<Point2i> shortTail, final int relativeRound) {
 
-		float localCutOff = 0;
+		float cutOff = 0;
 		for (final Point2i point : shortTail) {
-			if (relativeRound < minSteps.getValue(point))
-				localCutOff = Math.max(localCutOff, probabilities.getValue(point));
+			if (relativeRound < minSteps.getValue(point)) {
+				final float probabilityValue = probabilities.getValue(point);
+				final float localCutOff = (float) (-2 * Math.pow(probabilityValue - 1, 2) + 1);
+				cutOff = Math.max(cutOff, localCutOff);
+			}
 		}
-		return parentCutOffRating + localCutOff;
+		return cutOff;
 	}
 
 	/**
