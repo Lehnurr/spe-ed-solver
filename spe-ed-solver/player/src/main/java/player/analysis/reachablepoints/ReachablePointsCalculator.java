@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import player.analysis.ActionsRating;
 import player.analysis.RatedPredictivePlayer;
@@ -22,6 +24,8 @@ import utility.logging.ApplicationLogger;
  * {@link ActionsRating} objects and storing the last calculated results.
  */
 public class ReachablePointsCalculator {
+
+	private static final int DEADLINE_MILLISECOND_INTERRUPT = 250;
 
 	private ActionsRating successRatingsResult;
 	private ActionsRating cutOffRatingsResult;
@@ -49,7 +53,7 @@ public class ReachablePointsCalculator {
 		final Map<PlayerAction, ReachablePointsCalculation> calculations = getCalculations(startPlayer, board,
 				probabilities, minSteps, deadline);
 
-		calculateMultithreaded(calculations.values());
+		calculateMultithreaded(calculations.values(), deadline);
 
 		updateResults(calculations);
 	}
@@ -89,12 +93,15 @@ public class ReachablePointsCalculator {
 
 	/**
 	 * Calculates each given {@link ReachablePointsCalculation} in a separate
-	 * threads and joins all of them.
+	 * threads and joins all of them. Additionally a timer is set to interrupt
+	 * running threads, which are not finished in time.
 	 * 
 	 * @param calculations {@link ReachablePointsCalculation} objects to execute the
 	 *                     calculation for
+	 * @param deadline     {@link Deadline} for the calculations
 	 */
-	private void calculateMultithreaded(final Collection<ReachablePointsCalculation> calculations) {
+	private void calculateMultithreaded(final Collection<ReachablePointsCalculation> calculations,
+			final Deadline deadline) {
 
 		final List<Thread> threads = new ArrayList<>();
 
@@ -103,6 +110,19 @@ public class ReachablePointsCalculator {
 			threads.add(thread);
 			thread.start();
 		}
+
+		final Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				for (final Thread thread : threads) {
+					if (thread.isAlive()) {
+						thread.interrupt();
+					}
+				}
+				timer.cancel();
+			}
+		}, Math.max(1, deadline.getRemainingMilliseconds() - DEADLINE_MILLISECOND_INTERRUPT));
 
 		for (final Thread thread : threads) {
 			try {
@@ -131,7 +151,6 @@ public class ReachablePointsCalculator {
 			final FloatMatrix cutOffMatrix = calculation.getCutOffMatrixResult();
 			successMatrixResult.put(action, new FloatMatrix(1, 1));
 			cutOffMatrixResult.put(action, new FloatMatrix(1, 1));
-		
 
 			successMatrixResult.put(action, successMatrix);
 			cutOffMatrixResult.put(action, cutOffMatrix);
@@ -139,7 +158,7 @@ public class ReachablePointsCalculator {
 			successRatingsResult.setRating(action, successMatrix.sum());
 			cutOffRatingsResult.setRating(action, cutOffMatrix.sum());
 		}
-		
+
 		successRatingsResult.normalize();
 		cutOffRatingsResult.normalize();
 	}

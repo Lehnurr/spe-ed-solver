@@ -1,8 +1,6 @@
 package player.analysis.reachablepoints;
 
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Queue;
 
 import player.analysis.RatedPredictivePlayer;
 import utility.game.board.Board;
@@ -18,7 +16,8 @@ import utility.geometry.Point2i;
  */
 public class ReachablePointsCalculation {
 
-	private static final int DEADLINE_MILLISECOND_BUFFER = 200;
+	private static final int DEADLINE_MILLISECOND_BUFFER = 500;
+	private static final int QUEUE_SIZE = 10000;
 
 	private final Board<Cell> board;
 
@@ -60,13 +59,13 @@ public class ReachablePointsCalculation {
 	 */
 	public void execute() {
 
-		final Queue<RatedPredictivePlayer> queue = new LinkedList<>();
+		final LimitedQueue<RatedPredictivePlayer> queue = new LimitedQueue<>(RatedPredictivePlayer.class, QUEUE_SIZE);
 
 		final RatedPredictivePlayer initialQueueObject = this.startPlayer;
 		if (this.startPlayer.isActive())
 			queue.add(initialQueueObject);
 
-		while (queue.size() > 0 && deadline.getRemainingMilliseconds() > DEADLINE_MILLISECOND_BUFFER) {
+		while (queue.hasNext() && deadline.getRemainingMilliseconds() > DEADLINE_MILLISECOND_BUFFER) {
 			final RatedPredictivePlayer calculationPlayer = queue.poll();
 			final Collection<RatedPredictivePlayer> children = calculationPlayer.getValidChildren(board, probabilities,
 					minSteps);
