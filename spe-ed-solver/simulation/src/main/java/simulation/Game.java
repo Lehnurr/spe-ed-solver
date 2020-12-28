@@ -74,8 +74,10 @@ public class Game {
 
             PlayerDirection randomStartDirection = EnumExtensions.getRandomValue(PlayerDirection.class);
 
-            this.players[playerIndex] = new SimulationPlayer(playerIndex + 1, randomStartPosition, randomStartDirection,
+            int playerId = playerIndex + 1;
+            this.players[playerIndex] = new SimulationPlayer(playerId, randomStartPosition, randomStartDirection,
                     SimulationPlayer.MIN_SPEED);
+            setCell(randomStartPosition, playerId);
         }
 
         deadline.resetDeadLine();
@@ -84,9 +86,9 @@ public class Game {
     }
 
     /**
-     * Applies an action to a simulated player. The Player dies if the deadline
-     * exceeded or if this is the second action in the same turn. When all Players
-     * applied an Action, a new round will start.
+     * Applies an action to a simulated player. The Player dies if this is the
+     * second action in the same turn. When all Players applied an Action, a new
+     * round will start.
      * 
      * @param playerId the Players Id (1 - 6)
      * @param action   the action to be applied
@@ -96,10 +98,6 @@ public class Game {
     public List<GameStep> setAction(int playerId, PlayerAction action) {
         var currentPlayer = this.players[playerId - 1];
 
-        if (this.deadline.getRemainingMilliseconds() <= 0) {
-            currentPlayer.die();
-        }
-
         currentPlayer.setNextAction(action);
 
         // End round, if all players sent an Action
@@ -108,6 +106,8 @@ public class Game {
             Arrays.stream(players).forEach(SimulationPlayer::doActionAndMove);
             // update the board and the players alive-state
             updateGameState();
+            // reset the deadline
+            deadline.resetDeadLine();
             // return the new GameState as JSON
             return generateGameSteps();
         } else {
@@ -119,11 +119,17 @@ public class Game {
     private List<GameStep> generateGameSteps() {
         List<GameStep> gameSteps = new ArrayList<>();
 
+        // is running when more then one player is active
+        boolean isRunning = Arrays.stream(players).filter(SimulationPlayer::isActive).count() > 1;
+
+        long remainingDeadlineMilliseconds = deadline.getRemainingMilliseconds();
         for (var player : this.players) {
             var enemies = Arrays.stream(this.players).filter(p -> p != player)
                     .collect(Collectors.toMap(SimulationPlayer::getPlayerId, IPlayer.class::cast));
 
-            gameSteps.add(new GameStep((IPlayer) player, enemies, deadline, board, true));
+            var individualDeadline = new PlayerDeadline(remainingDeadlineMilliseconds);
+
+            gameSteps.add(new GameStep((IPlayer) player, enemies, individualDeadline, board, isRunning));
         }
 
         return gameSteps;
@@ -139,7 +145,7 @@ public class Game {
             if (!player.isActive())
                 continue;
 
-            // calculate the Vector to the first step by moving back (speed-1) steps
+            // calculate the Vector to the first step by moving back (speed - 1) steps
             var firstStepVector = player.getDirection().getDirectionVector().multiply((player.getSpeed() - 1) * -1);
             var firstStepPosition = player.getPosition().translate(firstStepVector);
 
@@ -181,12 +187,14 @@ public class Game {
     }
 
     /**
-     * Calculates the passed Cellc between two positions
+     * Calculates the passed Cells between two positions
      * 
      * @return The passed Cells (Jumped over cells are excluded)
      */
     private List<Point2i> getPassedSteps(Point2i positionA, Point2i positionB) {
-        if (round % JUMP_FREQUENCY == 0)
+        if (positionA.equals(positionB))
+            return Arrays.asList(positionA);
+        else if (round % JUMP_FREQUENCY != 0)
             return positionB.pointsInRectangle(positionA);
         else
             return Arrays.asList(positionA, positionB);
@@ -200,10 +208,12 @@ public class Game {
      * @return The actual new value
      */
     private CellValue setCell(Point2i point, int playerId) {
-        if (board.getBoardCellAt(point).getCellValue() == CellValue.EMPTY_CELL)
+        if (!board.isOnBoard(point))
+            return CellValue.MULTIPLE_PLAYER;
+        else if (board.getBoardCellAt(point).getCellValue() == CellValue.EMPTY_CELL)
             board.getBoardCellAt(point).setCellValue(playerId);
         else
-            board.getBoardCellAt(point).setCellValue(-1);
+            board.getBoardCellAt(point).setCellValue(CellValue.MULTIPLE_PLAYER.getIntegerValue());
 
         return board.getBoardCellAt(point).getCellValue();
     }
