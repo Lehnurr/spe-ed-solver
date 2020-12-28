@@ -25,4 +25,4 @@ jobs:
           context: .
           file: ./.docker/Dockerfile
           push: true
-          tags: teamlehnurr/informaticup2020:latest
+          tags: teamlehnurr/spe-ed-solver:latest
