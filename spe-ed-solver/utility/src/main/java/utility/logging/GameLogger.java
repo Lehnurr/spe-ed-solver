@@ -57,7 +57,7 @@ public final class GameLogger {
         final String consoleMessage = gameStep.toString();
 
         // Log the Board
-        gameStep.append(String.format("%nboard=%s%n", step.getBoard().toString()));
+        gameStep.append(String.format("%nboard=%s", step.getBoard().toString()));
         final String logFileMessage = gameStep.toString();
 
         ApplicationLogger.logMessage(LoggingLevel.GAME_INFO, logFileMessage, LoggingLevel.GAME_INFO, consoleMessage);

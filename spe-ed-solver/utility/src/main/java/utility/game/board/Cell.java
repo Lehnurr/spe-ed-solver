@@ -33,4 +33,9 @@ public class Cell implements IBoardCell<CellValue> {
 		return value == CellValue.EMPTY_CELL;
 	}
 
+	@Override
+	public String toString() {
+		return Integer.toString(getCellValue().getIntegerValue());
+	}
+
 }
