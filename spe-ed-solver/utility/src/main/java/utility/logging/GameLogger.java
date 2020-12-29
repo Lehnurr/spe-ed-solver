@@ -28,7 +28,7 @@ public final class GameLogger {
 
         // Log the general state
         StringBuilder gameStep = new StringBuilder(
-                String.format("%s: {you=%d, round=%d, playerCount=%d, remainingMilliseconds=%s}%n", running,
+                String.format("%s: {you=%d, round=%d, playerCount=%d, remainingMilliseconds=%s}", running,
                         step.getSelf().getPlayerId(), step.getSelf().getRound(), step.getPlayerCount(),
                         step.getDeadline().getRemainingMilliseconds()));
 
@@ -42,7 +42,7 @@ public final class GameLogger {
             else
                 active = "dead";
 
-            String player = String.format("\tPlayer %d {%s, %s, %s, %d}%n", currentPlayer.getPlayerId(), active,
+            String player = String.format("%n\tPlayer %d {%s, %s, %s, %d}", currentPlayer.getPlayerId(), active,
                     currentPlayer.getDirection().name(), currentPlayer.getPosition().toString(),
                     currentPlayer.getSpeed());
 
@@ -57,7 +57,7 @@ public final class GameLogger {
         final String consoleMessage = gameStep.toString();
 
         // Log the Board
-        gameStep.append(String.format("board=%s%n", step.getBoard().toString()));
+        gameStep.append(String.format("%nboard=%s%n", step.getBoard().toString()));
         final String logFileMessage = gameStep.toString();
 
         ApplicationLogger.logMessage(LoggingLevel.GAME_INFO, logFileMessage, LoggingLevel.GAME_INFO, consoleMessage);
