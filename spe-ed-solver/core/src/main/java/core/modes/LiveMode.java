@@ -1,7 +1,9 @@
 package core.modes;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import core.parser.EnvironmentVariableParser;
 import core.parser.EnvrionmentVariableParseException;
@@ -50,7 +52,8 @@ public class LiveMode implements Runnable {
 			final SpeedConnectionManager connectionManager = new SpeedConnectionManager(webserviceConnectionURI,
 					timeApiURI);
 
-			final GameController gameController = new GameController(viewerEnabled, Arrays.asList(playerType));
+			final List<PlayerType> playerTypes = new ArrayList<>(Arrays.asList(playerType));
+			final GameController gameController = new GameController(viewerEnabled, playerTypes);
 
 			connectionManager.play(gameController::handleGameStep);
 
