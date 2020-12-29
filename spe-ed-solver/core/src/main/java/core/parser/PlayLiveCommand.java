@@ -33,7 +33,7 @@ public class PlayLiveCommand implements Runnable {
 		this.viewerEnabled = viewerEnabled;
 	}
 
-	@Option(names = { "-p", "--player" }, description = "Sets the player type to play the game with.")
+	@Option(names = { "-p", "--player" }, description = "Sets the player type to play the game with.", required = true)
 	public void setPlayerType(final PlayerType playerType) {
 		this.playerType = playerType;
 	}
