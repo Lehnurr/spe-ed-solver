@@ -8,6 +8,7 @@ import player.PlayerType;
 import utility.game.player.PlayerAction;
 import utility.game.step.GameStep;
 import utility.geometry.ContextualFloatMatrix;
+import utility.logging.GameLogger;
 import visualisation.IViewer;
 import visualisation.InactiveViewer;
 import visualisation.Viewer;
@@ -41,6 +42,8 @@ public class PlayerController {
 	 */
 	public PlayerAction calculateAction(GameStep gameStep) {
 
+		GameLogger.logGameStep(gameStep);
+
 		final long availableMilliseconds = gameStep.getDeadline().getRemainingMilliseconds();
 		final float availableSeconds = availableMilliseconds / 1000f;
 
@@ -52,6 +55,9 @@ public class PlayerController {
 		final float requiredSeconds = requiredMilliseconds / 1000f;
 
 		viewer.commitRound(availableSeconds, action, requiredSeconds, gameStep.getBoard(), boardRatings);
+
+		GameLogger.logGameInformation(String.format("determined action %s for player %d after %.2f/%.2f seconds",
+				action, gameStep.getSelf().getPlayerId(), availableSeconds, requiredSeconds));
 
 		return action;
 	}
