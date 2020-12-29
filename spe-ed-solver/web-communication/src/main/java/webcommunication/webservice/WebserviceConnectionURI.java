@@ -6,9 +6,6 @@ import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-import utility.logging.ApplicationLogger;
-import utility.logging.LoggingLevel;
-
 public class WebserviceConnectionURI {
 
 	// name of the parameter used to identify the APi key for the webservice
@@ -34,9 +31,7 @@ public class WebserviceConnectionURI {
 		try {
 			encodedKey = URLEncoder.encode(apiKey, KEY_ENCODING);
 		} catch (UnsupportedEncodingException e) {
-			throw ApplicationLogger.logAndThrowException(
-					new IllegalStateException("The default webservice key encoding is set to an invalid value!", e),
-					LoggingLevel.ERROR);
+			throw new IllegalStateException("The default webservice key encoding is set to an invalid value!", e);
 		}
 		try {
 			uri = new URI(baseUri.toString() + "?" + KEY_PARAMETER_NAME + "=" + encodedKey);

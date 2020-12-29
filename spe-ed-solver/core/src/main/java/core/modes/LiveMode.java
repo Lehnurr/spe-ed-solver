@@ -57,9 +57,10 @@ public class LiveMode implements Runnable {
 
 			connectionManager.play(gameController::handleGameStep);
 
-		} catch (ConnectionInitializationException | EnvrionmentVariableParseException
-				| ConnectionTerminationException e) {
+		} catch (ConnectionInitializationException | EnvrionmentVariableParseException | ConnectionTerminationException
+				| InterruptedException e) {
 			ApplicationLogger.logException(e, LoggingLevel.ERROR);
+			ApplicationLogger.logError("The application will be shut down due to an unrecoverable error!");
 		}
 	}
 

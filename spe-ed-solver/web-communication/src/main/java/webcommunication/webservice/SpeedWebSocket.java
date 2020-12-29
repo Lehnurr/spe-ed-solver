@@ -91,22 +91,24 @@ public class SpeedWebSocket {
 
 	@OnWebSocketError
 	public void onError(final Throwable t) {
+		ApplicationLogger.logException(t, LoggingLevel.ERROR);
 		ApplicationLogger.logError(
 				"An error was thrown while communicating with the spe_ed server! The connection will be terminated!");
-		ApplicationLogger.logException(t, LoggingLevel.ERROR);
 		closeLatch.countDown();
 	}
 
 	/**
 	 * Asynchronous wait for the closure of the {@link SpeedWebSocket}. Blocks until
 	 * the {@link SpeedWebSocket} is closed.
+	 * 
+	 * @throws InterruptedException
 	 */
-	public void awaitClosure() {
+	public void awaitClosure() throws InterruptedException {
 		try {
 			closeLatch.await();
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
-			ApplicationLogger.logAndThrowException(new RuntimeException(e), LoggingLevel.ERROR);
+			throw e;
 		}
 	}
 

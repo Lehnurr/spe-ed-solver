@@ -50,9 +50,10 @@ public class SpeedConnectionManager {
 	 *                        {@link PlayerAction}
 	 * @throws ConnectionInitializationException
 	 * @throws ConnectionTerminationException
+	 * @throws InterruptedException
 	 */
 	public void play(final Function<GameStep, PlayerAction> gameStepHandler)
-			throws ConnectionInitializationException, ConnectionTerminationException {
+			throws ConnectionInitializationException, ConnectionTerminationException, InterruptedException {
 
 		final GameStepParser gameStepParser = new GameStepParser(timeSynchronizationManager);
 		final ResponseParser responseParser = new ResponseParser();

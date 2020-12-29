@@ -33,7 +33,9 @@ public class TimeSynchronizationManager {
 			ZonedDateTime serverTime = timeApiClient.getServerTime();
 			serverTimeOffset = Duration.between(clientTime, serverTime);
 		} catch (TimeRequestException e) {
-			ApplicationLogger.logException(e, LoggingLevel.WARNING, LoggingLevel.INFO);
+			ApplicationLogger.logException(e, LoggingLevel.WARNING);
+			ApplicationLogger
+					.logWarning("The time API couldn't be reached. Running without synchronization from now on!");
 			serverTimeOffset = Duration.ZERO;
 		}
 		this.serverTimeOffset = serverTimeOffset;
