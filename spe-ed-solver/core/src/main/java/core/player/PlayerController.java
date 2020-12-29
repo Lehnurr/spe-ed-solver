@@ -56,8 +56,7 @@ public class PlayerController {
 
 		viewer.commitRound(availableSeconds, action, requiredSeconds, gameStep.getBoard(), boardRatings);
 
-		GameLogger.logGameInformation(String.format("determined action %s for player %d after %.2f/%.2f seconds",
-				action, gameStep.getSelf().getPlayerId(), availableSeconds, requiredSeconds));
+		GameLogger.logPlayerAction(gameStep.getSelf(), action, requiredSeconds, availableSeconds);
 
 		return action;
 	}

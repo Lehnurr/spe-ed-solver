@@ -52,9 +52,6 @@ public class SimulationMode implements Runnable {
 		// Start the Simulation and get the initial GameSteps for each Player
 		var gameSteps = game.startSimulation();
 
-		// Log the initial GameStep
-		GameLogger.logGameStep(gameSteps.get(0));
-
 		// Iterate through all GameSteps
 		for (int i = 0; i < gameSteps.size(); i++) {
 			// Determine the current GameStep for a specific Player
@@ -62,9 +59,6 @@ public class SimulationMode implements Runnable {
 
 			// Send the GameStep and receive the Players chosen Action
 			var action = gameController.handleGameStep(gameStep);
-
-			// Log the Action
-			GameLogger.logPlayerAction(gameStep.getSelf(), action);
 
 			if (gameStep.isRunning()) {
 				// Send the Action to the Simulation and get the new GameSteps (if every
