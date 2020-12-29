@@ -11,18 +11,12 @@ import utility.geometry.ContextualFloatMatrix;
 /**
  * SpeedSolverPlayer
  */
-public class SpeedSolverPlayer {
+public class ReachablePointsPlayer implements ISpeedSolverPlayer {
 
 	private static final int ENEMY_PROBABILITY_SEARCH_DEPTH = 5;
 
 	private final EnemyProbabilityCalculator enemyProbabilityCalculator = new EnemyProbabilityCalculator();
 	private final ReachablePointsCalculator reachablePointsCalculator = new ReachablePointsCalculator();
-
-	private final int playerId;
-
-	public SpeedSolverPlayer(int playerId) {
-		this.playerId = playerId;
-	}
 
 	/**
 	 * Starts the Player to calculate a Action for the given GameStep
@@ -32,6 +26,7 @@ public class SpeedSolverPlayer {
 	 *                            {@link ContextualFloatMatrix} for documentation of
 	 *                            the decision made
 	 */
+	@Override
 	public PlayerAction calculateAction(GameStep gameStep, Consumer<ContextualFloatMatrix> boardRatingConsumer) {
 
 		enemyProbabilityCalculator.performCalculation(gameStep.getEnemies().values(), gameStep.getBoard(),
@@ -61,9 +56,5 @@ public class SpeedSolverPlayer {
 
 		// Send the Calculated Action
 		return actionToTake;
-	}
-
-	public int getPlayerId() {
-		return this.playerId;
 	}
 }

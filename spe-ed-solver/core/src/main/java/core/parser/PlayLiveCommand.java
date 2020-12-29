@@ -7,7 +7,7 @@ import utility.logging.ApplicationLogger;
 import utility.logging.LoggingLevel;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
-
+import player.PlayerType;
 import picocli.CommandLine.ParameterException;
 
 /**
@@ -26,21 +26,29 @@ public class PlayLiveCommand implements Runnable {
 
 	private boolean viewerEnabled = false;
 
+	private PlayerType playerType = PlayerType.REACHABLE_POINTS;
+
 	@Option(names = { "-v", "--viewer" }, description = "If specified the viewer will be enabled.")
 	public void setViewerEnabled(final boolean viewerEnabled) {
 		this.viewerEnabled = viewerEnabled;
 	}
 
-	@Option(names = { "-l",
-			"--logFileDirecotry" }, description = "If specified, a log file with all possible outputs will be created in the specified directory.")
+	@Option(names = { "-p", "--player" }, description = "Sets the player type to play the game with.")
+	public void setPlayerType(final PlayerType playerType) {
+		this.playerType = playerType;
+	}
+
+	@Option(names = { "-l", "--logFileDirecotry" },
+			description = "If specified, a log file with all possible outputs will be created in the specified directory.")
 	public void setLogFilePath(final String logDirectory) {
 		ApplicationLogger.setLogFilePath(logDirectory);
 	}
 
-	@Option(names = { "-c",
-			"--consoleLoggingLevel" }, description = "Limits the outputs in the console, a higher level includes all lower levels.\r\n"
+	@Option(names = { "-c", "--consoleLoggingLevel" },
+			description = "Limits the outputs in the console, a higher level includes all lower levels.\r\n"
 					+ "GAME_INFO = 1\r\n" + "INFO = 2\r\n" + "WARNING = 3\r\n" + "ERROR = 4\r\n"
-					+ "FATAL_ERROR = 5\r\n", defaultValue = "2")
+					+ "FATAL_ERROR = 5\r\n",
+			defaultValue = "2")
 	public void setConsoleOutputMethod(final String loggingLevel) {
 		try {
 			// Try parsing to an integer
@@ -59,13 +67,12 @@ public class PlayLiveCommand implements Runnable {
 			}
 		}
 
-		// no logging needed; handled by picocli
 		throw new ParameterException(spec.commandLine(), loggingLevel + " Is not a valid logging level!");
 	}
 
 	@Override
 	public void run() {
-		new LiveMode(viewerEnabled).run();
+		new LiveMode(viewerEnabled, playerType).run();
 	}
 
 }

@@ -1,19 +1,25 @@
 package core.parser;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import core.modes.SimulationMode;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
-import utility.logging.ApplicationLogger;
-import utility.logging.LoggingLevel;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.ParameterException;
 import picocli.CommandLine.Spec;
+import player.PlayerType;
+import utility.logging.ApplicationLogger;
+import utility.logging.LoggingLevel;
 
 /**
  * {@link Command} which runs a {@link SimulationMode} which simulates the game
  * spe_ed with the given command line arguments.
  */
-@Command(name = "simulated", description = "Starts a game of spe_ed locally with the given players and simulates the game.")
+@Command(name = "simulated",
+		description = "Starts a game of spe_ed locally with the given players and simulates the game.")
 public class PlaySimulationCommand implements Runnable {
 
 	@Spec
@@ -23,7 +29,8 @@ public class PlaySimulationCommand implements Runnable {
 
 	private int boardWidth;
 	private int boardHeight;
-	private int playerCount;
+
+	private List<PlayerType> playerTypes = Arrays.asList(PlayerType.getDefault(), PlayerType.getDefault());
 
 	@Option(names = { "-v", "--viewer" }, description = "If specified the viewer will be enabled.")
 	public void setViewerEnabled(final boolean viewerEnabled) {
@@ -48,29 +55,43 @@ public class PlaySimulationCommand implements Runnable {
 		this.boardHeight = boardHeight;
 	}
 
-	@Option(names = { "-p", "--playerCount" }, description = "The amount of players to play the simulation with.")
-	public void setPlayerCount(final int playerCount) {
-		if (playerCount < 2) {
-			// no logging needed; handled by picocli
+	@Option(names = { "-p", "--players" },
+			description = "Sets the player types to play the game with, seperated with \",\"")
+	public void setPlayerTypes(final String playerTypesString) {
+
+		final List<PlayerType> playerTypes = new ArrayList<>();
+
+		final String[] playerTypeStrings = playerTypesString.split(",");
+		for (final String playerTypeString : playerTypeStrings) {
+			try {
+				playerTypes.add(PlayerType.valueOf(playerTypeString));
+			} catch (final IllegalArgumentException e) {
+				throw new ParameterException(spec.commandLine(),
+						String.format("The %s player type is unknown! Valid values are %s seperated by \",\".",
+								playerTypeString, Arrays.asList(PlayerType.values())));
+			}
+		}
+
+		if (playerTypes.size() < 2)
 			throw new ParameterException(spec.commandLine(), "You need at least 2 players to simulate a game!");
-		}
-		if (playerCount > 6) {
-			// no logging needed; handled by picocli
+
+		if (playerTypes.size() > 6)
 			throw new ParameterException(spec.commandLine(), "You can't play spe_ed with more than 6 players!");
-		}
-		this.playerCount = playerCount;
+
+		this.playerTypes = playerTypes;
 	}
 
-	@Option(names = { "-l",
-			"--logFileDirecotry" }, description = "If specified, a log file with all possible outputs will be created in the specified directory.")
+	@Option(names = { "-l", "--logFileDirecotry" },
+			description = "If specified, a log file with all possible outputs will be created in the specified directory.")
 	public void setLogFilePath(final String logDirectory) {
 		ApplicationLogger.setLogFilePath(logDirectory);
 	}
 
-	@Option(names = { "-c",
-			"--consoleLoggingLevel" }, description = "Limits the outputs in the console, a higher level includes all lower levels.\r\n"
+	@Option(names = { "-c", "--consoleLoggingLevel" },
+			description = "Limits the outputs in the console, a higher level includes all lower levels.\r\n"
 					+ "GAME_INFO = 1\r\n" + "INFO = 2\r\n" + "WARNING = 3\r\n" + "ERROR = 4\r\n"
-					+ "FATAL_ERROR = 5\r\n", defaultValue = "2")
+					+ "FATAL_ERROR = 5\r\n",
+			defaultValue = "2")
 	public void setConsoleOutputMethod(final String loggingLevel) {
 		try {
 			// Try parsing to an integer
@@ -88,13 +109,12 @@ public class PlaySimulationCommand implements Runnable {
 				}
 			}
 		}
-		// no logging needed; handled by picocli
 		throw new ParameterException(spec.commandLine(), loggingLevel + " Is not a valid logging level!");
 	}
 
 	@Override
 	public void run() {
-		new SimulationMode(boardHeight, boardWidth, playerCount, viewerEnabled).run();
+		new SimulationMode(boardHeight, boardWidth, playerTypes, viewerEnabled).run();
 	}
 
 }

@@ -1,7 +1,12 @@
 package core.modes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import core.player.GameController;
+import player.PlayerType;
 import simulation.Game;
+import utility.game.board.Board;
 import utility.logging.ApplicationLogger;
 
 /**
@@ -10,25 +15,37 @@ import utility.logging.ApplicationLogger;
  */
 public class SimulationMode implements Runnable {
 
-	private final Game game;
-	private final GameController gameController;
+	private final int height;
+	private final int width;
+
+	private final List<PlayerType> playerTypes;
+	private final boolean viewerEnabled;
 
 	/**
 	 * Creates a new {@link Runnable} for the live play mode to play spe_ed offline
 	 * in an simulation. The constructor is used to set starting parameters.
 	 * 
-	 * @param height      Height of the Board
-	 * @param width       Widht of the Board
-	 * @param playerCount Number of Simulated Players
+	 * @param height        height of the {@link Board}
+	 * @param width         width of the {@link Board}
+	 * @param playerTypes   {@link List} of {@link PlayerType} of the players
+	 *                      participating
+	 * @param viewerEnabled true if the viewer should be enabled for the players
 	 * 
 	 */
-	public SimulationMode(int height, int width, int playerCount, boolean viewerEnabled) {
-		game = new Game(height, width, playerCount);
-		gameController = new GameController(viewerEnabled);
+	public SimulationMode(final int height, final int width, final List<PlayerType> playerTypes,
+			final boolean viewerEnabled) {
+		this.height = height;
+		this.width = width;
+		this.playerTypes = playerTypes;
+		this.viewerEnabled = viewerEnabled;
 	}
 
 	@Override
 	public void run() {
+
+		var game = new Game(height, width, playerTypes.size());
+		var gameController = new GameController(viewerEnabled, new ArrayList<>(playerTypes));
+
 		ApplicationLogger.logInformation("RUNNING SIMULATED");
 
 		// Start the Simulation and get the initial GameSteps for each Player
@@ -40,7 +57,7 @@ public class SimulationMode implements Runnable {
 			var gameStep = gameSteps.get(i);
 
 			// Send the GameStep and receive the Players chosen Action
-			var action = gameController.sendGameStep(gameStep);
+			var action = gameController.handleGameStep(gameStep);
 
 			if (gameStep.isRunning()) {
 				// Send the Action to the Simulation and get the new GameSteps (if every

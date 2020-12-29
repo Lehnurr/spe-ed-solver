@@ -3,7 +3,8 @@ package core.player;
 import java.util.ArrayList;
 import java.util.List;
 
-import player.SpeedSolverPlayer;
+import player.ISpeedSolverPlayer;
+import player.PlayerType;
 import utility.game.player.PlayerAction;
 import utility.game.step.GameStep;
 import utility.geometry.ContextualFloatMatrix;
@@ -16,12 +17,12 @@ import visualisation.Viewer;
  */
 public class PlayerController {
 
-	private final SpeedSolverPlayer player;
+	private final ISpeedSolverPlayer player;
 
 	private final IViewer viewer;
 
-	public PlayerController(int playerId, boolean viewerEnabled) {
-		this.player = new SpeedSolverPlayer(playerId);
+	public PlayerController(final boolean viewerEnabled, final PlayerType playerType) {
+		this.player = playerType.newInstance();
 
 		if (viewerEnabled) {
 			this.viewer = new Viewer();
