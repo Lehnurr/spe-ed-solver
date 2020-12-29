@@ -1,6 +1,7 @@
 package utility.logging;
 
-import utility.game.player.IMovablePlayer;
+import utility.game.player.IPlayer;
+import utility.game.player.PlayerAction;
 import utility.game.step.GameStep;
 
 /**
@@ -26,12 +27,10 @@ public final class GameLogger {
             running = "finished";
 
         // Log the general state
-        StringBuilder gameStep = new StringBuilder(String.format(
-                "%s: {you=%d, playerCount=%d, remainingMilliseconds=%s}%n", running, step.getSelf().getPlayerId(),
-                step.getPlayerCount(), step.getDeadline().getRemainingMilliseconds()));
-
-        // Log the Board
-        gameStep.append(String.format("board=%s%n", step.getBoard().toString()));
+        StringBuilder gameStep = new StringBuilder(
+                String.format("%s: {you=%d, round=%d, playerCount=%d, remainingMilliseconds=%s}%n", running,
+                        step.getSelf().getPlayerId(), step.getSelf().getRound(), step.getPlayerCount(),
+                        step.getDeadline().getRemainingMilliseconds()));
 
         // Log the Player
         var currentPlayer = step.getSelf();
@@ -43,9 +42,9 @@ public final class GameLogger {
             else
                 active = "dead";
 
-            String player = String.format("Player %d {%s, %s, %s, %d} in Round %d%n", currentPlayer.getPlayerId(),
-                    active, currentPlayer.getDirection().name(), currentPlayer.getPosition().toString(),
-                    currentPlayer.getSpeed(), currentPlayer.getRound());
+            String player = String.format("\tPlayer %d {%s, %s, %s, %d}%n", currentPlayer.getPlayerId(), active,
+                    currentPlayer.getDirection().name(), currentPlayer.getPosition().toString(),
+                    currentPlayer.getSpeed());
 
             gameStep.append(player);
 
@@ -55,30 +54,32 @@ public final class GameLogger {
                 currentPlayer = null;
         } while (currentPlayer != null);
 
-        ApplicationLogger.logMessage(LoggingLevel.GAME_INFO, gameStep.toString());
+        final String consoleMessage = gameStep.toString();
+
+        // Log the Board
+        gameStep.append(String.format("board=%s%n", step.getBoard().toString()));
+        final String logFileMessage = gameStep.toString();
+
+        ApplicationLogger.logMessage(LoggingLevel.GAME_INFO, logFileMessage, LoggingLevel.GAME_INFO, consoleMessage);
     }
 
     /**
+     * 
      * Logs the data of a Player State
      * 
-     * @param player The {@link IMovablePlayer Player} to log
+     * @param player The {@link IPlayer Player} to log
+     * @param action The players choosen action
      */
-    public static void logPlayerAction(IMovablePlayer player) {
+    public static void logPlayerAction(IPlayer player, PlayerAction action) {
 
-        String action;
-        if (player.getNextAction() != null)
-            action = player.getNextAction().getName();
-        else
-            action = "NO ACTION";
-
-        String playerState = String.format("action {%s} by Player %d {%s, %s, %d} in Round %d", action,
+        String playerState = String.format("action {%s} by Player %d {%s, %s, %d} in Round %d", action.getName(),
                 player.getPlayerId(), player.getDirection().name(), player.getPosition().toString(), player.getSpeed(),
                 player.getRound());
 
-        ApplicationLogger.logMessage(LoggingLevel.GAME_INFO, playerState);
+        ApplicationLogger.logMessage(LoggingLevel.GAME_INFO, playerState, LoggingLevel.GAME_INFO, playerState);
     }
 
     public static void logGameInformation(String message) {
-        ApplicationLogger.logMessage(LoggingLevel.GAME_INFO, message);
+        ApplicationLogger.logMessage(LoggingLevel.GAME_INFO, message, LoggingLevel.GAME_INFO, message);
     }
 }

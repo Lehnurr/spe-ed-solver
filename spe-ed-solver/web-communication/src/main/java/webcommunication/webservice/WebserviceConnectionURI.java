@@ -7,6 +7,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 import utility.logging.ApplicationLogger;
+import utility.logging.LoggingLevel;
 
 public class WebserviceConnectionURI {
 
@@ -34,13 +35,14 @@ public class WebserviceConnectionURI {
 			encodedKey = URLEncoder.encode(apiKey, KEY_ENCODING);
 		} catch (UnsupportedEncodingException e) {
 			throw ApplicationLogger.logAndThrowException(
-					new IllegalStateException("The default webservice key encoding is set to an invalid value!", e));
+					new IllegalStateException("The default webservice key encoding is set to an invalid value!", e),
+					LoggingLevel.ERROR);
 		}
 		try {
 			uri = new URI(baseUri.toString() + "?" + KEY_PARAMETER_NAME + "=" + encodedKey);
 		} catch (URISyntaxException e) {
-			throw ApplicationLogger.logAndThrowException(new MalformedURLException(
-					"The given URI and API Key could not be merged to a valid webservice connection URI!", e));
+			throw new MalformedURLException(
+					"The given URI and API Key could not be merged to a valid webservice connection URI!", e);
 		}
 	}
 

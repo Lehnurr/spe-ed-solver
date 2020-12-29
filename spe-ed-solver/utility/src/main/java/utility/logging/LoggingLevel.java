@@ -4,7 +4,22 @@ package utility.logging;
  * Specifies a Level for Log-Messages to put their importance in relation
  */
 public enum LoggingLevel {
-    GAME_INFO(1), INFO(2), WARNING(3), ERROR(4), FATAL_ERROR(5);
+    /**
+     * An error that prevents further execution
+     */
+    ERROR(0),
+    /**
+     * Information regarding the game spe_ed
+     */
+    GAME_INFO(1),
+    /**
+     * Information about the status of the application
+     */
+    INFO(2),
+    /**
+     * An error which does not prevent further execution
+     */
+    WARNING(3);
 
     private int level;
 
@@ -28,11 +43,11 @@ public enum LoggingLevel {
      * @return {@link LoggingLevel}
      */
     public static LoggingLevel fromInteger(final int intValue) {
-        if (intValue < 1 || intValue > 5) {
+        if (intValue < ERROR.getLevel() || intValue > WARNING.getLevel()) {
             ApplicationLogger.logAndThrowException(
-                    new IllegalArgumentException("Logging level " + intValue + " does not exist!"));
+                    new IllegalArgumentException("Logging level " + intValue + " does not exist!"), LoggingLevel.ERROR);
         }
 
-        return LoggingLevel.values()[intValue - 1];
+        return LoggingLevel.values()[intValue];
     }
 }

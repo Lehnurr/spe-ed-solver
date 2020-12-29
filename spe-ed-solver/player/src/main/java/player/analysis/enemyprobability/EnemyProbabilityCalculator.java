@@ -10,6 +10,7 @@ import utility.game.player.IPlayer;
 import utility.geometry.FloatMatrix;
 import utility.geometry.Point2i;
 import utility.logging.ApplicationLogger;
+import utility.logging.LoggingLevel;
 
 /**
  * Performs the {@link SingleEnemyPrediction} for each given player and combines
@@ -46,7 +47,7 @@ public class EnemyProbabilityCalculator {
 				thread.join();
 			} catch (InterruptedException e) {
 				// warning to logger but ignore
-				ApplicationLogger.logException(e);
+				ApplicationLogger.logException(e, LoggingLevel.WARNING);
 			}
 		}
 

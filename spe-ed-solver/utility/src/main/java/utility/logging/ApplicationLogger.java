@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.ZonedDateTime;
@@ -16,20 +17,12 @@ import java.time.format.DateTimeFormatter;
  */
 public final class ApplicationLogger {
     private static LoggingLevel consoleLoggingLevel = LoggingLevel.INFO;
-    private static String logFilePath = null;
+    private static String logFilePath = Paths
+            .get("log", DateTimeFormatter.ofPattern("'lehnurr_speed_'yyyyMMddHHmm'.log'").format(ZonedDateTime.now()))
+            .toAbsolutePath().toString();
+    private static boolean debugModeEnabled;
 
     private ApplicationLogger() {
-    }
-
-    /**
-     * Checks for a specific {@link LoggingLevel}, if a message with this level will
-     * be logged
-     * 
-     * @param level The level to check for logging
-     * @return true if the message will be logged in the console or in the log file
-     */
-    static boolean isLoggingEnabled(LoggingLevel level) {
-        return level.getLevel() <= consoleLoggingLevel.getLevel() || ApplicationLogger.logFilePath != null;
     }
 
     /**
@@ -39,7 +32,20 @@ public final class ApplicationLogger {
      *                     Default is false.
      */
     public static void setConsoleLoggingLevel(LoggingLevel loggingLevel) {
-        ApplicationLogger.consoleLoggingLevel = loggingLevel;
+        if (!debugModeEnabled)
+            ApplicationLogger.consoleLoggingLevel = loggingLevel;
+    }
+
+    /**
+     * Determines whether debug information (e.g. stacktrace of exceptions) are
+     * displayed on the console
+     * 
+     * @param debugEnabled True, if all available information is to be displayed on
+     *                     the console.
+     */
+    public static void setDebugMode(boolean debugEnabled) {
+        setConsoleLoggingLevel(LoggingLevel.WARNING);
+        ApplicationLogger.debugModeEnabled = debugEnabled;
     }
 
     /**
@@ -63,7 +69,11 @@ public final class ApplicationLogger {
         // Get Log-File path
         String dateTimeString = DateTimeFormatter.ofPattern("'lehnurr_speed_'yyyyMMddHHmm'.log'")
                 .format(applicationStartTime);
-        logFilePath = Paths.get(logFileDirectory, dateTimeString).toAbsolutePath().toString();
+        try {
+            logFilePath = Paths.get(logFileDirectory, dateTimeString).toAbsolutePath().toString();
+        } catch (InvalidPathException e) {
+            logFilePath = Paths.get(dateTimeString).toAbsolutePath().toString();
+        }
 
         try {
             // Create directory if necessary
@@ -76,8 +86,7 @@ public final class ApplicationLogger {
 
         } catch (IOException ex) {
             logFilePath = null;
-            ApplicationLogger.logError("Writing a log file is not possible");
-            ex.printStackTrace();
+            ApplicationLogger.logException(ex, LoggingLevel.WARNING);
         }
     }
 
@@ -87,10 +96,7 @@ public final class ApplicationLogger {
      * @param informationMessage The Message to log
      */
     public static void logInformation(String informationMessage) {
-        if (!isLoggingEnabled(LoggingLevel.INFO))
-            return;
-
-        logMessage(LoggingLevel.INFO, informationMessage);
+        logMessage(LoggingLevel.INFO, informationMessage, LoggingLevel.INFO, informationMessage);
     }
 
     /**
@@ -99,10 +105,10 @@ public final class ApplicationLogger {
      * @param warningMessage The Message to log
      */
     public static void logWarning(String warningMessage) {
-        if (!isLoggingEnabled(LoggingLevel.WARNING))
+        if (logFilePath == null && consoleLoggingLevel.getLevel() < LoggingLevel.WARNING.getLevel())
             return;
 
-        logMessage(LoggingLevel.WARNING, warningMessage);
+        logMessage(LoggingLevel.WARNING, warningMessage, LoggingLevel.WARNING, warningMessage);
     }
 
     /**
@@ -111,25 +117,21 @@ public final class ApplicationLogger {
      * @param errorMessage The Message to log
      */
     public static void logError(String errorMessage) {
-        if (!isLoggingEnabled(LoggingLevel.ERROR))
-            return;
-
-        logMessage(LoggingLevel.ERROR, errorMessage);
+        logMessage(LoggingLevel.ERROR, errorMessage, LoggingLevel.ERROR, errorMessage);
     }
 
     /**
-     * Logs a Exception with the Fatal-Error-Tag and a Time-Stamp
+     * Logs a Exception with a Time-Stamp. Additionally, a seperate level for the
+     * console output can be secified
      * 
-     * @param exception The occurred exception
+     * @param exception         The occurred exception
+     * @param exceptionLoglevel The level for the exception
+     * @param messageLoglevel   The level for the console output of the exception
+     *                          message
      */
-    public static void logException(Throwable exception) {
-        if (!isLoggingEnabled(LoggingLevel.FATAL_ERROR))
-            return;
-
+    public static void logException(Throwable exception, LoggingLevel exceptionLoglevel, LoggingLevel messageLoglevel) {
         final StringBuilder exceptionOutput = new StringBuilder();
 
-        // Performance can be disregarded, as we have a much worse problem here with an
-        // exception
         try (StringWriter sw = new StringWriter(); PrintWriter pw = new PrintWriter(sw)) {
             exception.printStackTrace(pw);
             exceptionOutput.append(sw.toString());
@@ -139,61 +141,93 @@ public final class ApplicationLogger {
             closeException.printStackTrace();
         }
 
-        logMessage(LoggingLevel.FATAL_ERROR, exceptionOutput.toString());
+        logMessage(exceptionLoglevel, exceptionOutput.toString(), messageLoglevel, exception.getMessage());
+        if (debugModeEnabled) {
+            exception.printStackTrace();
+        }
     }
 
     /**
-     * Logs a Exception with the Fatal-Error-Tag and a Time-Stamp and throws the
-     * Exception
+     * Logs a Exception with a Time-Stamp.
      * 
-     * @param <ExceptionType> The type of the occurred exception
-     * @param exception       The occurred exception
-     * @return an exception to make it possible to set the keyword {@code throw}
-     *         before the call of this method, so that the compiler knows, after the
-     *         call of this method nothing is executed anymore. Since this method
-     *         itself always throws an exception, nothing is ever returned.
-     * @throws ExceptionType Throws always the passed exception after passing it
+     * @param exception                   The occurred exception
+     * @param exceptionAndMessageLoglevel The level for the exception
      */
-    public static <ExceptionType extends Throwable> ExceptionType logAndThrowException(ExceptionType exception)
-            throws ExceptionType {
-        logException(exception);
-        // verhindern dass fatal error auf konsole ausgegeben wird.
+    public static void logException(Throwable exception, LoggingLevel exceptionAndMessageLoglevel) {
+        logException(exception, exceptionAndMessageLoglevel, exceptionAndMessageLoglevel);
+    }
+
+    /**
+     * Logs and throws a Exception with a Time-Stamp. Additionally, a seperate level
+     * for the console output can be secified
+     * 
+     * @param exception         The occurred exception
+     * @param exceptionLoglevel The level for the exception
+     * @param messageLoglevel   The level for the console output of the exception
+     *                          message
+     * @return will be never used because this function throws alwas an exception
+     * @throws ExceptionType the passed exception
+     */
+    public static <ExceptionType extends Throwable> ExceptionType logAndThrowException(ExceptionType exception,
+            LoggingLevel exceptionLoglevel, LoggingLevel messageLoglevel) throws ExceptionType {
+        logException(exception, exceptionLoglevel, messageLoglevel);
+        throw exception;
+    }
+
+    /**
+     * Logs and throws a Exception with a Time-Stamp. Additionally, a seperate level
+     * for the console output can be secified
+     * 
+     * @param exception                   The occurred exception
+     * @param exceptionAndMessageLoglevel The level for the exception
+     * @return will be never used because this function throws alwas an exception
+     * @throws ExceptionType the passed exception
+     */
+    public static <ExceptionType extends Throwable> ExceptionType logAndThrowException(ExceptionType exception,
+            LoggingLevel exceptionAndMessageLoglevel) throws ExceptionType {
+        logException(exception, exceptionAndMessageLoglevel, exceptionAndMessageLoglevel);
         throw exception;
     }
 
     /**
      * 
-     * Outputs a message without any modifications to the console and/or saves it to
-     * a file (depending on the configuration)
+     * Outputs a message to the console and saves it to a file (depending on the
+     * configuration)
      * 
-     * @param level      A {@link LoggingLevel LoggingLevel} to Tag the Message as
-     *                   Info, Warning, etc.
-     * @param logMessage The message to be output
+     * @param logFileLevel   A {@link LoggingLevel LoggingLevel} to Tag the Message
+     *                       as Info, Warning, etc. for the LogFile
+     * @param logFileMessage The message for the log File
+     * @param consoleLevel   A {@link LoggingLevel LoggingLevel} to Tag and filter
+     *                       the Message for the console output
+     * @param consoleMessage The message for the console output
      */
-    static void logMessage(LoggingLevel level, String logMessage) {
-        if (!isLoggingEnabled(level))
+    static void logMessage(LoggingLevel logFileLevel, String logFileMessage, LoggingLevel consoleLevel,
+            String consoleMessage) {
+        if (logFilePath == null && consoleLevel.getLevel() > consoleLoggingLevel.getLevel())
             return;
 
         // A String for the chronological classification of the message
         String timeTag = ZonedDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        String outputMessage = String.format("%-13s [%s]: %s", level.getTag(), timeTag, logMessage);
+        String fileLog = String.format("%-13s [%s]: %s", logFileLevel.getTag(), timeTag, logFileMessage);
+        String consoleLog = String.format("%-13s [%s]: %s", consoleLevel.getTag(), timeTag, consoleMessage);
 
-        if (consoleLoggingLevel.getLevel() >= level.getLevel()) {
-            System.out.println(outputMessage);
-        } else if (level == LoggingLevel.FATAL_ERROR) {
-            String fatalErrorMessage = String.format("%-13s [%s]: %s", level.getTag(), timeTag,
-                    "A fatal error has occurred, please check the log file");
-            System.out.println(fatalErrorMessage);
+        if (consoleLoggingLevel.getLevel() >= consoleLevel.getLevel()) {
+            if (consoleLevel == LoggingLevel.ERROR || consoleLevel == LoggingLevel.WARNING) {
+                System.err.println(consoleLog);
+            } else {
+                System.out.println(consoleLog);
+            }
         }
+
         if (ApplicationLogger.logFilePath != null) {
             try (FileWriter logFile = new FileWriter(ApplicationLogger.logFilePath, true)) {
-                logFile.append(String.format("%s%n", outputMessage));
+                logFile.append(String.format("%s%n", fileLog));
             } catch (IOException ex) {
-                if (consoleLoggingLevel.getLevel() < level.getLevel()) {
+                System.err.println("Error while Writing in LOG-File");
+                if (consoleLoggingLevel.getLevel() < logFileLevel.getLevel()) {
                     // Output the message to console if this has not already happened
-                    System.out.println(outputMessage);
+                    System.err.println(fileLog);
                 }
-                System.out.println("Error while Writing in LOG-File");
                 ex.printStackTrace();
             }
         }

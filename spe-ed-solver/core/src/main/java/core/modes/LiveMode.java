@@ -8,6 +8,7 @@ import core.parser.EnvrionmentVariableParseException;
 import core.player.GameController;
 import player.PlayerType;
 import utility.logging.ApplicationLogger;
+import utility.logging.LoggingLevel;
 import webcommunication.webservice.ConnectionInitializationException;
 import webcommunication.webservice.ConnectionTerminationException;
 import webcommunication.webservice.SpeedConnectionManager;
@@ -55,7 +56,7 @@ public class LiveMode implements Runnable {
 
 		} catch (ConnectionInitializationException | EnvrionmentVariableParseException
 				| ConnectionTerminationException e) {
-			ApplicationLogger.logException(e);
+			ApplicationLogger.logException(e, LoggingLevel.ERROR);
 		}
 	}
 

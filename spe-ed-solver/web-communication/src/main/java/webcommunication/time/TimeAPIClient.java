@@ -10,6 +10,7 @@ import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
 
 import utility.logging.ApplicationLogger;
+import utility.logging.LoggingLevel;
 import webcommunication.JettyHttpClientFactory;
 import webcommunication.time.parser.ServerTimeParser;
 
@@ -69,8 +70,8 @@ public class TimeAPIClient {
 		try {
 			client.start();
 		} catch (Exception e) {
-			ApplicationLogger.logAndThrowException(new TimeRequestException(
-					"The jetty http client could not get started with the following reason: " + e.getMessage(), e));
+			throw new TimeRequestException(
+					"The jetty http client could not get started with the following reason: " + e.getMessage(), e);
 		}
 
 		return client;
@@ -91,13 +92,11 @@ public class TimeAPIClient {
 		try {
 			response = client.GET(uri);
 		} catch (InterruptedException e) {
-			throw ApplicationLogger
-					.logAndThrowException(new TimeRequestException("The time request was interrupted!", e));
+			throw new TimeRequestException("The time request was interrupted!", e);
 		} catch (ExecutionException e) {
-			throw ApplicationLogger
-					.logAndThrowException(new TimeRequestException("The time request could not be executed!", e));
+			throw new TimeRequestException("The time request could not be executed!", e);
 		} catch (TimeoutException e) {
-			throw ApplicationLogger.logAndThrowException(new TimeRequestException("The time request timed out!", e));
+			throw new TimeRequestException("The time request timed out!", e);
 		}
 
 		return response.getContentAsString();
@@ -114,8 +113,7 @@ public class TimeAPIClient {
 		try {
 			client.stop();
 		} catch (Exception e) {
-			ApplicationLogger
-					.logAndThrowException(new TimeRequestException("The jetty http client could not get closed!", e));
+			throw new TimeRequestException("The jetty http client could not get closed!", e);
 		}
 
 	}

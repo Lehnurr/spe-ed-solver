@@ -1,6 +1,7 @@
 package utility.game.board;
 
 import utility.logging.ApplicationLogger;
+import utility.logging.LoggingLevel;
 
 /**
  * A possible Cell-Value for the Game (PlayerId, 0 or -1)
@@ -44,8 +45,8 @@ public enum CellValue {
 	 */
 	public static CellValue fromInteger(final int intValue) {
 		if (intValue > 6 || intValue < -1) {
-			ApplicationLogger
-					.logAndThrowException(new IllegalArgumentException("Cell value " + intValue + " does not exist!"));
+			ApplicationLogger.logAndThrowException(
+					new IllegalArgumentException("Cell value " + intValue + " does not exist!"), LoggingLevel.ERROR);
 		}
 		return CellValue.values()[intValue + 1];
 	}

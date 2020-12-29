@@ -40,8 +40,7 @@ public class EnvironmentVariableParser {
 	private String getEnvironmentVariableAsString(final String name) throws EnvrionmentVariableParseException {
 		final String variable = environmentVariables.getOrDefault(name, "");
 		if ("".equals(variable)) {
-			ApplicationLogger.logAndThrowException(new EnvrionmentVariableParseException(
-					"The environment variable \"" + name + "\" cannot be found!"));
+			throw new EnvrionmentVariableParseException("The environment variable \"" + name + "\" cannot be found!");
 		}
 		return variable;
 	}
@@ -58,8 +57,8 @@ public class EnvironmentVariableParser {
 		try {
 			parsedValue = new URI(stringValue);
 		} catch (URISyntaxException e) {
-			throw ApplicationLogger.logAndThrowException(new EnvrionmentVariableParseException(
-					"The environment variable \"" + WEBSERVICE_URL_ENV_NAME + "\" is not an valid URI!"));
+			throw new EnvrionmentVariableParseException(
+					"The environment variable \"" + WEBSERVICE_URL_ENV_NAME + "\" is not an valid URI!");
 		}
 		return parsedValue;
 	}
@@ -89,9 +88,9 @@ public class EnvironmentVariableParser {
 		try {
 			return new WebserviceConnectionURI(webserviceURI, apiKey);
 		} catch (MalformedURLException e) {
-			throw ApplicationLogger.logAndThrowException(new EnvrionmentVariableParseException(
+			throw new EnvrionmentVariableParseException(
 					"The environment variables for the URL and API Key of the webservice are not formatted a valid way.",
-					e));
+					e);
 		}
 	}
 
@@ -107,8 +106,8 @@ public class EnvironmentVariableParser {
 		try {
 			parsedValue = new URI(stringValue);
 		} catch (URISyntaxException e) {
-			throw ApplicationLogger.logAndThrowException(new EnvrionmentVariableParseException(
-					"The environment variable \"" + TIME_URL_ENV_NAME + "\" is not an valid URI!"));
+			throw new EnvrionmentVariableParseException(
+					"The environment variable \"" + TIME_URL_ENV_NAME + "\" is not an valid URI!");
 		}
 		return parsedValue;
 	}

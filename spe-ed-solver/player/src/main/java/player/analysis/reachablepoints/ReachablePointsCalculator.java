@@ -18,6 +18,7 @@ import utility.game.player.PlayerAction;
 import utility.game.step.Deadline;
 import utility.geometry.FloatMatrix;
 import utility.logging.ApplicationLogger;
+import utility.logging.LoggingLevel;
 
 /**
  * Calculator class calculating success and cut off ratings as
@@ -129,7 +130,7 @@ public class ReachablePointsCalculator {
 				thread.join();
 			} catch (InterruptedException e) {
 				ApplicationLogger.logWarning("The reachable points calculation was interrupted!");
-				ApplicationLogger.logException(e);
+				ApplicationLogger.logException(e, LoggingLevel.WARNING);
 			}
 		}
 	}

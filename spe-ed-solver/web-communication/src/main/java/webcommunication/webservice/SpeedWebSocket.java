@@ -14,6 +14,7 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import utility.game.player.PlayerAction;
 import utility.game.step.GameStep;
 import utility.logging.ApplicationLogger;
+import utility.logging.LoggingLevel;
 import webcommunication.webservice.parser.GameStepParser;
 import webcommunication.webservice.parser.ResponseParser;
 
@@ -72,8 +73,7 @@ public class SpeedWebSocket {
 			try {
 				session.getRemote().sendString(responseText);
 			} catch (IOException e) {
-				ApplicationLogger.logAndThrowException(
-						new MessageSendingException("Could not sent response: " + responseText, e));
+				throw new MessageSendingException("Could not sent response: " + responseText, e);
 			}
 		}
 		roundCounter++;
@@ -89,7 +89,7 @@ public class SpeedWebSocket {
 	public void onError(final Throwable t) {
 		ApplicationLogger.logError(
 				"An error was thrown while communicating with the spe_ed server! The connection will be terminated!");
-		ApplicationLogger.logException(t);
+		ApplicationLogger.logException(t, LoggingLevel.ERROR);
 		closeLatch.countDown();
 	}
 
@@ -102,7 +102,7 @@ public class SpeedWebSocket {
 			closeLatch.await();
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
-			ApplicationLogger.logAndThrowException(new RuntimeException(e));
+			ApplicationLogger.logAndThrowException(new RuntimeException(e), LoggingLevel.ERROR);
 		}
 	}
 

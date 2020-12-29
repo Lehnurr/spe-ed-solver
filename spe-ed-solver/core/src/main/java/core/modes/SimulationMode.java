@@ -8,6 +8,7 @@ import player.PlayerType;
 import simulation.Game;
 import utility.game.board.Board;
 import utility.logging.ApplicationLogger;
+import utility.logging.GameLogger;
 
 /**
  * {@link Runnable} for the live play mode to play spe_ed in an offline
@@ -51,6 +52,9 @@ public class SimulationMode implements Runnable {
 		// Start the Simulation and get the initial GameSteps for each Player
 		var gameSteps = game.startSimulation();
 
+		// Log the initial GameStep
+		GameLogger.logGameStep(gameSteps.get(0));
+
 		// Iterate through all GameSteps
 		for (int i = 0; i < gameSteps.size(); i++) {
 			// Determine the current GameStep for a specific Player
@@ -59,10 +63,18 @@ public class SimulationMode implements Runnable {
 			// Send the GameStep and receive the Players chosen Action
 			var action = gameController.handleGameStep(gameStep);
 
+			// Log the Action
+			GameLogger.logPlayerAction(gameStep.getSelf(), action);
+
 			if (gameStep.isRunning()) {
 				// Send the Action to the Simulation and get the new GameSteps (if every
 				// alive Player has already sent an Action)
 				var nextGameSteps = game.setAction(gameStep.getSelf().getPlayerId(), action);
+
+				if (!nextGameSteps.isEmpty()) {
+					// Log the new Gamestep
+					GameLogger.logGameStep(nextGameSteps.get(0));
+				}
 
 				// Add all new GameSteps to the gameSteps-List
 				gameSteps.addAll(nextGameSteps);

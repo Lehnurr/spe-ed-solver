@@ -38,22 +38,20 @@ public class PlayLiveCommand implements Runnable {
 		this.playerType = playerType;
 	}
 
-	@Option(names = { "-l", "--logFileDirecotry" },
-			description = "If specified, a log file with all possible outputs will be created in the specified directory.")
+	@Option(names = { "-l",
+			"--logFileDirecotry" }, description = "Specifies the directory in which a log file containing all possible output is created.", defaultValue = "log")
 	public void setLogFilePath(final String logDirectory) {
 		ApplicationLogger.setLogFilePath(logDirectory);
 	}
 
-	@Option(names = { "-c", "--consoleLoggingLevel" },
-			description = "Limits the outputs in the console, a higher level includes all lower levels.\r\n"
-					+ "GAME_INFO = 1\r\n" + "INFO = 2\r\n" + "WARNING = 3\r\n" + "ERROR = 4\r\n"
-					+ "FATAL_ERROR = 5\r\n",
-			defaultValue = "2")
+	@Option(names = { "-c",
+			"--consoleLoggingLevel" }, description = "Limits the outputs in the console, a higher level includes all lower levels.\r\n"
+					+ "GAME_INFO = 1\r\n" + "INFO = 2\r\n" + "WARNING = 3\r\n", defaultValue = "2")
 	public void setConsoleOutputMethod(final String loggingLevel) {
 		try {
 			// Try parsing to an integer
 			int ordinalLevel = Integer.parseInt(loggingLevel);
-			if (ordinalLevel >= 1 && ordinalLevel <= 5) {
+			if (ordinalLevel > LoggingLevel.ERROR.getLevel() && ordinalLevel <= LoggingLevel.WARNING.getLevel()) {
 				ApplicationLogger.setConsoleLoggingLevel(LoggingLevel.fromInteger(ordinalLevel));
 				return;
 			}
@@ -68,6 +66,12 @@ public class PlayLiveCommand implements Runnable {
 		}
 
 		throw new ParameterException(spec.commandLine(), loggingLevel + " Is not a valid logging level!");
+	}
+
+	@Option(names = { "-d",
+			"--debug" }, description = "If specified the application will show available debug information.")
+	public void setDebugEnabled(final boolean debugEnabled) {
+		ApplicationLogger.setDebugMode(debugEnabled);
 	}
 
 	@Override
