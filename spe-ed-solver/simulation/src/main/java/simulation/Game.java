@@ -76,7 +76,7 @@ public class Game {
 
             int playerId = playerIndex + 1;
             this.players[playerIndex] = new SimulationPlayer(playerId, randomStartPosition, randomStartDirection,
-                    SimulationPlayer.MIN_SPEED);
+                    SimulationPlayer.MIN_SPEED, 0);
             setCell(randomStartPosition, playerId);
         }
 
@@ -194,10 +194,10 @@ public class Game {
     private List<Point2i> getPassedSteps(Point2i positionA, Point2i positionB) {
         if (positionA.equals(positionB))
             return Arrays.asList(positionA);
-        else if (round % JUMP_FREQUENCY != 0)
-            return positionB.pointsInRectangle(positionA);
-        else
+        else if (round % JUMP_FREQUENCY == 0)
             return Arrays.asList(positionA, positionB);
+        else
+            return positionB.pointsInRectangle(positionA);
     }
 
     /**
