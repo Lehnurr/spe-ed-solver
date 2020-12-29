@@ -55,7 +55,7 @@ public class PlaySimulationCommand implements Runnable {
 	}
 
 	@Option(names = { "-p",
-			"--players" }, description = "Sets the player types to play the game with, seperated with \",\"", required = true)
+			"--players" }, description = "Sets the player types to play the game with, seperated with \",\"")
 	public void setPlayerTypes(final String playerTypesString) {
 
 		final List<PlayerType> playerTypes = new ArrayList<>();
