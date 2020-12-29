@@ -15,11 +15,9 @@ public final class GameLogger {
     /**
      * Logs the Data of a GameStep
      * 
-     * @param step The {@link GameStep#GameStep Steps} to log
+     * @param step The {@link GameStep Step} to log
      */
     public static void logGameStep(GameStep step) {
-        if (!ApplicationLogger.isLoggingEnabled())
-            return;
 
         String running;
         if (step.isRunning())
@@ -57,17 +55,15 @@ public final class GameLogger {
                 currentPlayer = null;
         } while (currentPlayer != null);
 
-        ApplicationLogger.logMessage(LoggingTag.GAME_INFO, gameStep.toString());
+        ApplicationLogger.logMessage(LoggingLevel.GAME_INFO, gameStep.toString());
     }
 
     /**
      * Logs the data of a Player State
      * 
-     * @param player The {@link IMovablePlayer#IMovablePlayer Player} to log
+     * @param player The {@link IMovablePlayer Player} to log
      */
     public static void logPlayerAction(IMovablePlayer player) {
-        if (!ApplicationLogger.isLoggingEnabled())
-            return;
 
         String action;
         if (player.getNextAction() != null)
@@ -79,6 +75,10 @@ public final class GameLogger {
                 player.getPlayerId(), player.getDirection().name(), player.getPosition().toString(), player.getSpeed(),
                 player.getRound());
 
-        ApplicationLogger.logMessage(LoggingTag.GAME_INFO, playerState);
+        ApplicationLogger.logMessage(LoggingLevel.GAME_INFO, playerState);
+    }
+
+    public static void logGameInformation(String message) {
+        ApplicationLogger.logMessage(LoggingLevel.GAME_INFO, message);
     }
 }

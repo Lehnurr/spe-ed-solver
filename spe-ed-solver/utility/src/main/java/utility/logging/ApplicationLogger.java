@@ -15,14 +15,21 @@ import java.time.format.DateTimeFormatter;
  * A Logger for Console or File output. Logs nothing by Default.
  */
 public final class ApplicationLogger {
-    private static boolean logInConsole = false;
+    private static LoggingLevel consoleLoggingLevel = LoggingLevel.INFO;
     private static String logFilePath = null;
 
     private ApplicationLogger() {
     }
 
-    static boolean isLoggingEnabled() {
-        return logInConsole || ApplicationLogger.logFilePath != null;
+    /**
+     * Checks for a specific {@link LoggingLevel}, if a message with this level will
+     * be logged
+     * 
+     * @param level The level to check for logging
+     * @return true if the message will be logged in the console or in the log file
+     */
+    static boolean isLoggingEnabled(LoggingLevel level) {
+        return level.getLevel() <= consoleLoggingLevel.getLevel() || ApplicationLogger.logFilePath != null;
     }
 
     /**
@@ -31,27 +38,27 @@ public final class ApplicationLogger {
      * @param logInConsole True if the messages should be printed to the console.
      *                     Default is false.
      */
-    public static void setLogInConsole(boolean logInConsole) {
-        ApplicationLogger.logInConsole = logInConsole;
+    public static void setConsoleLoggingLevel(LoggingLevel loggingLevel) {
+        ApplicationLogger.consoleLoggingLevel = loggingLevel;
     }
 
     /**
      * Specifies whether and where to store the log file(s).
      * 
-     * @param logFileDirectory     A Path (Empty string for the execution path) to a
-     *                             Directory or null if no file should be created.
-     *                             Default is null.
-     * @param applicationStartTime The start time of the application to assign a
-     *                             unique name to the log file.
-     * @throws IOException
+     * @param logFileDirectory A Path (Empty string for the execution path) to a
+     *                         Directory or null if no file should be created.
+     *                         Default is null.
      */
-    public static void setLogFilePath(String logFileDirectory, ZonedDateTime applicationStartTime) {
+    public static void setLogFilePath(String logFileDirectory) {
 
-        if (logFileDirectory == null || applicationStartTime == null) {
+        if (logFileDirectory == null) {
             // Disable File Logging
             logFilePath = null;
             return;
         }
+
+        // The start time of the application to assign a unique name to the log file.
+        final ZonedDateTime applicationStartTime = ZonedDateTime.now();
 
         // Get Log-File path
         String dateTimeString = DateTimeFormatter.ofPattern("'lehnurr_speed_'yyyyMMddHHmm'.log'")
@@ -80,10 +87,10 @@ public final class ApplicationLogger {
      * @param informationMessage The Message to log
      */
     public static void logInformation(String informationMessage) {
-        if (!isLoggingEnabled())
+        if (!isLoggingEnabled(LoggingLevel.INFO))
             return;
 
-        logMessage(LoggingTag.INFO, informationMessage);
+        logMessage(LoggingLevel.INFO, informationMessage);
     }
 
     /**
@@ -92,10 +99,10 @@ public final class ApplicationLogger {
      * @param warningMessage The Message to log
      */
     public static void logWarning(String warningMessage) {
-        if (!isLoggingEnabled())
+        if (!isLoggingEnabled(LoggingLevel.WARNING))
             return;
 
-        logMessage(LoggingTag.WARNING, warningMessage);
+        logMessage(LoggingLevel.WARNING, warningMessage);
     }
 
     /**
@@ -104,10 +111,10 @@ public final class ApplicationLogger {
      * @param errorMessage The Message to log
      */
     public static void logError(String errorMessage) {
-        if (!isLoggingEnabled())
+        if (!isLoggingEnabled(LoggingLevel.ERROR))
             return;
 
-        logMessage(LoggingTag.ERROR, errorMessage);
+        logMessage(LoggingLevel.ERROR, errorMessage);
     }
 
     /**
@@ -116,7 +123,7 @@ public final class ApplicationLogger {
      * @param exception The occurred exception
      */
     public static void logException(Throwable exception) {
-        if (!isLoggingEnabled())
+        if (!isLoggingEnabled(LoggingLevel.FATAL_ERROR))
             return;
 
         final StringBuilder exceptionOutput = new StringBuilder();
@@ -132,7 +139,7 @@ public final class ApplicationLogger {
             closeException.printStackTrace();
         }
 
-        logMessage(LoggingTag.FATAL_ERROR, exceptionOutput.toString());
+        logMessage(LoggingLevel.FATAL_ERROR, exceptionOutput.toString());
     }
 
     /**
@@ -150,6 +157,7 @@ public final class ApplicationLogger {
     public static <ExceptionType extends Throwable> ExceptionType logAndThrowException(ExceptionType exception)
             throws ExceptionType {
         logException(exception);
+        // verhindern dass fatal error auf konsole ausgegeben wird.
         throw exception;
     }
 
@@ -158,27 +166,30 @@ public final class ApplicationLogger {
      * Outputs a message without any modifications to the console and/or saves it to
      * a file (depending on the configuration)
      * 
-     * @param typeTag    A {@link LoggingTag#LoggingTag Tag} to mark the Message as
+     * @param level      A {@link LoggingLevel LoggingLevel} to Tag the Message as
      *                   Info, Warning, etc.
      * @param logMessage The message to be output
      */
-    static void logMessage(LoggingTag typeTag, String logMessage) {
-        if (!isLoggingEnabled())
+    static void logMessage(LoggingLevel level, String logMessage) {
+        if (!isLoggingEnabled(level))
             return;
 
         // A String for the chronological classification of the message
         String timeTag = ZonedDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        String outputMessage = String.format("%-13s [%s]: %s", typeTag.getTag(), timeTag, logMessage);
+        String outputMessage = String.format("%-13s [%s]: %s", level.getTag(), timeTag, logMessage);
 
-        if (logInConsole) {
+        if (consoleLoggingLevel.getLevel() >= level.getLevel()) {
             System.out.println(outputMessage);
+        } else if (level == LoggingLevel.FATAL_ERROR) {
+            String fatalErrorMessage = String.format("%-13s [%s]: %s", level.getTag(), timeTag,
+                    "A fatal error has occurred, please check the log file");
+            System.out.println(fatalErrorMessage);
         }
-
         if (ApplicationLogger.logFilePath != null) {
             try (FileWriter logFile = new FileWriter(ApplicationLogger.logFilePath, true)) {
                 logFile.append(String.format("%s%n", outputMessage));
             } catch (IOException ex) {
-                if (!logInConsole) {
+                if (consoleLoggingLevel.getLevel() < level.getLevel()) {
                     // Output the message to console if this has not already happened
                     System.out.println(outputMessage);
                 }

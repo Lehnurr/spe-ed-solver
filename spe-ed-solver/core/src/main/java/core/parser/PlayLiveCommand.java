@@ -3,8 +3,12 @@ package core.parser;
 import core.modes.LiveMode;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
+import utility.logging.ApplicationLogger;
+import utility.logging.LoggingLevel;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
+
+import picocli.CommandLine.ParameterException;
 
 /**
  * {@link Command} which runs a {@link LiveMode} with the given command line
@@ -25,6 +29,38 @@ public class PlayLiveCommand implements Runnable {
 	@Option(names = { "-v", "--viewer" }, description = "If specified the viewer will be enabled.")
 	public void setViewerEnabled(final boolean viewerEnabled) {
 		this.viewerEnabled = viewerEnabled;
+	}
+
+	@Option(names = { "-l",
+			"--logFileDirecotry" }, description = "If specified, a log file with all possible outputs will be created in the specified directory.")
+	public void setLogFilePath(final String logDirectory) {
+		ApplicationLogger.setLogFilePath(logDirectory);
+	}
+
+	@Option(names = { "-c",
+			"--consoleLoggingLevel" }, description = "Limits the outputs in the console, a higher level includes all lower levels.\r\n"
+					+ "GAME_INFO = 1\r\n" + "INFO = 2\r\n" + "WARNING = 3\r\n" + "ERROR = 4\r\n"
+					+ "FATAL_ERROR = 5\r\n", defaultValue = "2")
+	public void setConsoleOutputMethod(final String loggingLevel) {
+		try {
+			// Try parsing to an integer
+			int ordinalLevel = Integer.parseInt(loggingLevel);
+			if (ordinalLevel >= 1 && ordinalLevel <= 5) {
+				ApplicationLogger.setConsoleLoggingLevel(LoggingLevel.fromInteger(ordinalLevel));
+				return;
+			}
+		} catch (IllegalArgumentException e) {
+			// try getting the Level by name
+			for (LoggingLevel level : LoggingLevel.values()) {
+				if (level.name().equals(loggingLevel)) {
+					ApplicationLogger.setConsoleLoggingLevel(level);
+					return;
+				}
+			}
+		}
+
+		// no logging needed; handled by picocli
+		throw new ParameterException(spec.commandLine(), loggingLevel + " Is not a valid logging level!");
 	}
 
 	@Override
