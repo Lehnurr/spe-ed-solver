@@ -9,8 +9,6 @@ import java.util.concurrent.TimeoutException;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
 
-import utility.logging.ApplicationLogger;
-import utility.logging.LoggingLevel;
 import webcommunication.JettyHttpClientFactory;
 import webcommunication.time.parser.ServerTimeParser;
 

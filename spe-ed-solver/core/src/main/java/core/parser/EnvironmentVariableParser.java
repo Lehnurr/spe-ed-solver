@@ -4,7 +4,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
-import utility.logging.ApplicationLogger;
 import webcommunication.webservice.MalformedURLException;
 import webcommunication.webservice.WebserviceConnectionURI;
 
