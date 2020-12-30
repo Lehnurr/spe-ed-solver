@@ -57,10 +57,11 @@ public class LimitedQueue<Element> {
 	/**
 	 * Returns the next element without checking if the access is allowed.
 	 * 
-	 * @return
+	 * @return the removed object
 	 */
 	private Element pollUnprotected() {
 		final Element returnValue = buffer[readIndex];
+		buffer[readIndex] = null;
 		readIndex = (readIndex + 1) % buffer.length;
 		size--;
 		return returnValue;
