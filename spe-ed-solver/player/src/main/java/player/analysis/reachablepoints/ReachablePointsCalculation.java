@@ -31,6 +31,8 @@ public class ReachablePointsCalculation {
 	private final FloatMatrix successMatrixResult;
 	private final FloatMatrix cutOffMatrixResult;
 
+	private int calculatedPathsCount = 0;
+
 	/**
 	 * Creates a new {@link ReachablePointsCalculation} object.
 	 * 
@@ -77,6 +79,7 @@ public class ReachablePointsCalculation {
 				cutOffMatrixResult.add(position, child.getCutOffRating());
 
 				queue.add(child);
+				calculatedPathsCount++;
 			}
 		}
 	}
@@ -97,6 +100,15 @@ public class ReachablePointsCalculation {
 	 */
 	public FloatMatrix getCutOffMatrixResult() {
 		return cutOffMatrixResult;
+	}
+
+	/**
+	 * Returns the amount of calculated paths made.
+	 * 
+	 * @return amount of calculated paths
+	 */
+	public int getCalculatedPathsCount() {
+		return calculatedPathsCount;
 	}
 
 }

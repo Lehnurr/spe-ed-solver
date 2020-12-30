@@ -18,6 +18,7 @@ import utility.game.player.PlayerAction;
 import utility.game.step.Deadline;
 import utility.geometry.FloatMatrix;
 import utility.logging.ApplicationLogger;
+import utility.logging.GameLogger;
 import utility.logging.LoggingLevel;
 
 /**
@@ -146,6 +147,8 @@ public class ReachablePointsCalculator {
 
 		clearResults();
 
+		int calculatedPaths = 0;
+
 		for (final PlayerAction action : PlayerAction.values()) {
 			final ReachablePointsCalculation calculation = calculations.get(action);
 			final FloatMatrix successMatrix = calculation.getSuccessMatrixResult();
@@ -158,7 +161,11 @@ public class ReachablePointsCalculator {
 
 			successRatingsResult.setRating(action, successMatrix.sum());
 			cutOffRatingsResult.setRating(action, cutOffMatrix.sum());
+
+			calculatedPaths += calculation.getCalculatedPathsCount();
 		}
+
+		GameLogger.logGameInformation(String.format("Calculated %d reachable points paths!", calculatedPaths));
 
 		successRatingsResult.normalize();
 		cutOffRatingsResult.normalize();

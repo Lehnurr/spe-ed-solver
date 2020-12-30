@@ -38,6 +38,8 @@ public class TimeSynchronizationManager {
 					.logWarning("The time API couldn't be reached. Running without synchronization from now on!");
 			serverTimeOffset = Duration.ZERO;
 		}
+		ApplicationLogger
+				.logInformation(String.format("Server time offset: %d ms", serverTimeOffset.toMillis()));
 		this.serverTimeOffset = serverTimeOffset;
 	}
 
@@ -60,7 +62,7 @@ public class TimeSynchronizationManager {
 
 		return new Deadline() {
 
-			final ZonedDateTime targetTime = deadlineTime.plus(serverTimeOffset).plusNanos(BUFFER_NANOSECONDS);
+			final ZonedDateTime targetTime = deadlineTime.minus(serverTimeOffset).minusNanos(BUFFER_NANOSECONDS);
 
 			@Override
 			public long getRemainingMilliseconds() {
