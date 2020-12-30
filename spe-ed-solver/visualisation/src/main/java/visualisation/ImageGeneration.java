@@ -34,16 +34,16 @@ public class ImageGeneration {
 		final float rangeMin = matrix.getRangeMin();
 		final float stretchFactor = 1 / (rangeMax - rangeMin);
 
-		BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		final BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				float value = (matrix.getValue(x, y) - rangeMin) * stretchFactor;
+				final float value = (matrix.getValue(x, y) - rangeMin) * stretchFactor;
 				bufferedImage.setRGB(x, y, colorGradient.apply(value));
 			}
 		}
 
-		NamedImage result = new NamedImage(matrix.getName(), bufferedImage);
+		final NamedImage result = new NamedImage(matrix.getName(), bufferedImage);
 		return result;
 	}
 

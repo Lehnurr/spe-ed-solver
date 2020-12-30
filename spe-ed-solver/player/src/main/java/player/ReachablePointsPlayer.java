@@ -63,8 +63,8 @@ public class ReachablePointsPlayer implements ISpeedSolverPlayer {
 				enemyProbabilityCalculator.getProbabilitiesMatrix(), 0, 1);
 		boardRatingConsumer.accept(probabilitiesNamedMatrix);
 
-		var minStepsNamedMatrix = new ContextualFloatMatrix("mininum steps",
-				enemyProbabilityCalculator.getMinStepsMatrix(), 0, 1);
+		var minStepsNamedMatrix = new ContextualFloatMatrix("min steps",
+				enemyProbabilityCalculator.getMinStepsMatrix());
 		boardRatingConsumer.accept(minStepsNamedMatrix);
 
 		var successNamedMatrix = new ContextualFloatMatrix("success",
@@ -72,7 +72,7 @@ public class ReachablePointsPlayer implements ISpeedSolverPlayer {
 		boardRatingConsumer.accept(successNamedMatrix);
 
 		var cutOffNamedMatrix = new ContextualFloatMatrix("cut off",
-				reachablePointsCalculator.getCutOffMatrixResult().get(actionToTake));
+				reachablePointsCalculator.getCutOffMatrixResult().get(actionToTake), 0, 1);
 		boardRatingConsumer.accept(cutOffNamedMatrix);
 
 		// Send the Calculated Action
