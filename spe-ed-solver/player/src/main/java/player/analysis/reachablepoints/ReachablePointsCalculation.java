@@ -63,9 +63,12 @@ public class ReachablePointsCalculation {
 
 		final LimitedQueue<RatedPredictivePlayer> queue = new LimitedQueue<>(RatedPredictivePlayer.class, QUEUE_SIZE);
 
-		final RatedPredictivePlayer initialQueueObject = this.startPlayer;
-		if (this.startPlayer.isActive())
-			queue.add(initialQueueObject);
+		final RatedPredictivePlayer nextPlayer = this.startPlayer;
+		if (this.startPlayer.isActive()) {
+			queue.add(nextPlayer);
+			successMatrixResult.max(nextPlayer.getPosition(), nextPlayer.getSuccessRating());
+			cutOffMatrixResult.max(nextPlayer.getPosition(), nextPlayer.getCutOffRating());
+		}
 
 		while (queue.hasNext() && deadline.getRemainingMilliseconds() > DEADLINE_MILLISECOND_BUFFER) {
 			final RatedPredictivePlayer calculationPlayer = queue.poll();
