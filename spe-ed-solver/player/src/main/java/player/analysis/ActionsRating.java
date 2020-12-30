@@ -88,24 +88,22 @@ public class ActionsRating {
 
 	/**
 	 * Combines this {@link ActionsRating} with another {@link ActionsRating} by
-	 * adding each rating with a different weight for each {@link ActionsRating}.
+	 * adding each rating with a weight to the object's rating.
 	 * 
-	 * @param thisWeight  weight for this object
 	 * @param other       {@link ActionsRating} to combine with
 	 * @param otherWeight weight for the other object
 	 * @return combined {@link ActionsRating}
 	 */
-	public ActionsRating combine(final float thisWeight, final ActionsRating other, final float otherWeight) {
+	public ActionsRating combine(final ActionsRating other, final float otherWeight) {
 		final ActionsRating returnValue = new ActionsRating();
 		for (final PlayerAction action : PlayerAction.values()) {
-			final float thisWeightedValue = this.getRating(action) * thisWeight;
 			final float otherWeightedValue = other.getRating(action) * otherWeight;
-			final float combinedValue = thisWeightedValue + otherWeightedValue;
+			final float combinedValue = this.getRating(action) + otherWeightedValue;
 			returnValue.setRating(action, combinedValue);
 		}
 		return returnValue;
 	}
-	
+
 	@Override
 	public String toString() {
 		return ratingMap.toString();

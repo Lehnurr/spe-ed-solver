@@ -47,10 +47,10 @@ public class ActionsRatingTest {
 		second.setRating(PlayerAction.CHANGE_NOTHING, 10f);
 		second.setRating(PlayerAction.SLOW_DOWN, 5f);
 		
-		ActionsRating combined = first.combine(2f, second, 0.5f);
+		ActionsRating combined = first.combine(second, 0.5f);
 		
-		assertEquals(15f, combined.getRating(PlayerAction.CHANGE_NOTHING), 0.001f);		
-		assertEquals(22.5f, combined.getRating(PlayerAction.SLOW_DOWN), 0.001f);		
+		assertEquals(10f, combined.getRating(PlayerAction.CHANGE_NOTHING), 0.001f);		
+		assertEquals(12.5f, combined.getRating(PlayerAction.SLOW_DOWN), 0.001f);		
 	}
 
 }

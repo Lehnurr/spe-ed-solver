@@ -160,7 +160,7 @@ public class ReachablePointsCalculator {
 			cutOffMatrixResult.put(action, cutOffMatrix);
 
 			successRatingsResult.setRating(action, successMatrix.sum());
-			cutOffRatingsResult.setRating(action, cutOffMatrix.sum());
+			cutOffRatingsResult.setRating(action, cutOffMatrix.max());
 
 			calculatedPaths += calculation.getCalculatedPathsCount();
 		}
@@ -168,7 +168,6 @@ public class ReachablePointsCalculator {
 		GameLogger.logGameInformation(String.format("Calculated %d reachable points paths!", calculatedPaths));
 
 		successRatingsResult.normalize();
-		cutOffRatingsResult.normalize();
 	}
 
 	/**

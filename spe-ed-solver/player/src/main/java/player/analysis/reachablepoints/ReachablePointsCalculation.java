@@ -76,7 +76,7 @@ public class ReachablePointsCalculation {
 				final Point2i position = child.getPosition();
 
 				successMatrixResult.max(position, child.getSuccessRating());
-				cutOffMatrixResult.add(position, child.getCutOffRating());
+				cutOffMatrixResult.max(position, child.getCutOffRating());
 
 				queue.add(child);
 				calculatedPathsCount++;

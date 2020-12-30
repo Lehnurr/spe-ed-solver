@@ -9,7 +9,13 @@ public enum PlayerType {
 	REACHABLE_POINTS {
 		@Override
 		public ISpeedSolverPlayer newInstance() {
-			return new ReachablePointsPlayer();
+			return new ReachablePointsPlayer(5, 0.4f);
+		}
+	},
+	REACHABLE_POINTS_BASE {
+		@Override
+		public ISpeedSolverPlayer newInstance() {
+			return new ReachablePointsPlayer(5, 0f);
 		}
 	};
 

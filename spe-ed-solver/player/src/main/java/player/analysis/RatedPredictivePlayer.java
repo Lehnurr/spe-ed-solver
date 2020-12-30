@@ -104,9 +104,7 @@ public class RatedPredictivePlayer extends PredictivePlayer {
 		float cutOff = 0;
 		for (final Point2i point : shortTail) {
 			if (relativeRound < minSteps.getValue(point)) {
-				final float probabilityValue = probabilities.getValue(point);
-				final float localCutOff = (float) (-2 * Math.pow(probabilityValue - 1, 2) + 1);
-				cutOff = Math.max(cutOff, localCutOff);
+				cutOff = Math.max(cutOff, probabilities.getValue(point));
 			}
 		}
 		return cutOff;
