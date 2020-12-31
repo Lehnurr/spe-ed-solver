@@ -7,8 +7,6 @@ import utility.game.board.Board;
 import utility.game.board.Cell;
 import utility.game.player.PlayerAction;
 import utility.geometry.ContextualFloatMatrix;
-import utility.logging.ApplicationLogger;
-import utility.logging.LoggingLevel;
 
 /**
  * Reference implementation for the {@link IViewer} interface.
@@ -72,13 +70,10 @@ public class Viewer implements IViewer {
 	public void showRound(int roundIdx) {
 
 		if (roundIdx < 0) {
-			ApplicationLogger.logAndThrowException(new IllegalArgumentException("referenced round index is below zero"),
-					LoggingLevel.ERROR);
+			throw new IllegalArgumentException("referenced round index is below zero");
 		}
 		if (roundIdx > maxRoundIdx) {
-			ApplicationLogger.logAndThrowException(
-					new IllegalArgumentException("referenced round index is higher than the stored rounds"),
-					LoggingLevel.ERROR);
+			throw new IllegalArgumentException("referenced round index is higher than the stored rounds");
 		}
 
 		displayedRoundIdx = roundIdx;
