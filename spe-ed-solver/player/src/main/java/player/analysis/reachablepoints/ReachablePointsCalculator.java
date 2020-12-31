@@ -153,8 +153,6 @@ public class ReachablePointsCalculator {
 			final ReachablePointsCalculation calculation = calculations.get(action);
 			final FloatMatrix successMatrix = calculation.getSuccessMatrixResult();
 			final FloatMatrix cutOffMatrix = calculation.getCutOffMatrixResult();
-			successMatrixResult.put(action, new FloatMatrix(1, 1));
-			cutOffMatrixResult.put(action, new FloatMatrix(1, 1));
 
 			successMatrixResult.put(action, successMatrix);
 			cutOffMatrixResult.put(action, cutOffMatrix);
