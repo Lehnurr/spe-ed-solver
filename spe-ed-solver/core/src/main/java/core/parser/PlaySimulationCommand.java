@@ -11,6 +11,7 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.ParameterException;
 import picocli.CommandLine.Spec;
 import player.PlayerType;
+import simulation.SimulationDeadline;
 import utility.logging.ApplicationLogger;
 import utility.logging.LoggingLevel;
 
@@ -115,6 +116,25 @@ public class PlaySimulationCommand implements Runnable {
 			"--debug" }, description = "If specified the application will show available debug information.")
 	public void setDebugEnabled(final boolean debugEnabled) {
 		ApplicationLogger.setDebugMode(debugEnabled);
+	}
+
+	@Option(names = {
+			"--lower-deadline" }, description = "Sets the lower second-limit for the deadline.", defaultValue = "2")
+	public void setDeadlineLowerLimit(final int deadlineLowerLimit) {
+		if (deadlineLowerLimit < 0)
+			throw new ParameterException(spec.commandLine(),
+					"The lower second-limit for the deadline must be positive!");
+		SimulationDeadline.setLowerTimeLimit(deadlineLowerLimit);
+	}
+
+	@Option(names = {
+			"--upper-deadline" }, description = "Sets the upper second-limit for the deadline.", defaultValue = "15")
+	public void setDeadlineUpperLimit(final int deadlineUpperLimit) {
+		if (deadlineUpperLimit < 0)
+			throw new ParameterException(spec.commandLine(),
+					"The upper second-limit for the deadline must be positive!");
+
+		SimulationDeadline.setUpperTimeLimit(deadlineUpperLimit);
 	}
 
 	@Override
