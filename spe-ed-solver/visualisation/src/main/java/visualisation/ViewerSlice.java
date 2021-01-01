@@ -12,31 +12,27 @@ import utility.game.player.PlayerAction;
  */
 public class ViewerSlice {
 
-	// round the slice describes in seconds
 	private final int round;
 
-	// time the player had to act in the given round
 	private final double availableTime;
 
-	// action performed in the given round
 	private final PlayerAction performedAction;
 
-	// time the player actually needed to calculate the performed action in seconds
 	private final double requiredTime;
 
-	// named images containing information about round specific board ratings
 	private final List<NamedImage> images = new ArrayList<NamedImage>();
 
 	/**
 	 * Generates a new viewer slice with round specific information.
 	 * 
-	 * @param round
-	 * @param availableTime
-	 * @param performedAction
-	 * @param timeRequired
+	 * @param round           the round index the viewer slice is valid for
+	 * @param availableTime   the available time in seconds
+	 * @param performedAction the {@link PlayerAction} chosen by the player for the
+	 *                        given round
+	 * @param timeRequired    the required time in seconds
 	 */
-	public ViewerSlice(int round, double availableTime, PlayerAction performedAction, double requiredTime) {
-		super();
+	public ViewerSlice(final int round, final double availableTime, final PlayerAction performedAction,
+			final double requiredTime) {
 		this.round = round;
 		this.availableTime = availableTime;
 		this.performedAction = performedAction;
@@ -44,21 +40,21 @@ public class ViewerSlice {
 	}
 
 	/**
-	 * @return the round
+	 * @return the round the viewer slice is valid for
 	 */
 	public int getRound() {
 		return round;
 	}
 
 	/**
-	 * @return the availableTime
+	 * @return the available time in seconds
 	 */
 	public double getAvailableTime() {
 		return availableTime;
 	}
 
 	/**
-	 * @return the action performed by the player in the given round
+	 * @return the {@link PlayerAction} performed by the player
 	 */
 	public PlayerAction getPerformedAction() {
 		return performedAction;
@@ -72,16 +68,16 @@ public class ViewerSlice {
 	}
 
 	/**
-	 * Adds an image to the current slice.
+	 * Adds an image to the current {@link ViewerSlice}.
 	 * 
-	 * @param image
+	 * @param image {@link NamedImage} to add to the {@link ViewerSlice}
 	 */
-	public void addImage(NamedImage image) {
+	public void addImage(final NamedImage image) {
 		images.add(image);
 	}
 
 	/**
-	 * @return the named images aggregated for the given round
+	 * @return the {@link NamedImage images} aggregated for the given round
 	 */
 	public List<NamedImage> getImages() {
 		return Collections.unmodifiableList(images);

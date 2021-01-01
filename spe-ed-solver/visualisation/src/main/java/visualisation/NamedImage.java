@@ -3,21 +3,20 @@ package visualisation;
 import java.awt.image.BufferedImage;
 
 /**
- * Class for storing images with a name for additional context.
+ * Class for storing {@link BufferedImage images} with a name for additional
+ * context.
  */
 public class NamedImage {
 
-	// name of the image
 	private final String name;
 
-	// underlying image data
 	private final BufferedImage image;
 
 	/**
 	 * Generates a new {@link NamedImage} with the unchangeable given information.
 	 * 
-	 * @param name
-	 * @param image
+	 * @param name  name of the image
+	 * @param image actual {@link BufferedImage}
 	 */
 	public NamedImage(final String name, final BufferedImage image) {
 		this.name = name;
@@ -36,7 +35,7 @@ public class NamedImage {
 	/**
 	 * Returns the actual instance of the {@link BufferedImage}.
 	 * 
-	 * @return image
+	 * @return managed {@link BufferedImage}
 	 */
 	public BufferedImage getImage() {
 		return image;

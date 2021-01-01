@@ -15,16 +15,12 @@ import utility.logging.LoggingLevel;
  */
 public class Viewer implements IViewer {
 
-	// color gradient to apply to every matrix
 	private static final ColorGradient DEFAULT_COLOR_GRADIENT = ColorGradient.FIRE;
 
-	// window to display the information to
 	private final ViewerWindow window;
 
-	// slices for every received round to store displayable information
 	private final List<ViewerSlice> slices = new ArrayList<ViewerSlice>();
 
-	// round information
 	private int maxRoundIdx = -1;
 	private int displayedRoundIdx = -1;
 
@@ -67,7 +63,7 @@ public class Viewer implements IViewer {
 	 * Shows a specific {@link ViewerSlice} to the user in the responsible
 	 * {@link ViewerWindow}.
 	 * 
-	 * @param roundIdx
+	 * @param roundIdx the index of the round to show
 	 */
 	public void showRound(int roundIdx) {
 
@@ -94,13 +90,11 @@ public class Viewer implements IViewer {
 	 */
 	private void showSlice(final ViewerSlice viewerSlice) {
 
-		// update game info
 		window.setRoundCounter(viewerSlice.getRound());
 		window.setAvailableTime(viewerSlice.getAvailableTime());
 		window.setPerformedAction(viewerSlice.getPerformedAction());
 		window.setRequiredTime(viewerSlice.getRequiredTime());
 
-		// update board ratings
 		window.updateBoardRatings(viewerSlice.getImages());
 	}
 

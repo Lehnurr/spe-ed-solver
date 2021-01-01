@@ -30,7 +30,7 @@ public class TimeSynchronizationManager {
 
 		Duration serverTimeOffset;
 		try {
-			ZonedDateTime serverTime = timeApiClient.getServerTime();
+			final ZonedDateTime serverTime = timeApiClient.getServerTime();
 			serverTimeOffset = Duration.between(clientTime, serverTime);
 		} catch (TimeRequestException e) {
 			ApplicationLogger.logException(e, LoggingLevel.WARNING);

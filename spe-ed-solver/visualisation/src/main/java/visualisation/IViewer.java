@@ -15,7 +15,8 @@ public interface IViewer {
 	 * @param availableMilliseconds available time in milliseconds
 	 * @param performedAction       {@link PlayerAction} performed in the round
 	 * @param requiredMilliseconds  required time in milliseconds
-	 * @param board                 the board for the current {@link GameStep}
+	 * @param board                 the {@link Board} for the current
+	 *                              {@link GameStep}
 	 * @param boardRatings          {@link ContextualFloatMatrix}s of board ratings
 	 */
 	public void commitRound(double availableTime, PlayerAction performedAction, double requiredTime, Board<Cell> board,

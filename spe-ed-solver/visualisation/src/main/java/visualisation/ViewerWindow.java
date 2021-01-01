@@ -22,42 +22,42 @@ import javax.swing.SwingConstants;
 
 import utility.game.player.PlayerAction;
 
+/**
+ * Window class usable to display spe_ed game informations to the user by
+ * visualizing them.
+ */
 public class ViewerWindow {
 
-	// minimum dimensions of the window
 	private static final int MIN_WINDOW_WIDTH = 700;
 	private static final int MIN_WINDOW_HEIGHT = 500;
 
-	// gap values for the info panel grid layout
 	private static final int INFO_GAP_HORIZONTAL = 10;
 	private static final int INFO_GAP_VERTICAL = 5;
 
-	// paddings for board ratings
 	private static final int BOARD_RATING_PADDING_HORIZONTAL = 32;
 	private static final int BOARD_RATING_PADDING_VERTICAL = 8;
 
-	// parent JFrame
 	private final JFrame jFrame = new JFrame();
 
-	// information labels
 	private final JLabel roundLabel = new JLabel("-1");
 	private final JLabel availableTimeLabel = new JLabel("-1");
 	private final JLabel performedActionLabel = new JLabel("-1");
 	private final JLabel requiredTimeLabel = new JLabel("-1");
 
-	// panel to show different boards with specific ratings
 	private final JPanel boardPanel = new JPanel();
 
-	// scrollbar to scroll through the different rounds
 	private final JScrollBar timelineScrollBar = new JScrollBar(JScrollBar.HORIZONTAL);
 
-	// storing the board ratings added to the window
 	private List<NamedImage> boardRatings = new ArrayList<>();
 
 	/**
-	 * Generates a new window and shows it.
+	 * Generates a new {@link ViewerWindow} and displays it.
+	 * 
+	 * @param timelineChangeHandler a handler called when the time line changes and
+	 *                              information of an other round should be
+	 *                              displayed.
 	 */
-	public ViewerWindow(Consumer<Integer> timelineChangeHandler) {
+	public ViewerWindow(final Consumer<Integer> timelineChangeHandler) {
 
 		// main panel of the whole window
 		JPanel mainPanel = new JPanel();
@@ -118,7 +118,7 @@ public class ViewerWindow {
 	/**
 	 * Updates the displayed round in the window.
 	 * 
-	 * @param roundCounter
+	 * @param roundCounter the displayed round
 	 */
 	public void setRoundCounter(final int roundCounter) {
 		roundLabel.setText(Integer.toString(roundCounter));
@@ -127,7 +127,7 @@ public class ViewerWindow {
 	/**
 	 * Updates the displayed available time in the window.
 	 * 
-	 * @param availableTime
+	 * @param availableTime the available time in seconds
 	 */
 	public void setAvailableTime(final double availableTime) {
 		availableTimeLabel.setText(String.format("%.4f", availableTime));
@@ -136,7 +136,7 @@ public class ViewerWindow {
 	/**
 	 * Updates the displayed performed action in the window.
 	 * 
-	 * @param performedAction
+	 * @param performedAction the performed {@link PlayerAction}
 	 */
 	public void setPerformedAction(final PlayerAction performedAction) {
 		performedActionLabel.setText(performedAction.getName());
@@ -145,7 +145,7 @@ public class ViewerWindow {
 	/**
 	 * Updates the displayed required time in the window.
 	 * 
-	 * @param requiredTime
+	 * @param requiredTime the required time in seconds
 	 */
 	public void setRequiredTime(final double requiredTime) {
 		requiredTimeLabel.setText(String.format("%.4f", requiredTime));
@@ -154,7 +154,7 @@ public class ViewerWindow {
 	/**
 	 * Adds multiple {@link NamedImages} to the {@link ViewerWindow}.
 	 * 
-	 * @param namedImages
+	 * @param namedImages the {@link NamedImage images} to display as board ratings
 	 */
 	public void updateBoardRatings(List<NamedImage> namedImages) {
 		boardRatings = namedImages;
@@ -213,9 +213,9 @@ public class ViewerWindow {
 	 * Sets the max value for the time line, marking the highest round index the
 	 * user may select.
 	 * 
-	 * @param maxValue
+	 * @param maxValue the max value of the timeline
 	 */
-	public void setMaxTimelineValue(int maxValue) {
+	public void setMaxTimelineValue(final int maxValue) {
 		this.timelineScrollBar.setMaximum(maxValue);
 	}
 
@@ -224,7 +224,7 @@ public class ViewerWindow {
 	 * 
 	 * @param newValue the new value the timeline should be set to
 	 */
-	public void triggerTimlineChange(int newValue) {
+	public void triggerTimlineChange(final int newValue) {
 		this.timelineScrollBar.setValue(newValue);
 	}
 
