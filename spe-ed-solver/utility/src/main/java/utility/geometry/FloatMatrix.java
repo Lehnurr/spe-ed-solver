@@ -1,8 +1,5 @@
 package utility.geometry;
 
-import utility.logging.ApplicationLogger;
-import utility.logging.LoggingLevel;
-
 public class FloatMatrix {
 
 	private final float[][] values;
@@ -144,8 +141,7 @@ public class FloatMatrix {
 	public FloatMatrix max(FloatMatrix other) {
 
 		if (!isSameSize(other)) {
-			ApplicationLogger.logAndThrowException(
-					new IllegalArgumentException("Both matrices need to have the same size"), LoggingLevel.ERROR);
+			throw new IllegalArgumentException("Both matrices need to have the same size");
 		}
 
 		FloatMatrix resultMatrix = new FloatMatrix(getWidth(), getHeight());
@@ -183,8 +179,7 @@ public class FloatMatrix {
 	public FloatMatrix min(FloatMatrix other) {
 
 		if (!isSameSize(other)) {
-			ApplicationLogger.logAndThrowException(
-					new IllegalArgumentException("Both matrices need to have the same size"), LoggingLevel.ERROR);
+			throw new IllegalArgumentException("Both matrices need to have the same size");
 		}
 
 		FloatMatrix resultMatrix = new FloatMatrix(getWidth(), getHeight());
@@ -207,8 +202,7 @@ public class FloatMatrix {
 	public FloatMatrix mul(FloatMatrix other) {
 
 		if (!isSameSize(other)) {
-			ApplicationLogger.logAndThrowException(
-					new IllegalArgumentException("Both matrices need to have the same size"), LoggingLevel.ERROR);
+			throw new IllegalArgumentException("Both matrices need to have the same size");
 		}
 
 		FloatMatrix resultMatrix = new FloatMatrix(getWidth(), getHeight());
@@ -231,8 +225,7 @@ public class FloatMatrix {
 	public FloatMatrix sum(FloatMatrix other) {
 
 		if (!isSameSize(other)) {
-			ApplicationLogger.logAndThrowException(
-					new IllegalArgumentException("Both matrices need to have the same size"), LoggingLevel.ERROR);
+			throw new IllegalArgumentException("Both matrices need to have the same size");
 		}
 
 		FloatMatrix resultMatrix = new FloatMatrix(getWidth(), getHeight());

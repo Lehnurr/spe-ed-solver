@@ -44,8 +44,7 @@ public enum LoggingLevel {
      */
     public static LoggingLevel fromInteger(final int intValue) {
         if (intValue < ERROR.getLevel() || intValue > WARNING.getLevel()) {
-            ApplicationLogger.logAndThrowException(
-                    new IllegalArgumentException("Logging level " + intValue + " does not exist!"), LoggingLevel.ERROR);
+            throw new IllegalArgumentException("Logging level " + intValue + " does not exist!");
         }
 
         return LoggingLevel.values()[intValue];

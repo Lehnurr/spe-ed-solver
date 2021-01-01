@@ -158,38 +158,6 @@ public final class ApplicationLogger {
     }
 
     /**
-     * Logs and throws a Exception with a Time-Stamp. Additionally, a seperate level
-     * for the console output can be secified
-     * 
-     * @param exception         The occurred exception
-     * @param exceptionLoglevel The level for the exception
-     * @param messageLoglevel   The level for the console output of the exception
-     *                          message
-     * @return will be never used because this function throws alwas an exception
-     * @throws ExceptionType the passed exception
-     */
-    public static <ExceptionType extends Throwable> ExceptionType logAndThrowException(ExceptionType exception,
-            LoggingLevel exceptionLoglevel, LoggingLevel messageLoglevel) throws ExceptionType {
-        logException(exception, exceptionLoglevel, messageLoglevel);
-        throw exception;
-    }
-
-    /**
-     * Logs and throws a Exception with a Time-Stamp. Additionally, a seperate level
-     * for the console output can be secified
-     * 
-     * @param exception                   The occurred exception
-     * @param exceptionAndMessageLoglevel The level for the exception
-     * @return will be never used because this function throws alwas an exception
-     * @throws ExceptionType the passed exception
-     */
-    public static <ExceptionType extends Throwable> ExceptionType logAndThrowException(ExceptionType exception,
-            LoggingLevel exceptionAndMessageLoglevel) throws ExceptionType {
-        logException(exception, exceptionAndMessageLoglevel, exceptionAndMessageLoglevel);
-        throw exception;
-    }
-
-    /**
      * 
      * Outputs a message to the console and saves it to a file (depending on the
      * configuration)
