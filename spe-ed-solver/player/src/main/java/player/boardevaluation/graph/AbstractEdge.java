@@ -10,42 +10,54 @@ import utility.geometry.Vector2i;
  */
 public final class AbstractEdge implements IEdge {
 
-    private final int stepCount;
-    private final int[] abstractPath;
+    public AbstractEdge() {
 
-    public AbstractEdge(int[] abstractPath) {
-        this.stepCount = abstractPath.length;
-        this.abstractPath = abstractPath;
     }
 
     /**
      * Calculates the {@link IConcreteEdge} from the {@link IAbstractEdge}
      * 
-     * @param board     The {@link Board} with all {@link Node Nodes}
+     * @param graph     The {@link Graph} with all {@link Node Nodes}
      * @param startNode The {@link Node} where the player must be to use this edge
      * @param direction The {@link PlayerDirection Players direction}
+     * @param dojump    specifies if the searched edge is a jump-over edge
+     * @param speed     specifies the speed for the searched edge
      */
-    public ConcreteEdge calculatePath(Board<Node> board, Node startNode, PlayerDirection direction) {
-        Node[] path = new Node[this.stepCount];
-        Node[] invertedPath = new Node[this.stepCount];
+    public ConcreteEdge calculatePath(Graph graph, Node startNode, PlayerDirection direction, boolean doJump,
+            int speed) {
+
+        int stepCount;
+        int[] abstractPath;
+        if (doJump && speed > 2) {
+            stepCount = 2;
+            abstractPath = new int[] { 1, speed };
+        } else {
+            stepCount = speed;
+            abstractPath = new int[speed];
+            for (int i = 0; i < speed; i++) {
+                abstractPath[i] = i + 1;
+            }
+        }
+
+        Node[] path = new Node[stepCount];
+        Node[] invertedPath = new Node[stepCount];
 
         // Scan the stepped nodes and set the path and the inverted path
-        for (int stepIndex = 0; stepIndex < this.stepCount; stepIndex++) {
+        for (int stepIndex = 0; stepIndex < stepCount; stepIndex++) {
             final Vector2i deltaX = direction.getDirectionVector().multiply(abstractPath[stepIndex]);
-            final Node stepNode = board.getBoardCellAt(startNode.getPosition().translate(deltaX));
+            final Node stepNode = graph.getBoardCellAt(startNode.getPosition().translate(deltaX));
             if (stepNode == null)
                 return null;
             path[stepIndex] = stepNode;
-            invertedPath[this.stepCount - 1 - stepIndex] = stepNode;
+            invertedPath[stepCount - 1 - stepIndex] = stepNode;
         }
+
+        final Point2i endPosition = path[stepCount - 1].getPosition();
 
         final ConcreteEdge edge = new ConcreteEdge(path);
 
-        final int speed = abstractPath[this.stepCount - 1];
-        final boolean doJump = speed != this.stepCount;
-        final Point2i endPosition = path[this.stepCount - 1].getPosition();
         final Point2i invertedStartPosition = endPosition.translate(direction.getDirectionVector());
-        final Node invertedStartNode = board.getBoardCellAt(invertedStartPosition);
+        final Node invertedStartNode = graph.getBoardCellAt(invertedStartPosition);
 
         if (invertedStartNode != null) {
             final ConcreteEdge invertedEdge = new ConcreteEdge(invertedPath);
@@ -56,10 +68,6 @@ public final class AbstractEdge implements IEdge {
         }
 
         return edge;
-    }
-
-    public int getStepCount() {
-        return stepCount;
     }
 
 }
