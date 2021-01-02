@@ -2,6 +2,7 @@ package player.analysis.reachablepoints;
 
 import java.util.Collection;
 
+import player.analysis.LimitedQueue;
 import player.analysis.RatedPredictivePlayer;
 import utility.game.board.Board;
 import utility.game.board.Cell;
