@@ -12,7 +12,7 @@ public class Node implements IBoardCell<CellValue> {
     private static final int PLAYER_DIRECTION_ORDINAL_HIGHEST_ONE_BIT = Integer
             .highestOneBit(PlayerDirection.values().length - 1);
 
-    private final Board<Node> board;
+    private final Graph graph;
     private final Point2i position;
     private IEdge[] edges;
     private CellValue value;
@@ -25,10 +25,11 @@ public class Node implements IBoardCell<CellValue> {
      *                   {@link Board}
      * @param edges      All {@link IEdge Edges} that start at this Node.
      */
-    public Node(final Board<Node> graphBoard, final Point2i position, final IEdge[] edges) {
-        this.board = graphBoard;
+    public Node(final Graph graph, final Point2i position, final IEdge[] edges) {
+        this.graph = graph;
         this.position = position;
         this.edges = edges;
+        this.value = CellValue.EMPTY_CELL;
     }
 
     public Point2i getPosition() {
@@ -60,7 +61,7 @@ public class Node implements IBoardCell<CellValue> {
         }
 
         if (edge instanceof AbstractEdge) {
-            edge = ((AbstractEdge) edge).calculatePath(board, this, direction);
+            edge = ((AbstractEdge) edge).calculatePath(graph, this, direction, doJump, speed);
             setEdge(direction, doJump, speed, (ConcreteEdge) edge);
         }
 
@@ -93,26 +94,50 @@ public class Node implements IBoardCell<CellValue> {
     }
 
     /**
-     * Sets the value of the Cell and deletes affected Edges
+     * Sets the value of the Cell and deletes all affected Edges
      * 
      * @param value The new Value for the Cell ({@link CellValue#EMPTY_CELL} is not
      *              possible)
+     * 
      */
     public void setCellValue(CellValue value) {
+        setCellValue(value, true);
+    }
+
+    /**
+     * Sets the value of the Cell and deletes affected Edges
+     * 
+     * @param value                   The new Value for the Cell
+     *                                ({@link CellValue#EMPTY_CELL} is not possible)
+     * @param removeEdgesStartingHere Specifies whether edges that start at this
+     *                                node should also be removed. The edges must be
+     *                                kept for the time being if there is currently
+     *                                a player there.
+     */
+    public void setCellValue(CellValue value, boolean removeEdgesStartingHere) {
         if (this.value != value && value != CellValue.EMPTY_CELL) {
 
             // Destroy all edges that pass this node or end here
             final var passingEdges = AffectedEdgesLookUpTable.getAbstractPassingEdges();
             for (var edge : passingEdges) {
                 Point2i edgeStartingPosition = this.position.translate(edge.getKey());
-                Node edgeStartingNode = board.getBoardCellAt(edgeStartingPosition);
-                for (int edgeIndex : edge.getValue())
-                    edgeStartingNode.setEdge(edgeIndex, null);
-            }
+                Node edgeStartingNode = graph.getBoardCellAt(edgeStartingPosition);
 
-            // If the value is not empty, this node will not return any edges
+                if (edgeStartingNode == null)
+                    continue;
+
+                for (int edgeIndex : edge.getValue()) {
+                    edgeStartingNode.setEdge(edgeIndex, null);
+                }
+            }
+        }
+
+        if (removeEdgesStartingHere && value != CellValue.EMPTY_CELL) {
+            if (this.value != CellValue.EMPTY_CELL)
+                this.value = CellValue.MULTIPLE_PLAYER;
+            else
+                this.value = value;
             this.edges = null;
-            this.value = value;
         }
     }
 

@@ -17,6 +17,12 @@ public enum PlayerType {
 		public ISpeedSolverPlayer newInstance() {
 			return new ReachablePointsPlayer(5, 0f);
 		}
+	},
+	GRAPH {
+		@Override
+		public ISpeedSolverPlayer newInstance() {
+			return new GraphPlayer(5, 0.4f);
+		}
 	};
 
 	/**

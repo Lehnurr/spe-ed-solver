@@ -1,12 +1,8 @@
 package player.boardevaluation.graph;
 
 /**
- * IEdge
+ * Empty interface to generalize abstract and concrete edges
  */
 public interface IEdge {
-    /**
-     * Number of the steps of this {@link IEdge Edge}. Jumped over steps are not
-     * included.
-     */
-    int getStepCount();
+
 }
