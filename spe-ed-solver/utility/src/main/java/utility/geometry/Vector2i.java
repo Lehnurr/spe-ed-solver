@@ -48,4 +48,12 @@ public final class Vector2i {
 		return new Vector2i(x * factor, y * factor);
 	}
 
+	@Override
+	/**
+	 * Representation as row vector
+	 */
+	public String toString() {
+		return "(" + x + " , " + y + ")";
+	}
+
 }
