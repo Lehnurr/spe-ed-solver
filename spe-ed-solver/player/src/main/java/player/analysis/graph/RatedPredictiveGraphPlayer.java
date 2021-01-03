@@ -15,7 +15,7 @@ import utility.geometry.Point2i;
  * RatedPredictiveGraphPlayer for success and cutting off enemies ratings, based
  * on the graph board.
  */
-public class RatedPredictiveGraphPlayer implements IPlayer {
+public final class RatedPredictiveGraphPlayer implements IPlayer {
 
 	private final int playerId;
 	private final PlayerDirection direction;
@@ -30,63 +30,84 @@ public class RatedPredictiveGraphPlayer implements IPlayer {
 	private float cutOffRating;
 
 	/**
-	 * Creates a new {@link RatedPredictiveGraphPlayer} from a standard
-	 * {@link IPlayer} instance.
-	 * 
-	 * @param player        {@link IPlayer} to initialize
-	 * @param initialAction The action that the player should perform
-	 */
-	public RatedPredictiveGraphPlayer(final IPlayer player, PlayerAction initalAction) {
-		this.playerId = player.getPlayerId();
-		this.direction = player.getDirection();
-		this.speed = player.getSpeed();
-		this.position = player.getPosition();
-		this.active = player.isActive();
-		this.round = player.getRound();
-		this.relativeRound = 0;
-		this.initialAction = initalAction;
-		this.edgeTail = new ArrayList<>();
-		this.successRating = 1;
-		this.cutOffRating = 0;
-	}
-
-	/**
 	 * Creates a new {@link RatedPredictiveGraphPlayer} from a given
 	 * {@link RatedPredictiveGraphPlayer RatedPredictiveGraphPlayer-Parent}
 	 * 
-	 * @param parent    The previous player
-	 * @param speed     the changed speed value
-	 * @param direction the changed direction value
+	 * @param parent        The previous player
+	 * @param speed         The changed speed value
+	 * @param direction     The changed direction value
+	 * @param initialAction The action that the player should perform
+	 * @param relativeRound The number of rounds passed since the initialAction was
+	 *                      set
 	 */
-	private RatedPredictiveGraphPlayer(RatedPredictiveGraphPlayer parent, int speed, PlayerDirection direction) {
+	private RatedPredictiveGraphPlayer(IPlayer parent, int speed, PlayerDirection direction, PlayerAction initialAction,
+			int relativeRound) {
 
 		this.playerId = parent.getPlayerId();
 		this.direction = direction;
 		this.speed = speed;
-		this.position = parent.position;
+		this.position = parent.getPosition();
 		this.active = parent.isActive();
 		this.round = parent.getRound();
 
-		this.initialAction = parent.initialAction;
+		this.initialAction = initialAction;
 		this.edgeTail = new ArrayList<>();
-		this.relativeRound = parent.getRelativeRound() + 1;
+		this.relativeRound = relativeRound + 1;
 	}
 
 	/**
 	 * Calculates from the possible actions the children that survive
 	 * 
+	 * @param graph         The Graph-board for collision detection
+	 * @param probabilities The Enemy-Pobability matrix
+	 * @param minSteps      The Min-Steps matrix
 	 * @return All valid Children
 	 */
 	public List<RatedPredictiveGraphPlayer> getValidChildren(Graph graph, FloatMatrix probabilities,
 			FloatMatrix minSteps) {
+		return getValidChildren(this, this.getSuccessRating(), this.getInitialAction(), this.getRelativeRound(), graph,
+				probabilities, minSteps);
+	}
+
+	/**
+	 * Calculates from the possible actions the children that survive
+	 * 
+	 * @param parent        The previous status of the player
+	 * @param graph         The Graph-board for collision detection
+	 * @param probabilities The Enemy-Pobability matrix
+	 * @param minSteps      The Min-Steps matrix
+	 * @return All valid Children
+	 */
+	public static List<RatedPredictiveGraphPlayer> getValidChildren(IPlayer parent, Graph graph,
+			FloatMatrix probabilities, FloatMatrix minSteps) {
+		return getValidChildren(parent, 1, null, 0, graph, probabilities, minSteps);
+	}
+
+	/**
+	 * Calculates from the possible actions the children that survive
+	 * 
+	 * @param parent              The previous status of the player
+	 * @param parentSuccessRating The parent's successRating (1 if there is no
+	 *                            parent)
+	 * @param initialAction       The first action of the currently calculated path
+	 *                            (null if there is no first action)
+	 * @param relativeRound       The number of rounds since the initialAction
+	 * @param graph               The Graph-board for collision detection
+	 * @param probabilities       The Enemy-Pobability matrix
+	 * @param minSteps            The Min-Steps matrix
+	 * @return All valid Children
+	 */
+	private static List<RatedPredictiveGraphPlayer> getValidChildren(IPlayer parent, float parentSuccessRating,
+			PlayerAction initialAction, int relativeRound, Graph graph, FloatMatrix probabilities,
+			FloatMatrix minSteps) {
 
 		List<RatedPredictiveGraphPlayer> children = new ArrayList<>();
-		boolean doJump = (getRound() + 1) % 6 == 0 && getSpeed() > 2;
+		boolean doJump = (parent.getRound() + 1) % 6 == 0 && parent.getSpeed() > 2;
 
 		for (var action : PlayerAction.values()) {
 
-			int childSpeed = this.getSpeed();
-			PlayerDirection childDirection = this.getDirection();
+			int childSpeed = parent.getSpeed();
+			PlayerDirection childDirection = parent.getDirection();
 
 			if (action == PlayerAction.SPEED_UP) {
 				childSpeed++;
@@ -99,12 +120,16 @@ public class RatedPredictiveGraphPlayer implements IPlayer {
 			if (childSpeed > IPlayer.MAX_SPEED || childSpeed < IPlayer.MIN_SPEED)
 				continue;
 
-			final var child = new RatedPredictiveGraphPlayer(this, childSpeed, childDirection);
+			PlayerAction childInitialAction = initialAction == null ? action : initialAction;
 
-			final ConcreteEdge edge = graph.getBoardCellAt(getPosition()).getEdge(childDirection, doJump, childSpeed);
+			final var child = new RatedPredictiveGraphPlayer(parent, childSpeed, childDirection, childInitialAction,
+					relativeRound);
+
+			final ConcreteEdge edge = graph.getBoardCellAt(parent.getPosition()).getEdge(childDirection, doJump,
+					childSpeed);
 
 			// Check if the move is possible, try to add the Edge and update Ratings
-			if (edge != null && child.addEdgeAndCalculateRating(getSuccessRating(), probabilities, minSteps, edge))
+			if (edge != null && child.addEdgeAndCalculateRating(parentSuccessRating, probabilities, minSteps, edge))
 				children.add(child);
 		}
 

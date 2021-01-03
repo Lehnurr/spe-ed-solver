@@ -44,9 +44,8 @@ public class GraphCalculator {
 	public void performCalculation(final IPlayer self, final FloatMatrix probabilities, final FloatMatrix minSteps,
 			final Deadline deadline, final Graph graph) {
 
-		final List<RatedPredictiveGraphPlayer> startPlayers = new ArrayList<>();
-		for (final PlayerAction action : PlayerAction.values())
-			startPlayers.add(new RatedPredictiveGraphPlayer(self, action));
+		final List<RatedPredictiveGraphPlayer> startPlayers = RatedPredictiveGraphPlayer.getValidChildren(self, graph,
+				probabilities, minSteps);
 
 		clearResults();
 
