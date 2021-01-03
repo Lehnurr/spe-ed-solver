@@ -68,10 +68,10 @@ public class LimitedQueue<Element> {
 	}
 
 	/**
-	 * Returns the next value of the {@link LimitedQueue}. If no next element is
-	 * available a {@link NoSuchElementException} is thrown.
+	 * Returns the next value of the {@link LimitedQueue}.
 	 * 
-	 * @return next value
+	 * @return the next value
+	 * @throws NoSuchElementException if no next element is available
 	 */
 	public Element poll() {
 		if (!hasNext())
@@ -86,6 +86,15 @@ public class LimitedQueue<Element> {
 	 */
 	public boolean hasNext() {
 		return size > 0;
+	}
+
+	/**
+	 * The amount of remaining values.
+	 * 
+	 * @return An integer equal or higher than 0 and less than the buffer length
+	 */
+	public int remaining() {
+		return size;
 	}
 
 	/**

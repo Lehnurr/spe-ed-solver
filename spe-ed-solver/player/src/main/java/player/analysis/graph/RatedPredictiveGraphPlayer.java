@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import player.boardevaluation.graph.ConcreteEdge;
+import player.boardevaluation.graph.Graph;
 import utility.game.player.IPlayer;
 import utility.game.player.PlayerAction;
 import utility.game.player.PlayerDirection;
@@ -22,9 +23,9 @@ public class RatedPredictiveGraphPlayer implements IPlayer {
 	private Point2i position;
 	private boolean active;
 	private final int round;
+	private final int relativeRound;
 	private final PlayerAction initialAction;
 	private final List<ConcreteEdge> edgeTail;
-	private final int relativeRound;
 	private float successRating;
 	private float cutOffRating;
 
@@ -32,60 +33,82 @@ public class RatedPredictiveGraphPlayer implements IPlayer {
 	 * Creates a new {@link RatedPredictiveGraphPlayer} from a standard
 	 * {@link IPlayer} instance.
 	 * 
-	 * @param player {@link IPlayer} to initialize
+	 * @param player        {@link IPlayer} to initialize
+	 * @param initialAction The action that the player should perform
 	 */
-	public RatedPredictiveGraphPlayer(final IPlayer player) {
+	public RatedPredictiveGraphPlayer(final IPlayer player, PlayerAction initalAction) {
 		this.playerId = player.getPlayerId();
 		this.direction = player.getDirection();
 		this.speed = player.getSpeed();
 		this.position = player.getPosition();
 		this.active = player.isActive();
 		this.round = player.getRound();
+		this.relativeRound = 0;
+		this.initialAction = initalAction;
+		this.edgeTail = new ArrayList<>();
 		this.successRating = 1;
 		this.cutOffRating = 0;
-		this.relativeRound = 0;
-		this.initialAction = null;
-		this.edgeTail = new ArrayList<>();
-	}
-
-	private RatedPredictiveGraphPlayer(RatedPredictiveGraphPlayer parent, PlayerAction initAction, int speed,
-			PlayerDirection direction) {
-
-		this.playerId = parent.getPlayerId();
-		this.position = parent.position;
-		this.speed = speed;
-		this.direction = direction;
-
-		this.round = parent.getRound();
-		this.initialAction = initAction;
-		this.edgeTail = new ArrayList<>();
-		this.relativeRound = parent.getRelativeRound() + 1;
-
-		this.active = parent.isActive();
-
 	}
 
 	/**
-	 * Calculate a child by doing a specific action
+	 * Creates a new {@link RatedPredictiveGraphPlayer} from a given
+	 * {@link RatedPredictiveGraphPlayer RatedPredictiveGraphPlayer-Parent}
 	 * 
-	 * @param doAction the actio to do
-	 * @return A Child that has the action applied or null if the child would die
+	 * @param parent    The previous player
+	 * @param speed     the changed speed value
+	 * @param direction the changed direction value
 	 */
-	public RatedPredictiveGraphPlayer calculateChild(PlayerAction doAction) {
-		int childSpeed = this.getSpeed();
-		PlayerDirection childDirection = this.getDirection();
-		if (doAction == PlayerAction.SPEED_UP && childSpeed < 10) {
-			childSpeed++;
-		} else if (doAction == PlayerAction.SLOW_DOWN && childSpeed > 1) {
-			childSpeed--;
-		} else if (doAction == PlayerAction.TURN_RIGHT || doAction == PlayerAction.TURN_LEFT
-				|| doAction == PlayerAction.CHANGE_NOTHING) {
-			childDirection = childDirection.doAction(doAction);
-		} else {
-			return null;
+	private RatedPredictiveGraphPlayer(RatedPredictiveGraphPlayer parent, int speed, PlayerDirection direction) {
+
+		this.playerId = parent.getPlayerId();
+		this.direction = direction;
+		this.speed = speed;
+		this.position = parent.position;
+		this.active = parent.isActive();
+		this.round = parent.getRound();
+
+		this.initialAction = parent.initialAction;
+		this.edgeTail = new ArrayList<>();
+		this.relativeRound = parent.getRelativeRound() + 1;
+	}
+
+	/**
+	 * Calculates from the possible actions the children that survive
+	 * 
+	 * @return All valid Children
+	 */
+	public List<RatedPredictiveGraphPlayer> getValidChildren(Graph graph, FloatMatrix probabilities,
+			FloatMatrix minSteps) {
+
+		List<RatedPredictiveGraphPlayer> children = new ArrayList<>();
+		boolean doJump = (getRound() + 1) % 6 == 0 && getSpeed() > 2;
+
+		for (var action : PlayerAction.values()) {
+
+			int childSpeed = this.getSpeed();
+			PlayerDirection childDirection = this.getDirection();
+
+			if (action == PlayerAction.SPEED_UP) {
+				childSpeed++;
+			} else if (action == PlayerAction.SLOW_DOWN) {
+				childSpeed--;
+			} else {
+				childDirection = childDirection.doAction(action);
+			}
+
+			if (childSpeed > IPlayer.MAX_SPEED || childSpeed < IPlayer.MIN_SPEED)
+				continue;
+
+			final var child = new RatedPredictiveGraphPlayer(this, childSpeed, childDirection);
+
+			final ConcreteEdge edge = graph.getBoardCellAt(getPosition()).getEdge(childDirection, doJump, childSpeed);
+
+			// Check if the move is possible, try to add the Edge and update Ratings
+			if (edge != null && child.addEdgeAndCalculateRating(getSuccessRating(), probabilities, minSteps, edge))
+				children.add(child);
 		}
 
-		return new RatedPredictiveGraphPlayer(this, doAction, childSpeed, childDirection);
+		return children;
 	}
 
 	/**

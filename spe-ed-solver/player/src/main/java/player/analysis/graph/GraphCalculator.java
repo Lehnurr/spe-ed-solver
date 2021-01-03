@@ -13,9 +13,7 @@ import utility.game.player.IPlayer;
 import utility.game.player.PlayerAction;
 import utility.game.step.Deadline;
 import utility.geometry.FloatMatrix;
-import utility.logging.ApplicationLogger;
 import utility.logging.GameLogger;
-import utility.logging.LoggingLevel;
 
 /**
  * Calculator class calculating success and cut off ratings as
@@ -26,6 +24,7 @@ public class GraphCalculator {
 
 	private ActionsRating successRatingsResult;
 	private ActionsRating cutOffRatingsResult;
+	private int calculatedPaths;
 
 	private Map<PlayerAction, FloatMatrix> successMatrixResult;
 	private Map<PlayerAction, FloatMatrix> cutOffMatrixResult;
@@ -45,14 +44,28 @@ public class GraphCalculator {
 	public void performCalculation(final IPlayer self, final FloatMatrix probabilities, final FloatMatrix minSteps,
 			final Deadline deadline, final Graph graph) {
 
-		final RatedPredictiveGraphPlayer startPlayer = new RatedPredictiveGraphPlayer(self);
+		final List<RatedPredictiveGraphPlayer> startPlayers = new ArrayList<>();
+		for (final PlayerAction action : PlayerAction.values())
+			startPlayers.add(new RatedPredictiveGraphPlayer(self, action));
 
-		final List<GraphCalculation> calculations = getCalculations(startPlayer, probabilities, minSteps, deadline,
+		clearResults();
+
+		final List<GraphCalculation> calculations = getCalculations(startPlayers, probabilities, minSteps, deadline,
 				graph);
 
-		calculateMultithreaded(calculations);
-
+		calculate(calculations);
 		updateResults(calculations);
+	}
+
+	/**
+	 * Clears all locally stored results.
+	 */
+	private void clearResults() {
+		successMatrixResult = new EnumMap<>(PlayerAction.class);
+		cutOffMatrixResult = new EnumMap<>(PlayerAction.class);
+		successRatingsResult = new ActionsRating();
+		cutOffRatingsResult = new ActionsRating();
+		calculatedPaths = 0;
 	}
 
 	/**
@@ -69,106 +82,57 @@ public class GraphCalculator {
 	 * @param graph         The Graph board to find the edges
 	 * @return {@link GraphCalculation} objects
 	 */
-	private List<GraphCalculation> getCalculations(final RatedPredictiveGraphPlayer startPlayer,
+	private List<GraphCalculation> getCalculations(final List<RatedPredictiveGraphPlayer> startPlayers,
 			final FloatMatrix probabilities, final FloatMatrix minSteps, final Deadline deadline, final Graph graph) {
 
-		final int basePerThread = (graph.getHeight() + graph.getWidth()) * 10;
+		// Create a Calculation for each thread
+		List<GraphCalculation> calculations = new ArrayList<>();
+		while (calculations.size() < THREAD_COUNT)
+			calculations.add(new GraphCalculation(graph, probabilities, minSteps, deadline));
 
-		var calculations = new ArrayList<GraphCalculation>();
-		var baseCalculation = new GraphCalculation(probabilities, minSteps, new ArrayList<>(), deadline, graph);
-		calculations.add(baseCalculation);
+		// Define the number of required start players
+		final int threadBase = (graph.getHeight() + graph.getWidth()) * 10;
+		final int totalBase = threadBase * THREAD_COUNT;
 
 		// create a Base of Player states
-		List<RatedPredictiveGraphPlayer> fullBase = new ArrayList<>();
-		fullBase.add(startPlayer);
-		int i;
-		for (i = 0; i < fullBase.size() && fullBase.size() - i < basePerThread * THREAD_COUNT; i++) {
-			var self = fullBase.get(i);
-			boolean doJump = (self.getRound() + 1) % 6 == 0 && self.getSpeed() > 2;
+		GraphCalculation baseCalculation = new GraphCalculation(graph, probabilities, minSteps, deadline, totalBase);
+		startPlayers.stream().forEach(baseCalculation::addStartPlayer);
 
-			for (var action : PlayerAction.values()) {
-				var child = self.calculateChild(action);
-
-				if (child == null)
-					continue;
-
-				var edge = graph.getBoardCellAt(self.getPosition()).getEdge(child.getDirection(), doJump,
-						child.getSpeed());
-
-				// Check if the move is possible, try to add the Edge and update Ratings
-				if (edge == null
-						|| !child.addEdgeAndCalculateRating(self.getSuccessRating(), probabilities, minSteps, edge))
-					continue;
-
-				baseCalculation.getSuccessMatrixResult(child.getInitialAction()).max(child.getPosition(),
-						child.getSuccessRating());
-				baseCalculation.getCutOffMatrixResult(child.getInitialAction()).max(child.getPosition(),
-						child.getCutOffRating());
-
-				fullBase.add(child);
-				baseCalculation.incrementCalculatedPathsCount();
-			}
+		while (baseCalculation.queueHasNext() && baseCalculation.queueRemaining() < totalBase) {
+			baseCalculation.executeStep();
 		}
+		updateResults(baseCalculation);
 
-		List<List<RatedPredictiveGraphPlayer>> bases = new ArrayList<>();
-		for (int j = 0; j < THREAD_COUNT; j++)
-			bases.add(new ArrayList<>());
-
-		// Split the fullBase to the different Bases
-		while (i < fullBase.size()) {
-			for (var base : bases) {
-				if (i < fullBase.size()) {
-					base.add(fullBase.get(i));
-					i++;
-				}
-			}
+		for (int calculationIndex = 0; baseCalculation
+				.queueHasNext(); calculationIndex = (calculationIndex + 1) % THREAD_COUNT) {
+			final RatedPredictiveGraphPlayer startPlayer = baseCalculation.queuePoll();
+			calculations.get(calculationIndex).addStartPlayer(startPlayer);
 		}
-
-		for (var base : bases)
-			calculations.add(new GraphCalculation(probabilities, minSteps, base, deadline, graph));
 
 		return calculations;
 	}
 
 	/**
-	 * Calculates the second {@link GraphCalculation} in this thread and the other
-	 * each in a separate thread (Does not calculate the first calculation, because
-	 * this is the base)
+	 * Calculates the first given calculation in this Thread and all other
+	 * calculation in seperate Threads
 	 * 
 	 * @param calculations {@link GraphCalculation} objects to execute the
 	 *                     calculation for
 	 */
-	private void calculateMultithreaded(final Collection<GraphCalculation> calculations) {
-		// TODO: Make Multithreading more readable and stable
+	private static void calculate(final List<GraphCalculation> calculations) {
 		final List<Thread> threads = new ArrayList<>();
 
-		int i = 0;
-		GraphCalculation baseCalculation = null;
-		for (final GraphCalculation calculation : calculations) {
-			if (i == 0) {
-				i++;
-				continue;
-			}
-			if (i == 1) {
-				baseCalculation = calculation;
-				i++;
-				continue;
-			}
-			final Thread thread = new Thread(calculation::execute);
+		for (int i = 1; i < calculations.size(); i++) {
+			final GraphCalculation calculation = calculations.get(i);
+			final Thread thread = new Thread(calculation::executeDeadline);
 			threads.add(thread);
 			thread.start();
 		}
 
-		baseCalculation.execute();
+		calculations.get(0).executeDeadline();
 
-		for (final Thread thread : threads) {
-			try {
-				thread.join();
-			} catch (InterruptedException e) {
-				ApplicationLogger.logWarning("The reachable points calculation was interrupted!");
-				ApplicationLogger.logException(e, LoggingLevel.WARNING);
-			}
-		}
+		// To be on the safe side interrupt all other threads
+		threads.stream().forEach(Thread::interrupt);
 	}
 
 	/**
@@ -179,41 +143,28 @@ public class GraphCalculator {
 	 *                     taken {@link PlayerAction}
 	 */
 	private void updateResults(final List<GraphCalculation> calculations) {
-
-		clearResults();
-
-		int calculatedPaths = 0;
-		for (var calculation : calculations) {
-
-			for (final PlayerAction action : PlayerAction.values()) {
-				final FloatMatrix successMatrix = calculation.getSuccessMatrixResult(action);
-				final FloatMatrix cutOffMatrix = calculation.getCutOffMatrixResult(action);
-				successMatrixResult.put(action, new FloatMatrix(1, 1));
-				cutOffMatrixResult.put(action, new FloatMatrix(1, 1));
-
-				successMatrixResult.put(action, successMatrix);
-				cutOffMatrixResult.put(action, cutOffMatrix);
-
-				successRatingsResult.addRating(action, successMatrix.sum());
-				cutOffRatingsResult.addRating(action, cutOffMatrix.sum());
-			}
-			calculatedPaths += calculation.getCalculatedPathsCount();
-		}
+		calculations.stream().forEach(this::updateResults);
 
 		GameLogger.logGameInformation(String.format("Calculated %d reachable points paths!", calculatedPaths));
 
 		successRatingsResult.normalize();
 		cutOffRatingsResult.normalize();
+
 	}
 
-	/**
-	 * Clears all locally stored results.
-	 */
-	private void clearResults() {
-		successMatrixResult = new EnumMap<>(PlayerAction.class);
-		cutOffMatrixResult = new EnumMap<>(PlayerAction.class);
-		successRatingsResult = new ActionsRating();
-		cutOffRatingsResult = new ActionsRating();
+	private void updateResults(GraphCalculation calculation) {
+		for (final PlayerAction action : PlayerAction.values()) {
+			final FloatMatrix successMatrix = calculation.getSuccessMatrixResult(action);
+			final FloatMatrix cutOffMatrix = calculation.getCutOffMatrixResult(action);
+
+			successMatrixResult.put(action, successMatrix);
+			cutOffMatrixResult.put(action, cutOffMatrix);
+
+			successRatingsResult.addRating(action, successMatrix.sum());
+			cutOffRatingsResult.addRating(action, cutOffMatrix.sum());
+		}
+
+		calculatedPaths += calculation.getCalculatedPathsCount();
 	}
 
 	/**

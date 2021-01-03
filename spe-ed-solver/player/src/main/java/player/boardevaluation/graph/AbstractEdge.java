@@ -1,6 +1,5 @@
 package player.boardevaluation.graph;
 
-import utility.game.board.Board;
 import utility.game.player.PlayerDirection;
 import utility.geometry.Point2i;
 import utility.geometry.Vector2i;
