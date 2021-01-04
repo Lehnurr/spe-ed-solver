@@ -89,7 +89,7 @@ public class LineSegment2i {
             aValue = getPointA().getY();
             bValue = getPointB().getY();
             pValue = point.getY();
-        } else if (getPointA().getY() != getPointB().getY()) {
+        } else if (getPointA().getY() != point.getY()) {
             // y value is the same, x value of the point must be between pointA and pointB
             aValue = getPointA().getX();
             bValue = getPointB().getX();

@@ -90,6 +90,10 @@ public class ActionsRating {
 	 */
 	public void normalize() {
 		final float maxValue = maxRating();
+
+		if (Float.isNaN(1 / maxValue))
+			return;
+
 		for (final PlayerAction action : PlayerAction.values()) {
 			final float oldValue = getRating(action);
 			setRating(action, oldValue / maxValue);

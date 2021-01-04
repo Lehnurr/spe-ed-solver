@@ -41,7 +41,7 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	 *                      set
 	 */
 	private RatedPredictiveGraphPlayer(IPlayer parent, int speed, PlayerDirection direction, PlayerAction initialAction,
-			int relativeRound) {
+			int relativeRound, List<ConcreteEdge> parentEdgeTail) {
 
 		this.playerId = parent.getPlayerId();
 		this.direction = direction;
@@ -51,7 +51,7 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 		this.round = parent.getRound();
 
 		this.initialAction = initialAction;
-		this.edgeTail = new ArrayList<>();
+		this.edgeTail = new ArrayList<>(parentEdgeTail);
 		this.relativeRound = relativeRound + 1;
 	}
 
@@ -65,8 +65,8 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	 */
 	public List<RatedPredictiveGraphPlayer> getValidChildren(Graph graph, FloatMatrix probabilities,
 			FloatMatrix minSteps) {
-		return getValidChildren(this, this.getSuccessRating(), this.getInitialAction(), this.getRelativeRound(), graph,
-				probabilities, minSteps);
+		return getValidChildren(this, this.getSuccessRating(), this.getInitialAction(), this.getRelativeRound(),
+				this.edgeTail, graph, probabilities, minSteps);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	 */
 	public static List<RatedPredictiveGraphPlayer> getValidChildren(IPlayer parent, Graph graph,
 			FloatMatrix probabilities, FloatMatrix minSteps) {
-		return getValidChildren(parent, 1, null, 0, graph, probabilities, minSteps);
+		return getValidChildren(parent, 1, null, 0, new ArrayList<>(), graph, probabilities, minSteps);
 	}
 
 	/**
@@ -98,11 +98,11 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	 * @return All valid Children
 	 */
 	private static List<RatedPredictiveGraphPlayer> getValidChildren(IPlayer parent, float parentSuccessRating,
-			PlayerAction initialAction, int relativeRound, Graph graph, FloatMatrix probabilities,
-			FloatMatrix minSteps) {
+			PlayerAction initialAction, int relativeRound, List<ConcreteEdge> parentEdgeTail, Graph graph,
+			FloatMatrix probabilities, FloatMatrix minSteps) {
 
 		List<RatedPredictiveGraphPlayer> children = new ArrayList<>();
-		boolean doJump = (parent.getRound() + 1) % 6 == 0 && parent.getSpeed() > 2;
+		boolean doJump = parent.getRound() % 6 == 0 && parent.getSpeed() > 2;
 
 		for (var action : PlayerAction.values()) {
 
@@ -123,7 +123,7 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 			PlayerAction childInitialAction = initialAction == null ? action : initialAction;
 
 			final var child = new RatedPredictiveGraphPlayer(parent, childSpeed, childDirection, childInitialAction,
-					relativeRound);
+					relativeRound, parentEdgeTail);
 
 			final ConcreteEdge edge = graph.getBoardCellAt(parent.getPosition()).getEdge(childDirection, doJump,
 					childSpeed);

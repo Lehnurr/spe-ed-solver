@@ -1,7 +1,6 @@
 package player.analysis.graph;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
@@ -53,7 +52,7 @@ public class GraphCalculator {
 				graph);
 
 		calculate(calculations);
-		updateResults(calculations);
+		addResults(calculations);
 	}
 
 	/**
@@ -100,7 +99,7 @@ public class GraphCalculator {
 		while (baseCalculation.queueHasNext() && baseCalculation.queueRemaining() < totalBase) {
 			baseCalculation.executeStep();
 		}
-		updateResults(baseCalculation);
+		addResults(baseCalculation);
 
 		for (int calculationIndex = 0; baseCalculation
 				.queueHasNext(); calculationIndex = (calculationIndex + 1) % THREAD_COUNT) {
@@ -119,6 +118,9 @@ public class GraphCalculator {
 	 *                     calculation for
 	 */
 	private static void calculate(final List<GraphCalculation> calculations) {
+		if (calculations.isEmpty())
+			return;
+
 		final List<Thread> threads = new ArrayList<>();
 
 		for (int i = 1; i < calculations.size(); i++) {
@@ -141,17 +143,16 @@ public class GraphCalculator {
 	 * @param calculations {@link ReachablePointsCalculation} objects mapped to the
 	 *                     taken {@link PlayerAction}
 	 */
-	private void updateResults(final List<GraphCalculation> calculations) {
-		calculations.stream().forEach(this::updateResults);
+	private void addResults(final List<GraphCalculation> calculations) {
+		calculations.stream().forEach(this::addResults);
 
 		GameLogger.logGameInformation(String.format("Calculated %d reachable points paths!", calculatedPaths));
 
 		successRatingsResult.normalize();
 		cutOffRatingsResult.normalize();
-
 	}
 
-	private void updateResults(GraphCalculation calculation) {
+	private void addResults(GraphCalculation calculation) {
 		for (final PlayerAction action : PlayerAction.values()) {
 			final FloatMatrix successMatrix = calculation.getSuccessMatrixResult(action);
 			final FloatMatrix cutOffMatrix = calculation.getCutOffMatrixResult(action);

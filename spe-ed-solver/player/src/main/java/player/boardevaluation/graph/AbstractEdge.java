@@ -53,13 +53,13 @@ public final class AbstractEdge implements IEdge {
 
         final Point2i endPosition = path[stepCount - 1].getPosition();
 
-        final ConcreteEdge edge = new ConcreteEdge(path);
+        final ConcreteEdge edge = new ConcreteEdge(startNode, path);
 
         final Point2i invertedStartPosition = endPosition.translate(direction.getDirectionVector());
         final Node invertedStartNode = graph.getBoardCellAt(invertedStartPosition);
 
         if (invertedStartNode != null) {
-            final ConcreteEdge invertedEdge = new ConcreteEdge(invertedPath);
+            final ConcreteEdge invertedEdge = new ConcreteEdge(invertedStartNode, invertedPath);
             edge.setInvertedEdge(invertedEdge);
             invertedEdge.setInvertedEdge(edge);
 

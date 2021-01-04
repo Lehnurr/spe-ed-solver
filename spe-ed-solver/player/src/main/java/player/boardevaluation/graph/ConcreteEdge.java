@@ -13,12 +13,14 @@ import utility.geometry.LineSegment2i;
 public final class ConcreteEdge extends LineSegment2i implements IEdge {
     private final int stepCount;
     private final Node[] path;
+    private final Node startNode;
     private ConcreteEdge invertedEdge;
 
-    public ConcreteEdge(final Node[] path) {
+    public ConcreteEdge(final Node startNode, final Node[] path) {
         super(path[0].getPosition(), path[path.length - 1].getPosition());
         this.stepCount = path.length;
         this.path = path;
+        this.startNode = startNode;
     }
 
     /**
@@ -42,7 +44,7 @@ public final class ConcreteEdge extends LineSegment2i implements IEdge {
     }
 
     public Node getStartNode() {
-        return path[0];
+        return startNode;
     }
 
     public Node getEndNode() {
