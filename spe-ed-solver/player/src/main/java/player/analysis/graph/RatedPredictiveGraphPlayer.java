@@ -48,7 +48,7 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 		this.speed = speed;
 		this.position = parent.getPosition();
 		this.active = parent.isActive();
-		this.round = parent.getRound();
+		this.round = parent.getRound() + 1;
 
 		this.initialAction = initialAction;
 		this.edgeTail = new ArrayList<>(parentEdgeTail);
@@ -102,7 +102,7 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 			FloatMatrix probabilities, FloatMatrix minSteps) {
 
 		List<RatedPredictiveGraphPlayer> children = new ArrayList<>();
-		boolean doJump = parent.getRound() % 6 == 0 && parent.getSpeed() > 2;
+		boolean doJump = (parent.getRound() + 1) % 6 == 0;
 
 		for (var action : PlayerAction.values()) {
 
