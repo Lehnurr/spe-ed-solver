@@ -60,8 +60,7 @@ public class Graph extends Board<Node> {
             final CellValue enemyCellValue = CellValue.fromInteger(player.getPlayerId());
 
             // remove outgoing and incoming edges for the passed steps
-            // (excluding the new end position, but including the previous end position)
-            for (int i = 0; i < player.getSpeed(); i++) {
+            for (int i = 0; i <= player.getSpeed(); i++) {
                 var speedDirectionVector = player.getDirection().getDirectionVector().multiply(-1 * i);
                 var affectedPosition = player.getPosition().translate(speedDirectionVector);
                 var affectedNode = getBoardCellAt(affectedPosition);
