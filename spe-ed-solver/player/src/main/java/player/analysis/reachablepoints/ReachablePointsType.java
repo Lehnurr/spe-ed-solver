@@ -3,6 +3,10 @@ package player.analysis.reachablepoints;
 import player.analysis.reachablepoints.multithreaded.ReachablePointsMultithreaded;
 import player.analysis.reachablepoints.singlethreaded.ReachablePointsSingleThreaded;
 
+/**
+ * Enum describing multiple types of the {@link IReachablePoints} calculation.
+ * Each type is able to provide a {@link IReachablePoints} instance.
+ */
 public enum ReachablePointsType {
 
 	MULTI_THREADED {
@@ -18,6 +22,12 @@ public enum ReachablePointsType {
 		}
 	};
 
+	/**
+	 * Returns a new instance of {@link IReachablePoints} according to the
+	 * {@link ReachablePointsType}.
+	 * 
+	 * @return {@link IReachablePoints} instance
+	 */
 	public abstract IReachablePoints newInstance();
 
 }

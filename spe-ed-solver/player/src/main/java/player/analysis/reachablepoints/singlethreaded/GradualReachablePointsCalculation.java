@@ -9,6 +9,13 @@ import utility.game.board.Cell;
 import utility.geometry.FloatMatrix;
 import utility.geometry.Point2i;
 
+/**
+ * Helper class to calculate {@link ReachablePointsSingleThreaded}. The object
+ * is representing the predictive steps performed on an initial
+ * {@link RatedPredictivePlayer} and their success and cutoff
+ * {@link FloatMatrix} results. The results are gradually build by calling
+ * {@link GradualReachablePointsCalculation#performSingleStep()}.
+ */
 public class GradualReachablePointsCalculation {
 
 	private static final int QUEUE_SIZE = 10000;
@@ -25,6 +32,16 @@ public class GradualReachablePointsCalculation {
 
 	private int calculatedPathsCount = 0;
 
+	/**
+	 * Creates a new {@link GradualReachablePointsCalculation} object with the given
+	 * information for the initial {@link RatedPredictivePlayer}.
+	 * 
+	 * @param board         {@link Board} to check for collisions
+	 * @param probabilities probabilities of enemies as {@link FloatMatrix}
+	 * @param minSteps      minimum steps of enemies as {@link FloatMatrix}
+	 * @param startPlayer   initial {@link RatedPredictivePlayer} all children paths
+	 *                      depend on
+	 */
 	public GradualReachablePointsCalculation(final Board<Cell> board, final FloatMatrix probabilities,
 			final FloatMatrix minSteps, final RatedPredictivePlayer startPlayer) {
 
@@ -44,6 +61,13 @@ public class GradualReachablePointsCalculation {
 		}
 	}
 
+	/**
+	 * Performs a single step of the player specific reachable points calculating by
+	 * polling a {@link RatedPredictivePlayer} from a {@link LimitedQueue},
+	 * evaluating the {@link RatedPredictivePlayer children} and adding the valid
+	 * {@link RatedPredictivePlayer children} to the {@link LimitedQueue}. The local
+	 * results are added to the global result {@link FloatMatrix matrices}.
+	 */
 	public void performSingleStep() {
 
 		final RatedPredictivePlayer calculationPlayer = queue.poll();

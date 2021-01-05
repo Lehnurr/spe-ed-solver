@@ -10,6 +10,11 @@ import utility.game.player.PlayerAction;
 import utility.game.step.Deadline;
 import utility.geometry.FloatMatrix;
 
+/**
+ * Interface for reachable points calculations. The instances are responsible
+ * for calculating the success and cut off {@link ActionsRating ratings} for the
+ * given information. Results should be stored until they are updated.
+ */
 public interface IReachablePoints {
 
 	/**

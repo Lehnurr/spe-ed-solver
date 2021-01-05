@@ -14,6 +14,13 @@ import utility.game.step.Deadline;
 import utility.geometry.FloatMatrix;
 import utility.logging.GameLogger;
 
+/**
+ * Class implementing the {@link IReachablePoints} interface. The reachable
+ * points calculation is performed on a single thread (main thread). The
+ * calculation is distributed to multiple
+ * {@link GradualReachablePointsCalculation} objects which are repeatedly
+ * alternated to distribute the resources equally.
+ */
 public class ReachablePointsSingleThreaded implements IReachablePoints {
 
 	private static final int DEADLINE_MILLISECOND_BUFFER = 500;
@@ -32,12 +39,25 @@ public class ReachablePointsSingleThreaded implements IReachablePoints {
 		updateActionsRatings();
 	}
 
+	/**
+	 * Resets the {@link GradualReachablePointsCalculation calculations} and
+	 * {@link ActionsRating ratings}.
+	 */
 	private void reset() {
 		calculations = new EnumMap<>(PlayerAction.class);
 		successRating = new ActionsRating();
 		cutOffRating = new ActionsRating();
 	}
 
+	/**
+	 * Initializes the {@link GradualReachablePointsCalculation calculations} with
+	 * the given start information.
+	 * 
+	 * @param self          {@link IPlayer} to test for further movement
+	 * @param board         {@link Board} to check for collisions
+	 * @param probabilities probabilities of enemies as {@link FloatMatrix}
+	 * @param minSteps      minimum steps of enemies as {@link FloatMatrix}
+	 */
 	private void initCalculations(final IPlayer self, final Board<Cell> board, final FloatMatrix probabilities,
 			final FloatMatrix minSteps) {
 
@@ -51,6 +71,14 @@ public class ReachablePointsSingleThreaded implements IReachablePoints {
 		}
 	}
 
+	/**
+	 * Executes the main calculation loop. Thereby multiple
+	 * {@link GradualReachablePointsCalculation calculations} are repeatedly
+	 * alternated until a {@link Deadline} is reached.
+	 * 
+	 * @param deadline {@link Deadline} for the
+	 *                 {@link GradualReachablePointsCalculation calculations}
+	 */
 	private void executeCalculationLoop(final Deadline deadline) {
 
 		boolean finished = false;
@@ -72,6 +100,10 @@ public class ReachablePointsSingleThreaded implements IReachablePoints {
 		GameLogger.logGameInformation(String.format("Calculated %d reachable points paths!", calculatedPaths));
 	}
 
+	/**
+	 * Updates the success and cut off {@link ActionsRating ratings} with the
+	 * calculated success and cut off {@link FloatMatrix matrices}.
+	 */
 	private void updateActionsRatings() {
 		for (final PlayerAction action : PlayerAction.values()) {
 			final float successValue = calculations.get(action).getSuccessMatrixResult().sum();
