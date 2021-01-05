@@ -6,6 +6,7 @@ import player.analysis.ActionsRating;
 import player.analysis.enemyprobability.EnemyProbabilityCalculator;
 import player.analysis.reachablepoints.IReachablePoints;
 import player.analysis.reachablepoints.ReachablePointsType;
+import player.analysis.slowdown.SlowDown;
 import utility.game.player.PlayerAction;
 import utility.game.step.GameStep;
 import utility.geometry.ContextualFloatMatrix;
@@ -23,9 +24,11 @@ public class ReachablePointsPlayer implements ISpeedSolverPlayer {
 
 	private final EnemyProbabilityCalculator enemyProbabilityCalculator;
 	private final IReachablePoints reachablePointsCalculator;
+	private final SlowDown slowDown;
 
 	private final int enemySearchDepth;
 	private final float cutOffWeight;
+	private final float slowDownWeight;
 
 	/**
 	 * Creates a new {@link ReachablePointsPlayer} with the given configuration
@@ -33,13 +36,18 @@ public class ReachablePointsPlayer implements ISpeedSolverPlayer {
 	 * 
 	 * @param enemySearchDepth recursive search depth to search for enemy actions
 	 * @param cutOffWeight     relative weight for the cut off {@link ActionsRating}
+	 * @param slowDownWeight   relative weight for the slow down
+	 *                         {@link ActionsRating}
 	 * @param type             the {@link ReachablePointsType} of the calculation
 	 */
-	public ReachablePointsPlayer(final int enemySearchDepth, final float cutOffWeight, final ReachablePointsType type) {
+	public ReachablePointsPlayer(final int enemySearchDepth, final float cutOffWeight, final float slowDownWeight,
+			final ReachablePointsType type) {
 		this.enemyProbabilityCalculator = new EnemyProbabilityCalculator();
 		this.reachablePointsCalculator = type.newInstance();
+		this.slowDown = new SlowDown();
 		this.enemySearchDepth = enemySearchDepth;
 		this.cutOffWeight = cutOffWeight;
+		this.slowDownWeight = slowDownWeight;
 	}
 
 	@Override
@@ -53,15 +61,17 @@ public class ReachablePointsPlayer implements ISpeedSolverPlayer {
 				gameStep.getDeadline());
 
 		final ActionsRating successActionsRating = reachablePointsCalculator.getSuccessRatingsResult();
-		GameLogger.logGameInformation(String.format("success-rating:\t%s", successActionsRating));
-
 		final ActionsRating cutOffActionsRating = reachablePointsCalculator.getCutOffRatingsResult();
-		GameLogger.logGameInformation(String.format("cut-off-rating:\t%s", cutOffActionsRating));
-
-		final ActionsRating combinedActionsRating = successActionsRating.combine(cutOffActionsRating, cutOffWeight);
-		GameLogger.logGameInformation(String.format("combined-rating:\t%s", combinedActionsRating));
+		final ActionsRating slowDownActionsRating = slowDown.getActionsRating(gameStep.getSelf(), gameStep.getBoard());
+		final ActionsRating combinedActionsRating = successActionsRating.combine(cutOffActionsRating, cutOffWeight)
+				.combine(slowDownActionsRating, slowDownWeight);
 
 		final PlayerAction actionToTake = combinedActionsRating.maxAction();
+
+		GameLogger.logGameInformation(String.format("success-rating:\t%s", successActionsRating));
+		GameLogger.logGameInformation(String.format("cut-off-rating:\t%s", cutOffActionsRating));
+		GameLogger.logGameInformation(String.format("slow-down-rating:\t%s", slowDownActionsRating));
+		GameLogger.logGameInformation(String.format("combined-rating:\t%s", combinedActionsRating));
 
 		var probabilitiesNamedMatrix = new ContextualFloatMatrix("probability",
 				enemyProbabilityCalculator.getProbabilitiesMatrix(), 0, 1);
