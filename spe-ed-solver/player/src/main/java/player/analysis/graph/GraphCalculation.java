@@ -34,7 +34,7 @@ public class GraphCalculation {
 	private final Graph graph;
 
 	/**
-	 * Creates a new {@link ReachablePointsCalculation} object.
+	 * Creates a new {@link GradualReachablePointsCalculation} object.
 	 * 
 	 * @param graph         The Graph board to find the edges
 	 * @param probabilities {@link FloatMatrix} with probabilities
@@ -62,7 +62,7 @@ public class GraphCalculation {
 	}
 
 	/**
-	 * Creates a new {@link ReachablePointsCalculation} object and sets the size of
+	 * Creates a new {@link GradualReachablePointsCalculation} object and sets the size of
 	 * the queue to {@link GraphCalculation#DEFAULT_QUEUE_SIZE}
 	 * 
 	 * @param graph         The Graph board to find the edges
@@ -86,7 +86,7 @@ public class GraphCalculation {
 	}
 
 	/**
-	 * Starts the execution for the {@link ReachablePointsCalculation} with the
+	 * Starts the execution for the {@link GradualReachablePointsCalculation} with the
 	 * given startPlayers. Ends when no steps can be found or the Deadline exceeds
 	 * the {@link GraphCalculation#DEADLINE_MILLISECOND_BUFFER}
 	 */

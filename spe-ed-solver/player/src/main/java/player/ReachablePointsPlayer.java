@@ -4,7 +4,8 @@ import java.util.function.Consumer;
 
 import player.analysis.ActionsRating;
 import player.analysis.enemyprobability.EnemyProbabilityCalculator;
-import player.analysis.reachablepoints.ReachablePointsCalculator;
+import player.analysis.reachablepoints.IReachablePoints;
+import player.analysis.reachablepoints.ReachablePointsType;
 import utility.game.player.PlayerAction;
 import utility.game.step.GameStep;
 import utility.geometry.ContextualFloatMatrix;
@@ -20,8 +21,8 @@ import utility.logging.GameLogger;
  */
 public class ReachablePointsPlayer implements ISpeedSolverPlayer {
 
-	private final EnemyProbabilityCalculator enemyProbabilityCalculator = new EnemyProbabilityCalculator();
-	private final ReachablePointsCalculator reachablePointsCalculator = new ReachablePointsCalculator();
+	private final EnemyProbabilityCalculator enemyProbabilityCalculator;
+	private final IReachablePoints reachablePointsCalculator;
 
 	private final int enemySearchDepth;
 	private final float cutOffWeight;
@@ -32,8 +33,11 @@ public class ReachablePointsPlayer implements ISpeedSolverPlayer {
 	 * 
 	 * @param enemySearchDepth recursive search depth to search for enemy actions
 	 * @param cutOffWeight     relative weight for the cut off {@link ActionsRating}
+	 * @param type             the {@link ReachablePointsType} of the calculation
 	 */
-	public ReachablePointsPlayer(final int enemySearchDepth, final float cutOffWeight) {
+	public ReachablePointsPlayer(final int enemySearchDepth, final float cutOffWeight, final ReachablePointsType type) {
+		this.enemyProbabilityCalculator = new EnemyProbabilityCalculator();
+		this.reachablePointsCalculator = type.newInstance();
 		this.enemySearchDepth = enemySearchDepth;
 		this.cutOffWeight = cutOffWeight;
 	}

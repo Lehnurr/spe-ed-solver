@@ -1,4 +1,4 @@
-package player.analysis.reachablepoints;
+package player.analysis.reachablepoints.multithreaded;
 
 import java.util.Collection;
 
@@ -15,7 +15,7 @@ import utility.geometry.Point2i;
  * initial player until a {@link Deadline} is reached. Calculations are queued
  * up based on their local solution improvement and a small random value.
  */
-public class ReachablePointsCalculation {
+public class DeadlineReachablePointsCalculation {
 
 	private static final int DEADLINE_MILLISECOND_BUFFER = 500;
 	private static final int QUEUE_SIZE = 10000;
@@ -35,7 +35,7 @@ public class ReachablePointsCalculation {
 	private int calculatedPathsCount = 0;
 
 	/**
-	 * Creates a new {@link ReachablePointsCalculation} object.
+	 * Creates a new {@link DeadlineReachablePointsCalculation} object.
 	 * 
 	 * @param board         {@link Board} to check for collisions
 	 * @param probabilities {@link FloatMatrix} with probabilities
@@ -43,7 +43,7 @@ public class ReachablePointsCalculation {
 	 * @param startPlayer   {@link RatedPredictivePlayer} to start with
 	 * @param deadline      {@link Deadline} to limit execution time
 	 */
-	public ReachablePointsCalculation(final Board<Cell> board, final FloatMatrix probabilities,
+	public DeadlineReachablePointsCalculation(final Board<Cell> board, final FloatMatrix probabilities,
 			final FloatMatrix minSteps, final RatedPredictivePlayer startPlayer, final Deadline deadline) {
 
 		this.board = board;
@@ -58,7 +58,7 @@ public class ReachablePointsCalculation {
 	}
 
 	/**
-	 * Starts the execution for the {@link ReachablePointsCalculation} object.
+	 * Starts the execution for the {@link DeadlineReachablePointsCalculation} object.
 	 */
 	public void execute() {
 

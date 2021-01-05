@@ -1,4 +1,4 @@
-package player.analysis.reachablepoints;
+package player.analysis.reachablepoints.multithreaded;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,6 +11,7 @@ import java.util.TimerTask;
 
 import player.analysis.ActionsRating;
 import player.analysis.RatedPredictivePlayer;
+import player.analysis.reachablepoints.IReachablePoints;
 import utility.game.board.Board;
 import utility.game.board.Cell;
 import utility.game.player.IPlayer;
@@ -25,7 +26,7 @@ import utility.logging.LoggingLevel;
  * Calculator class calculating success and cut off ratings as
  * {@link ActionsRating} objects and storing the last calculated results.
  */
-public class ReachablePointsCalculator {
+public class ReachablePointsMultithreaded implements IReachablePoints {
 
 	private static final int DEADLINE_MILLISECOND_INTERRUPT = 250;
 
@@ -35,24 +36,13 @@ public class ReachablePointsCalculator {
 	private Map<PlayerAction, FloatMatrix> successMatrixResult;
 	private Map<PlayerAction, FloatMatrix> cutOffMatrixResult;
 
-	/**
-	 * Performs the calculation with the given values and updates the stored
-	 * results.
-	 * 
-	 * @param self          {@link IPlayer} of yourself in the spe_ed game
-	 * @param board         {@link Board} to check for collisions
-	 * @param probabilities {@link FloatMatrix} containing the enemy probability
-	 *                      values
-	 * @param minSteps      {@link FloatMatrix} containing the minimum enemy steps
-	 *                      for each element
-	 * @param deadline      {@link Deadline} which must not be exceeded
-	 */
+	@Override
 	public void performCalculation(final IPlayer self, final Board<Cell> board, final FloatMatrix probabilities,
 			final FloatMatrix minSteps, final Deadline deadline) {
 
 		final RatedPredictivePlayer startPlayer = new RatedPredictivePlayer(self);
 
-		final Map<PlayerAction, ReachablePointsCalculation> calculations = getCalculations(startPlayer, board,
+		final Map<PlayerAction, DeadlineReachablePointsCalculation> calculations = getCalculations(startPlayer, board,
 				probabilities, minSteps, deadline);
 
 		calculateMultithreaded(calculations.values(), deadline);
@@ -61,7 +51,7 @@ public class ReachablePointsCalculator {
 	}
 
 	/**
-	 * Generates {@link ReachablePointsCalculation} objects for each possible
+	 * Generates {@link DeadlineReachablePointsCalculation} objects for each possible
 	 * {@link PlayerAction} a given {@link RatedPredictivePlayer} can make. The
 	 * objects are mapped to the performed {@link PlayerAction} and returned.
 	 * 
@@ -73,19 +63,19 @@ public class ReachablePointsCalculator {
 	 * @param minSteps      {@link FloatMatrix} containing the minimum enemy steps
 	 *                      for each element
 	 * @param deadline      {@link Deadline} which must not be exceeded
-	 * @return {@link ReachablePointsCalculation} objects mapped to the taken child
+	 * @return {@link DeadlineReachablePointsCalculation} objects mapped to the taken child
 	 *         {@link PlayerAction}
 	 */
-	private Map<PlayerAction, ReachablePointsCalculation> getCalculations(final RatedPredictivePlayer startPlayer,
+	private Map<PlayerAction, DeadlineReachablePointsCalculation> getCalculations(final RatedPredictivePlayer startPlayer,
 			final Board<Cell> board, final FloatMatrix probabilities, final FloatMatrix minSteps,
 			final Deadline deadline) {
 
-		final Map<PlayerAction, ReachablePointsCalculation> result = new EnumMap<>(PlayerAction.class);
+		final Map<PlayerAction, DeadlineReachablePointsCalculation> result = new EnumMap<>(PlayerAction.class);
 
 		for (final PlayerAction action : PlayerAction.values()) {
 			final RatedPredictivePlayer child = new RatedPredictivePlayer(startPlayer, action, board, probabilities,
 					minSteps);
-			final ReachablePointsCalculation calculation = new ReachablePointsCalculation(board, probabilities,
+			final DeadlineReachablePointsCalculation calculation = new DeadlineReachablePointsCalculation(board, probabilities,
 					minSteps, child, deadline);
 			result.put(action, calculation);
 		}
@@ -94,20 +84,20 @@ public class ReachablePointsCalculator {
 	}
 
 	/**
-	 * Calculates each given {@link ReachablePointsCalculation} in a separate
+	 * Calculates each given {@link DeadlineReachablePointsCalculation} in a separate
 	 * threads and joins all of them. Additionally a timer is set to interrupt
 	 * running threads, which are not finished in time.
 	 * 
-	 * @param calculations {@link ReachablePointsCalculation} objects to execute the
+	 * @param calculations {@link DeadlineReachablePointsCalculation} objects to execute the
 	 *                     calculation for
 	 * @param deadline     {@link Deadline} for the calculations
 	 */
-	private void calculateMultithreaded(final Collection<ReachablePointsCalculation> calculations,
+	private void calculateMultithreaded(final Collection<DeadlineReachablePointsCalculation> calculations,
 			final Deadline deadline) {
 
 		final List<Thread> threads = new ArrayList<>();
 
-		for (final ReachablePointsCalculation calculation : calculations) {
+		for (final DeadlineReachablePointsCalculation calculation : calculations) {
 			final Thread thread = new Thread(calculation::execute);
 			threads.add(thread);
 			thread.start();
@@ -138,19 +128,19 @@ public class ReachablePointsCalculator {
 
 	/**
 	 * Updates all the locally stored results by collecting all result of the
-	 * {@link ReachablePointsCalculation} objects.
+	 * {@link DeadlineReachablePointsCalculation} objects.
 	 * 
-	 * @param calculations {@link ReachablePointsCalculation} objects mapped to the
+	 * @param calculations {@link DeadlineReachablePointsCalculation} objects mapped to the
 	 *                     taken {@link PlayerAction}
 	 */
-	private void updateResults(final Map<PlayerAction, ReachablePointsCalculation> calculations) {
+	private void updateResults(final Map<PlayerAction, DeadlineReachablePointsCalculation> calculations) {
 
 		clearResults();
 
 		int calculatedPaths = 0;
 
 		for (final PlayerAction action : PlayerAction.values()) {
-			final ReachablePointsCalculation calculation = calculations.get(action);
+			final DeadlineReachablePointsCalculation calculation = calculations.get(action);
 			final FloatMatrix successMatrix = calculation.getSuccessMatrixResult();
 			final FloatMatrix cutOffMatrix = calculation.getCutOffMatrixResult();
 
@@ -178,42 +168,22 @@ public class ReachablePointsCalculator {
 		cutOffRatingsResult = new ActionsRating();
 	}
 
-	/**
-	 * Returns the {@link ActionsRating} for the success ratings for each
-	 * {@link PlayerAction}.
-	 * 
-	 * @return success ratings
-	 */
+	@Override
 	public ActionsRating getSuccessRatingsResult() {
 		return successRatingsResult;
 	}
 
-	/**
-	 * Returns the {@link ActionsRating} for the cut off ratings for each
-	 * {@link PlayerAction}.
-	 * 
-	 * @return cut off ratings
-	 */
+	@Override
 	public ActionsRating getCutOffRatingsResult() {
 		return cutOffRatingsResult;
 	}
 
-	/**
-	 * Returns a {@link Map} mapping each {@link PlayerAction} to a
-	 * {@link FloatMatrix} containing the success ratings for each element.
-	 * 
-	 * @return success matrices map
-	 */
+	@Override
 	public Map<PlayerAction, FloatMatrix> getSuccessMatrixResult() {
 		return Collections.unmodifiableMap(successMatrixResult);
 	}
 
-	/**
-	 * Returns a {@link Map} mapping each {@link PlayerAction} to a
-	 * {@link FloatMatrix} containing the cut off ratings for each element.
-	 * 
-	 * @return cut off matrices map
-	 */
+	@Override
 	public Map<PlayerAction, FloatMatrix> getCutOffMatrixResult() {
 		return Collections.unmodifiableMap(cutOffMatrixResult);
 	}

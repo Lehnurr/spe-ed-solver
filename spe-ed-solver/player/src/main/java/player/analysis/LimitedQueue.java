@@ -106,4 +106,13 @@ public class LimitedQueue<Element> {
 		return size == buffer.length;
 	}
 
+	/**
+	 * Determines if the {@link LimitedQueue} is empty.
+	 * 
+	 * @return true if no element is contained
+	 */
+	public boolean isEmpty() {
+		return size == 0;
+	}
+
 }

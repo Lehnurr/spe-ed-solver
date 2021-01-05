@@ -1,5 +1,7 @@
 package player;
 
+import player.analysis.reachablepoints.ReachablePointsType;
+
 /**
  * {@link PlayerType} enum representing multiple types of spe_ed solver players.
  * Each type can generate a {@link ISpeedSolverPlayer} instance.
@@ -9,13 +11,13 @@ public enum PlayerType {
 	REACHABLE_POINTS {
 		@Override
 		public ISpeedSolverPlayer newInstance() {
-			return new ReachablePointsPlayer(5, 0.4f);
+			return new ReachablePointsPlayer(5, 0.4f, ReachablePointsType.MULTI_THREADED);
 		}
 	},
-	REACHABLE_POINTS_BASE {
+	REACHABLE_POINTS_SINGLE_THREADED {
 		@Override
 		public ISpeedSolverPlayer newInstance() {
-			return new ReachablePointsPlayer(5, 0f);
+			return new ReachablePointsPlayer(5, 0.4f, ReachablePointsType.SINGLE_THREADED);
 		}
 	},
 	GRAPH {

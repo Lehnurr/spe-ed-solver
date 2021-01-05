@@ -138,9 +138,9 @@ public class GraphCalculator {
 
 	/**
 	 * Updates all the locally stored results by collecting all result of the
-	 * {@link ReachablePointsCalculation} objects.
+	 * {@link GradualReachablePointsCalculation} objects.
 	 * 
-	 * @param calculations {@link ReachablePointsCalculation} objects mapped to the
+	 * @param calculations {@link GradualReachablePointsCalculation} objects mapped to the
 	 *                     taken {@link PlayerAction}
 	 */
 	private void addResults(final List<GraphCalculation> calculations) {
