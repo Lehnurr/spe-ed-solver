@@ -140,8 +140,8 @@ public class GraphCalculator {
 	 * Updates all the locally stored results by collecting all result of the
 	 * {@link GradualReachablePointsCalculation} objects.
 	 * 
-	 * @param calculations {@link GradualReachablePointsCalculation} objects mapped to the
-	 *                     taken {@link PlayerAction}
+	 * @param calculations {@link GradualReachablePointsCalculation} objects mapped
+	 *                     to the taken {@link PlayerAction}
 	 */
 	private void addResults(final List<GraphCalculation> calculations) {
 		calculations.stream().forEach(this::addResults);
@@ -157,8 +157,8 @@ public class GraphCalculator {
 			final FloatMatrix successMatrix = calculation.getSuccessMatrixResult(action);
 			final FloatMatrix cutOffMatrix = calculation.getCutOffMatrixResult(action);
 
-			successMatrixResult.put(action, successMatrix);
-			cutOffMatrixResult.put(action, cutOffMatrix);
+			successMatrixResult.compute(action, (k, v) -> v == null ? successMatrix : v.sum(successMatrix));
+			cutOffMatrixResult.compute(action, (k, v) -> v == null ? cutOffMatrix : v.sum(cutOffMatrix));
 
 			successRatingsResult.addRating(action, successMatrix.sum());
 			cutOffRatingsResult.addRating(action, cutOffMatrix.sum());

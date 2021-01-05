@@ -62,8 +62,8 @@ public class GraphCalculation {
 	}
 
 	/**
-	 * Creates a new {@link GraphCalculation} object and sets the size of
-	 * the queue to {@link GraphCalculation#DEFAULT_QUEUE_SIZE}
+	 * Creates a new {@link GraphCalculation} object and sets the size of the queue
+	 * to {@link GraphCalculation#DEFAULT_QUEUE_SIZE}
 	 * 
 	 * @param graph         The Graph board to find the edges
 	 * @param probabilities {@link FloatMatrix} with probabilities
@@ -86,9 +86,9 @@ public class GraphCalculation {
 	}
 
 	/**
-	 * Starts the execution for the {@link GraphCalculation} with the
-	 * given startPlayers. Ends when no steps can be found or the Deadline exceeds
-	 * the {@link GraphCalculation#DEADLINE_MILLISECOND_BUFFER}
+	 * Starts the execution for the {@link GraphCalculation} with the given
+	 * startPlayers. Ends when no steps can be found or the Deadline exceeds the
+	 * {@link GraphCalculation#DEADLINE_MILLISECOND_BUFFER}
 	 */
 	public void executeDeadline() {
 		while (queue.hasNext() && deadline.getRemainingMilliseconds() > DEADLINE_MILLISECOND_BUFFER) {
