@@ -99,7 +99,7 @@ public final class ConcreteEdge extends LineSegment2i implements IEdge {
 
     @Override
     public int hashCode() {
-        return Objects.hash(stepCount, path, invertedEdge);
+        return Objects.hash(stepCount, path);
     }
 
 }
