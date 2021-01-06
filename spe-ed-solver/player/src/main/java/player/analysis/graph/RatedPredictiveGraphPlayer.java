@@ -1,7 +1,9 @@
 package player.analysis.graph;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import player.boardevaluation.graph.ConcreteEdge;
 import player.boardevaluation.graph.Graph;
@@ -28,6 +30,7 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	private final List<ConcreteEdge> edgeTail;
 	private float successRating;
 	private float cutOffRating;
+	private Map<ConcreteEdge, Integer> initialEdgeIncrements;
 
 	/**
 	 * Creates a new {@link RatedPredictiveGraphPlayer} from a given
@@ -64,9 +67,9 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	 * @return All valid Children
 	 */
 	public List<RatedPredictiveGraphPlayer> getValidChildren(Graph graph, FloatMatrix probabilities,
-			FloatMatrix minSteps) {
+			FloatMatrix minSteps, final ConcreteEdge[] initialEdges) {
 		return getValidChildren(this, this.getSuccessRating(), this.getInitialAction(), this.getRelativeRound(),
-				this.edgeTail, graph, probabilities, minSteps);
+				this.edgeTail, graph, probabilities, minSteps, initialEdges, this.getInitialEdgeIncrements());
 	}
 
 	/**
@@ -79,8 +82,10 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	 * @return All valid Children
 	 */
 	public static List<RatedPredictiveGraphPlayer> getValidChildren(IPlayer parent, Graph graph,
-			FloatMatrix probabilities, FloatMatrix minSteps) {
-		return getValidChildren(parent, 1, null, 0, new ArrayList<>(), graph, probabilities, minSteps);
+			FloatMatrix probabilities, FloatMatrix minSteps, final ConcreteEdge[] initialEdges,
+			final Map<ConcreteEdge, Integer> parentInitialEdgeIncrements) {
+		return getValidChildren(parent, 1, null, 0, new ArrayList<>(), graph, probabilities, minSteps, initialEdges,
+				parentInitialEdgeIncrements);
 	}
 
 	/**
@@ -99,8 +104,9 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	 */
 	private static List<RatedPredictiveGraphPlayer> getValidChildren(IPlayer parent, float parentSuccessRating,
 			PlayerAction initialAction, int relativeRound, List<ConcreteEdge> parentEdgeTail, Graph graph,
-			FloatMatrix probabilities, FloatMatrix minSteps) {
-
+			FloatMatrix probabilities, FloatMatrix minSteps, final ConcreteEdge[] initialEdges,
+			final Map<ConcreteEdge, Integer> parentInitialEdgeIncrements) {
+		// TODO: Too many parameters
 		List<RatedPredictiveGraphPlayer> children = new ArrayList<>();
 		boolean doJump = (parent.getRound() + 1) % 6 == 0;
 
@@ -129,8 +135,10 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 					childSpeed);
 
 			// Check if the move is possible, try to add the Edge and update Ratings
-			if (edge != null && child.addEdgeAndCalculateRating(parentSuccessRating, probabilities, minSteps, edge))
+			if (edge != null && child.addEdgeAndCalculateRating(parentSuccessRating, probabilities, minSteps,
+					initialEdges, parentInitialEdgeIncrements, edge)) {
 				children.add(child);
+			}
 		}
 
 		return children;
@@ -181,6 +189,36 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	}
 
 	/**
+	 * Calculates the increment-amount for the initial edge importance by applying a
+	 * new passed edge
+	 * 
+	 * @param initialEdges                all initial edges
+	 * @param parentInitialEdgeIncrements the increment values from the parent
+	 * @param newEdge                     the passed edge
+	 * @return a new InitialEdgeIncrements-map if the edge intersects an initial
+	 *         edge else the parents map
+	 */
+	private Map<ConcreteEdge, Integer> calculateInitialEdgeIncrements(ConcreteEdge[] initialEdges,
+			Map<ConcreteEdge, Integer> parentInitialEdgeIncrements, ConcreteEdge newEdge) {
+
+		Map<ConcreteEdge, Integer> increments = parentInitialEdgeIncrements;
+
+		for (final ConcreteEdge initialEdge : initialEdges) {
+			if (initialEdge.intersect(newEdge)) {
+				if (increments == parentInitialEdgeIncrements) {
+					// Overwrite the increment-value-map with a copy of it (only once)
+					increments = new HashMap<>();
+					increments.putAll(parentInitialEdgeIncrements);
+				}
+				// for the initial-edge add the increment value / increase it by 1
+				increments.compute(initialEdge, (k, v) -> v == null ? 1 : (v + 1));
+			}
+		}
+
+		return increments;
+	}
+
+	/**
 	 * Adds an edge to the Edge-Tail of this Player
 	 * 
 	 * @param edge the new passed edge
@@ -209,10 +247,13 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	 * @param newEdge             the new passsed edge
 	 */
 	private void calculateRating(final float parentSuccessRating, final FloatMatrix probabilities,
-			final FloatMatrix minSteps, final ConcreteEdge newEdge) {
+			final FloatMatrix minSteps, final ConcreteEdge[] initialEdges,
+			final Map<ConcreteEdge, Integer> parentInitialEdgeIncrements, final ConcreteEdge newEdge) {
 		if (isActive()) {
 			this.successRating = calculateSuccessRating(parentSuccessRating, probabilities, minSteps, newEdge);
 			this.cutOffRating = calculateCutOffRating(probabilities, minSteps, newEdge);
+			this.initialEdgeIncrements = calculateInitialEdgeIncrements(initialEdges, parentInitialEdgeIncrements,
+					newEdge);
 		} else {
 			this.successRating = 0;
 			this.cutOffRating = 0;
@@ -232,9 +273,11 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	 *         the edge has not been added and the results have not changed
 	 */
 	public boolean addEdgeAndCalculateRating(final float parentSuccessRating, final FloatMatrix probabilities,
-			final FloatMatrix minSteps, final ConcreteEdge edge) {
+			final FloatMatrix minSteps, final ConcreteEdge[] initialEdges,
+			final Map<ConcreteEdge, Integer> parentInitialEdgeIncrements, final ConcreteEdge edge) {
 		if (addEdge(edge)) {
-			calculateRating(parentSuccessRating, probabilities, minSteps, edge);
+			calculateRating(parentSuccessRating, probabilities, minSteps, initialEdges, parentInitialEdgeIncrements,
+					edge);
 			return true;
 		}
 		return false;
@@ -259,6 +302,16 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	}
 
 	/**
+	 * Returns the increment values for the initial edges
+	 * 
+	 * @return A map which specifies the value to be incremented for the initial
+	 *         edges
+	 */
+	public Map<ConcreteEdge, Integer> getInitialEdgeIncrements() {
+		return this.initialEdgeIncrements;
+	}
+
+	/**
 	 * Returns the amount of predictive round as relative round.
 	 * 
 	 * @return relative round
@@ -274,6 +327,15 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	 */
 	public PlayerAction getInitialAction() {
 		return this.initialAction;
+	}
+
+	/**
+	 * Returns a list of all passed Edges for the relative rounds
+	 * 
+	 * @return The passed edges
+	 */
+	public List<ConcreteEdge> getEdgeTail() {
+		return this.edgeTail;
 	}
 
 	@Override

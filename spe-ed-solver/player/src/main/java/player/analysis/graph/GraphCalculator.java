@@ -1,12 +1,13 @@
 package player.analysis.graph;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import player.analysis.ActionsRating;
+import player.boardevaluation.graph.ConcreteEdge;
 import player.boardevaluation.graph.Graph;
 import utility.game.player.IPlayer;
 import utility.game.player.PlayerAction;
@@ -23,10 +24,12 @@ public class GraphCalculator {
 
 	private ActionsRating successRatingsResult;
 	private ActionsRating cutOffRatingsResult;
+	private ActionsRating invertedImportanceResult;
 	private int calculatedPaths;
 
 	private Map<PlayerAction, FloatMatrix> successMatrixResult;
 	private Map<PlayerAction, FloatMatrix> cutOffMatrixResult;
+	private FloatMatrix invertedImportanceMatrixResult;
 
 	/**
 	 * Performs the calculation with the given values and updates the stored
@@ -44,7 +47,7 @@ public class GraphCalculator {
 			final Deadline deadline, final Graph graph) {
 
 		final List<RatedPredictiveGraphPlayer> startPlayers = RatedPredictiveGraphPlayer.getValidChildren(self, graph,
-				probabilities, minSteps);
+				probabilities, minSteps, new ConcreteEdge[0], new HashMap<>());
 
 		clearResults();
 
@@ -61,8 +64,10 @@ public class GraphCalculator {
 	private void clearResults() {
 		successMatrixResult = new EnumMap<>(PlayerAction.class);
 		cutOffMatrixResult = new EnumMap<>(PlayerAction.class);
+		invertedImportanceMatrixResult = null;
 		successRatingsResult = new ActionsRating();
 		cutOffRatingsResult = new ActionsRating();
+		invertedImportanceResult = new ActionsRating();
 		calculatedPaths = 0;
 	}
 
@@ -83,17 +88,25 @@ public class GraphCalculator {
 	private List<GraphCalculation> getCalculations(final List<RatedPredictiveGraphPlayer> startPlayers,
 			final FloatMatrix probabilities, final FloatMatrix minSteps, final Deadline deadline, final Graph graph) {
 
+		// determine the initial edges based on the startplayers
+		Map<PlayerAction, ConcreteEdge> initialEdges = new EnumMap<>(PlayerAction.class);
+		for (final var startPlayer : startPlayers) {
+			final ConcreteEdge initialEdge = startPlayer.getEdgeTail().get(0);
+			initialEdges.put(startPlayer.getInitialAction(), initialEdge);
+		}
+
 		// Create a Calculation for each thread
 		List<GraphCalculation> calculations = new ArrayList<>();
 		while (calculations.size() < THREAD_COUNT)
-			calculations.add(new GraphCalculation(graph, probabilities, minSteps, deadline));
+			calculations.add(new GraphCalculation(graph, probabilities, minSteps, initialEdges, deadline));
 
 		// Define the number of required start players
 		final int threadBase = (graph.getHeight() + graph.getWidth()) * 10;
 		final int totalBase = threadBase * THREAD_COUNT;
 
 		// create a Base of Player states
-		GraphCalculation baseCalculation = new GraphCalculation(graph, probabilities, minSteps, deadline, totalBase);
+		GraphCalculation baseCalculation = new GraphCalculation(graph, probabilities, minSteps, initialEdges, deadline,
+				totalBase);
 		startPlayers.stream().forEach(baseCalculation::addStartPlayer);
 
 		while (baseCalculation.queueHasNext() && baseCalculation.queueRemaining() < totalBase) {
@@ -150,18 +163,26 @@ public class GraphCalculator {
 
 		successRatingsResult.normalize();
 		cutOffRatingsResult.normalize();
+		invertedImportanceResult.normalize();
 	}
 
 	private void addResults(GraphCalculation calculation) {
 		for (final PlayerAction action : PlayerAction.values()) {
 			final FloatMatrix successMatrix = calculation.getSuccessMatrixResult(action);
 			final FloatMatrix cutOffMatrix = calculation.getCutOffMatrixResult(action);
+			final FloatMatrix invertedImportanceMatrix = calculation.getInvertedImportanceMatrix(action);
 
 			successMatrixResult.compute(action, (k, v) -> v == null ? successMatrix : v.sum(successMatrix));
 			cutOffMatrixResult.compute(action, (k, v) -> v == null ? cutOffMatrix : v.sum(cutOffMatrix));
+			if (invertedImportanceMatrixResult == null)
+				invertedImportanceMatrixResult = invertedImportanceMatrix;
+			else
+				invertedImportanceMatrixResult = invertedImportanceMatrixResult.sum(invertedImportanceMatrix);
 
 			successRatingsResult.addRating(action, successMatrix.sum());
 			cutOffRatingsResult.addRating(action, cutOffMatrix.sum());
+
+			invertedImportanceResult.addRating(action, invertedImportanceMatrix.sum());
 		}
 
 		calculatedPaths += calculation.getCalculatedPathsCount();
@@ -188,13 +209,23 @@ public class GraphCalculator {
 	}
 
 	/**
+	 * Returns the {@link ActionsRating} for inverted importance ratings for each
+	 * {@link PlayerAction}.
+	 * 
+	 * @return inverted importance ratings
+	 */
+	public ActionsRating getInvertedImportanceResult() {
+		return invertedImportanceResult;
+	}
+
+	/**
 	 * Returns a {@link Map} mapping each {@link PlayerAction} to a
 	 * {@link FloatMatrix} containing the success ratings for each element.
 	 * 
 	 * @return success matrices map
 	 */
-	public Map<PlayerAction, FloatMatrix> getSuccessMatrixResult() {
-		return Collections.unmodifiableMap(successMatrixResult);
+	public FloatMatrix getNormalizedSuccessMatrixResult(PlayerAction action) {
+		return successMatrixResult.get(action).normalize();
 	}
 
 	/**
@@ -203,8 +234,12 @@ public class GraphCalculator {
 	 * 
 	 * @return cut off matrices map
 	 */
-	public Map<PlayerAction, FloatMatrix> getCutOffMatrixResult() {
-		return Collections.unmodifiableMap(cutOffMatrixResult);
+	public FloatMatrix getNormalizedCutOffMatrixResult(PlayerAction action) {
+		return cutOffMatrixResult.get(action).normalize();
+	}
+
+	public FloatMatrix getNormalizedInvertedImportanceMatrixResult() {
+		return this.invertedImportanceMatrixResult.normalize();
 	}
 
 }

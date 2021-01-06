@@ -19,83 +19,94 @@ import utility.logging.GameLogger;
  * GraphPlayer
  */
 public class GraphPlayer implements ISpeedSolverPlayer {
-    private final EnemyProbabilityCalculator enemyProbabilityCalculator = new EnemyProbabilityCalculator();
-    private final GraphCalculator graphCalculator = new GraphCalculator();
+        private final EnemyProbabilityCalculator enemyProbabilityCalculator = new EnemyProbabilityCalculator();
+        private final GraphCalculator graphCalculator = new GraphCalculator();
 
-    private final int enemySearchDepth;
-    private final float cutOffWeight;
+        private final int enemySearchDepth;
+        private final float cutOffWeight;
+        private final float importanceWeight;
 
-    private Graph graph;
-    private int[] activeEnemiesIds;
+        private Graph graph;
+        private int[] activeEnemiesIds;
 
-    public GraphPlayer(final int enemySearchDepth, final float cutOffWeight) {
-        this.enemySearchDepth = enemySearchDepth;
-        this.cutOffWeight = cutOffWeight;
-    }
-
-    @Override
-    public PlayerAction calculateAction(GameStep gameStep, Consumer<ContextualFloatMatrix> boardRatingConsumer) {
-        if (!gameStep.getSelf().isActive())
-            return PlayerAction.CHANGE_NOTHING;
-
-        enemyProbabilityCalculator.performCalculation(gameStep.getEnemies().values(), gameStep.getBoard(), 5);
-
-        if (this.graph == null) {
-            // Initialize the graph with an empty Node-Array
-            var emptyNodes = new Node[gameStep.getBoard().getHeight()][gameStep.getBoard().getWidth()];
-            this.graph = new Graph(emptyNodes);
-
-            // Initialize the alive player
-            this.activeEnemiesIds = gameStep.getEnemies().keySet().stream().mapToInt(Integer::intValue).toArray();
+        public GraphPlayer(final int enemySearchDepth, final float cutOffWeight, final float importanceWeight) {
+                this.enemySearchDepth = enemySearchDepth;
+                this.cutOffWeight = cutOffWeight;
+                this.importanceWeight = importanceWeight;
         }
 
-        // Merge all players that were active last round into one list
-        List<IPlayer> enemies = new ArrayList<>();
-        for (int playerId : this.activeEnemiesIds)
-            enemies.add(gameStep.getEnemies().get(playerId));
+        @Override
+        public PlayerAction calculateAction(GameStep gameStep, Consumer<ContextualFloatMatrix> boardRatingConsumer) {
+                if (!gameStep.getSelf().isActive())
+                        return PlayerAction.CHANGE_NOTHING;
 
-        // Transfer the new occupied cells to the graph
-        graph.updateGraph(gameStep.getBoard(), gameStep.getSelf(), enemies);
+                enemyProbabilityCalculator.performCalculation(gameStep.getEnemies().values(), gameStep.getBoard(), 5);
 
-        // Determine the currently dead players to ignore them in the following round.
-        this.activeEnemiesIds = enemies.stream().filter(IPlayer::isActive).mapToInt(IPlayer::getPlayerId).toArray();
+                if (this.graph == null) {
+                        // Initialize the graph with an empty Node-Array
+                        var emptyNodes = new Node[gameStep.getBoard().getHeight()][gameStep.getBoard().getWidth()];
+                        this.graph = new Graph(emptyNodes);
 
-        // Calculate the action
-        enemyProbabilityCalculator.performCalculation(gameStep.getEnemies().values(), gameStep.getBoard(),
-                enemySearchDepth);
+                        // Initialize the alive player
+                        this.activeEnemiesIds = gameStep.getEnemies().keySet().stream().mapToInt(Integer::intValue)
+                                        .toArray();
+                }
 
-        graphCalculator.performCalculation(gameStep.getSelf(), enemyProbabilityCalculator.getProbabilitiesMatrix(),
-                enemyProbabilityCalculator.getMinStepsMatrix(), gameStep.getDeadline(), graph);
+                // Merge all players that were active last round into one list
+                List<IPlayer> enemies = new ArrayList<>();
+                for (int playerId : this.activeEnemiesIds)
+                        enemies.add(gameStep.getEnemies().get(playerId));
 
-        final ActionsRating successActionsRating = graphCalculator.getSuccessRatingsResult();
-        GameLogger.logGameInformation(String.format("success-rating:\t%s", successActionsRating));
+                // Transfer the new occupied cells to the graph
+                graph.updateGraph(gameStep.getBoard(), gameStep.getSelf(), enemies);
 
-        final ActionsRating cutOffActionsRating = graphCalculator.getCutOffRatingsResult();
-        GameLogger.logGameInformation(String.format("cut-off-rating:\t%s", cutOffActionsRating));
+                // Determine the currently dead players to ignore them in the following round.
+                this.activeEnemiesIds = enemies.stream().filter(IPlayer::isActive).mapToInt(IPlayer::getPlayerId)
+                                .toArray();
 
-        final ActionsRating combinedActionsRating = successActionsRating.combine(cutOffActionsRating, cutOffWeight);
-        GameLogger.logGameInformation(String.format("combined-rating:\t%s", combinedActionsRating));
+                // Calculate the action
+                enemyProbabilityCalculator.performCalculation(gameStep.getEnemies().values(), gameStep.getBoard(),
+                                enemySearchDepth);
 
-        final PlayerAction actionToTake = combinedActionsRating.maxAction();
+                graphCalculator.performCalculation(gameStep.getSelf(),
+                                enemyProbabilityCalculator.getProbabilitiesMatrix(),
+                                enemyProbabilityCalculator.getMinStepsMatrix(), gameStep.getDeadline(), graph);
 
-        var probabilitiesNamedMatrix = new ContextualFloatMatrix("probability",
-                enemyProbabilityCalculator.getProbabilitiesMatrix(), 0, 1);
-        boardRatingConsumer.accept(probabilitiesNamedMatrix);
+                final ActionsRating successActionsRating = graphCalculator.getSuccessRatingsResult();
+                final ActionsRating cutOffActionsRating = graphCalculator.getCutOffRatingsResult();
+                final ActionsRating importanceResult = graphCalculator.getInvertedImportanceResult();
+                final ActionsRating combinedActionsRating = successActionsRating
+                                .combine(cutOffActionsRating, cutOffWeight).combine(importanceResult, importanceWeight);
 
-        var minStepsNamedMatrix = new ContextualFloatMatrix("min steps",
-                enemyProbabilityCalculator.getMinStepsMatrix());
-        boardRatingConsumer.accept(minStepsNamedMatrix);
+                GameLogger.logGameInformation(String.format("success-rating:\t%s", successActionsRating));
+                GameLogger.logGameInformation(String.format("cut-off-rating:\t%s", cutOffActionsRating));
+                GameLogger.logGameInformation(String.format("inverted-importance-rating:\t%s", importanceResult));
+                GameLogger.logGameInformation(String.format("combined-rating:\t%s", combinedActionsRating));
 
-        var successNamedMatrix = new ContextualFloatMatrix("success",
-                graphCalculator.getSuccessMatrixResult().get(actionToTake), 0, 1);
-        boardRatingConsumer.accept(successNamedMatrix);
+                final PlayerAction actionToTake = combinedActionsRating.maxAction();
 
-        var cutOffNamedMatrix = new ContextualFloatMatrix("cut off",
-                graphCalculator.getCutOffMatrixResult().get(actionToTake), 0, 1);
-        boardRatingConsumer.accept(cutOffNamedMatrix);
+                var probabilitiesNamedMatrix = new ContextualFloatMatrix("probability",
+                                enemyProbabilityCalculator.getProbabilitiesMatrix(), 0, 1);
+                boardRatingConsumer.accept(probabilitiesNamedMatrix);
 
-        // Send the Calculated Action
-        return actionToTake;
-    }
+                var minStepsNamedMatrix = new ContextualFloatMatrix("min steps",
+                                enemyProbabilityCalculator.getMinStepsMatrix());
+                boardRatingConsumer.accept(minStepsNamedMatrix);
+
+                var successNamedMatrix = new ContextualFloatMatrix("success",
+                                graphCalculator.getNormalizedSuccessMatrixResult(actionToTake), 0, 1);
+                boardRatingConsumer.accept(successNamedMatrix);
+
+                var cutOffNamedMatrix = new ContextualFloatMatrix("cut off",
+                                graphCalculator.getNormalizedCutOffMatrixResult(actionToTake), 0, 1);
+                boardRatingConsumer.accept(cutOffNamedMatrix);
+
+                var importanceNamedMatrix = new ContextualFloatMatrix("inverted importance",
+                                graphCalculator.getNormalizedInvertedImportanceMatrixResult(), 0, 1);
+                boardRatingConsumer.accept(importanceNamedMatrix);
+
+                // Send the Calculated Action
+                return actionToTake;
+        }
 
 }

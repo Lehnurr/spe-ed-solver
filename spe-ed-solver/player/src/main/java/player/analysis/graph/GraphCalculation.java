@@ -1,9 +1,12 @@
 package player.analysis.graph;
 
+import java.util.Collections;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 
 import player.analysis.LimitedQueue;
+import player.boardevaluation.graph.ConcreteEdge;
 import player.boardevaluation.graph.Graph;
 import utility.game.player.PlayerAction;
 import utility.game.step.Deadline;
@@ -24,6 +27,8 @@ public class GraphCalculation {
 
 	private final FloatMatrix probabilities;
 	private final FloatMatrix minSteps;
+	private final Map<ConcreteEdge, Integer> initialEdgeImportance;
+	private final Map<PlayerAction, ConcreteEdge> initialEdges;
 
 	private final Deadline deadline;
 
@@ -39,14 +44,20 @@ public class GraphCalculation {
 	 * @param graph         The Graph board to find the edges
 	 * @param probabilities {@link FloatMatrix} with probabilities
 	 * @param minSteps      {@link FloatMatrix} with minimum steps
+	 * @param initialEdges  All possible Edges the player can do for the current
+	 *                      round
 	 * @param deadline      {@link Deadline} to limit execution time
 	 * @param queueSize     The maximum Size of elements in the queue
 	 */
 	public GraphCalculation(final Graph graph, final FloatMatrix probabilities, final FloatMatrix minSteps,
-			final Deadline deadline, int queueSize) {
+			final Map<PlayerAction, ConcreteEdge> initialEdges, final Deadline deadline, int queueSize) {
 
 		this.probabilities = probabilities;
 		this.minSteps = minSteps;
+		this.initialEdges = initialEdges;
+		initialEdgeImportance = new HashMap<>(initialEdges.size());
+		for (final ConcreteEdge initialEdge : initialEdges.values())
+			initialEdgeImportance.put(initialEdge, 0);
 
 		this.deadline = deadline;
 		this.graph = graph;
@@ -67,11 +78,14 @@ public class GraphCalculation {
 	 * 
 	 * @param graph         The Graph board to find the edges
 	 * @param probabilities {@link FloatMatrix} with probabilities
-	 * @param minSteps      {@link FloatMatrix} with minimum steps
+	 * @param minSteps      {@link FloatMatrix} with minimum steps * @param
+	 * @param initialEdges  All possible Edges the player can do for the current
+	 *                      round
 	 * @param deadline      {@link Deadline} to limit execution time
 	 */
-	public GraphCalculation(Graph graph, FloatMatrix probabilities, FloatMatrix minSteps, Deadline deadline) {
-		this(graph, probabilities, minSteps, deadline, DEFAULT_QUEUE_SIZE);
+	public GraphCalculation(Graph graph, FloatMatrix probabilities, FloatMatrix minSteps,
+			final Map<PlayerAction, ConcreteEdge> initialEdges, Deadline deadline) {
+		this(graph, probabilities, minSteps, initialEdges, deadline, DEFAULT_QUEUE_SIZE);
 	}
 
 	public void addStartPlayer(RatedPredictiveGraphPlayer startPlayer) {
@@ -103,9 +117,15 @@ public class GraphCalculation {
 	 * @throws NoSuchElementException if no next element is available
 	 */
 	public void executeStep() {
-		final var children = queue.poll().getValidChildren(graph, probabilities, minSteps);
+		var parent = queue.poll();
+		final var children = parent.getValidChildren(graph, probabilities, minSteps,
+				initialEdgeImportance.keySet().toArray(new ConcreteEdge[initialEdgeImportance.size()]));
 
 		for (final var child : children) {
+			// 2. Die betroffenen initial-edges an der GraphCalculation inkrementieren
+			for (var x : parent.getInitialEdgeIncrements().entrySet()) {
+				initialEdgeImportance.compute(x.getKey(), (k, v) -> v == null ? x.getValue() : (v + x.getValue()));
+			}
 
 			getSuccessMatrixResult(child.getInitialAction()).max(child.getPosition(), child.getSuccessRating());
 			getCutOffMatrixResult(child.getInitialAction()).max(child.getPosition(), child.getCutOffRating());
@@ -160,6 +180,34 @@ public class GraphCalculation {
 	 */
 	public FloatMatrix getCutOffMatrixResult(PlayerAction initialAction) {
 		return cutOffMatrixResult.get(initialAction);
+	}
+
+	/**
+	 * Generates the inverted importance matrix for a Player-Action
+	 * 
+	 * @param initialAction The action the matrix is created for
+	 * @return A Matrix containing the inverted importance for the cells that can be
+	 *         passed in one round
+	 */
+	public FloatMatrix getInvertedImportanceMatrix(PlayerAction initialAction) {
+		final FloatMatrix invertedImportanceMatrix = new FloatMatrix(graph.getWidth(), graph.getHeight());
+
+		if (initialEdgeImportance.isEmpty())
+			return invertedImportanceMatrix;
+
+		final int maxImportance = Collections.max(initialEdgeImportance.values());
+		final ConcreteEdge initialEdge = initialEdges.get(initialAction);
+
+		if (maxImportance == 0 || initialEdge == null)
+			return invertedImportanceMatrix;
+
+		final int invertedImportance = maxImportance - initialEdgeImportance.getOrDefault(initialEdge, 0);
+
+		for (final var cell : initialEdge.getPath()) {
+			invertedImportanceMatrix.setValue(cell.getPosition(), invertedImportance);
+		}
+
+		return invertedImportanceMatrix;
 	}
 
 	/**

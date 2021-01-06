@@ -23,7 +23,7 @@ public enum PlayerType {
 	GRAPH {
 		@Override
 		public ISpeedSolverPlayer newInstance() {
-			return new GraphPlayer(5, 0.4f);
+			return new GraphPlayer(5, 0.4f, 0.6f);
 		}
 	};
 
