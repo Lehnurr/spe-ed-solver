@@ -122,7 +122,6 @@ public class GraphCalculation {
 				initialEdgeImportance.keySet().toArray(new ConcreteEdge[initialEdgeImportance.size()]));
 
 		for (final var child : children) {
-			// 2. Die betroffenen initial-edges an der GraphCalculation inkrementieren
 			for (var x : parent.getInitialEdgeIncrements().entrySet()) {
 				initialEdgeImportance.compute(x.getKey(), (k, v) -> v == null ? x.getValue() : (v + x.getValue()));
 			}

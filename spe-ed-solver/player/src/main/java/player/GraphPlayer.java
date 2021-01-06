@@ -60,7 +60,8 @@ public class GraphPlayer implements ISpeedSolverPlayer {
                 // Transfer the new occupied cells to the graph
                 graph.updateGraph(gameStep.getBoard(), gameStep.getSelf(), enemies);
 
-                // Determine the currently dead players to ignore them in the following round.
+                // Determine the currently dead players to ignore them in the following round
+                // for the graph-update.
                 this.activeEnemiesIds = enemies.stream().filter(IPlayer::isActive).mapToInt(IPlayer::getPlayerId)
                                 .toArray();
 
@@ -72,19 +73,30 @@ public class GraphPlayer implements ISpeedSolverPlayer {
                                 enemyProbabilityCalculator.getProbabilitiesMatrix(),
                                 enemyProbabilityCalculator.getMinStepsMatrix(), gameStep.getDeadline(), graph);
 
+                // Calculate and combine the action ratings
                 final ActionsRating successActionsRating = graphCalculator.getSuccessRatingsResult();
                 final ActionsRating cutOffActionsRating = graphCalculator.getCutOffRatingsResult();
                 final ActionsRating importanceResult = graphCalculator.getInvertedImportanceResult();
                 final ActionsRating combinedActionsRating = successActionsRating
                                 .combine(cutOffActionsRating, cutOffWeight).combine(importanceResult, importanceWeight);
 
+                // Log calculated Rating-Information
                 GameLogger.logGameInformation(String.format("success-rating:\t%s", successActionsRating));
                 GameLogger.logGameInformation(String.format("cut-off-rating:\t%s", cutOffActionsRating));
                 GameLogger.logGameInformation(String.format("inverted-importance-rating:\t%s", importanceResult));
                 GameLogger.logGameInformation(String.format("combined-rating:\t%s", combinedActionsRating));
 
+                // get the best action
                 final PlayerAction actionToTake = combinedActionsRating.maxAction();
 
+                sendViewerData(boardRatingConsumer, actionToTake);
+
+                // Send the Calculated Action
+                return actionToTake;
+        }
+
+        private void sendViewerData(final Consumer<ContextualFloatMatrix> boardRatingConsumer,
+                        final PlayerAction actionToTake) {
                 var probabilitiesNamedMatrix = new ContextualFloatMatrix("probability",
                                 enemyProbabilityCalculator.getProbabilitiesMatrix(), 0, 1);
                 boardRatingConsumer.accept(probabilitiesNamedMatrix);
@@ -104,9 +116,6 @@ public class GraphPlayer implements ISpeedSolverPlayer {
                 var importanceNamedMatrix = new ContextualFloatMatrix("inverted importance",
                                 graphCalculator.getNormalizedInvertedImportanceMatrixResult(), 0, 1);
                 boardRatingConsumer.accept(importanceNamedMatrix);
-
-                // Send the Calculated Action
-                return actionToTake;
         }
 
 }
