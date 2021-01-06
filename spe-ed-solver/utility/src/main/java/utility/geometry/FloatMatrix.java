@@ -290,4 +290,21 @@ public class FloatMatrix {
 		}
 	}
 
+	/**
+	 * Builds a new normalized Matrix by dividing all values by the maximum value
+	 * 
+	 * @return The Matrix with normalized values
+	 */
+	public FloatMatrix normalize() {
+		final float maxValue = max();
+
+		final float normalizeFactor = 1 / maxValue;
+		if (Float.isNaN(normalizeFactor))
+			return this;
+
+		final FloatMatrix factorMatrix = new FloatMatrix(this.getWidth(), this.getHeight(), normalizeFactor);
+
+		return this.mul(factorMatrix);
+	}
+
 }
