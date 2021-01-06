@@ -126,7 +126,7 @@ public class RatedPredictivePlayer extends PredictivePlayer {
 		final List<RatedPredictivePlayer> result = new ArrayList<>();
 		for (final PlayerAction action : PlayerAction.values()) {
 			final RatedPredictivePlayer child = new RatedPredictivePlayer(this, action, board, probabilities, minSteps);
-			if (child.isActive())
+			if (child.isActive() && child.getSuccessRating() > 0)
 				result.add(child);
 		}
 		return result;
