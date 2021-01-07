@@ -65,10 +65,12 @@ public class Graph extends Board<Node> {
                 var affectedPosition = player.getPosition().translate(speedDirectionVector);
                 var affectedNode = getBoardCellAt(affectedPosition);
 
-                // set the node value, if the cell is passed by any player (otherwise the cell
-                // was not passed)
-                if (affectedNode != null
-                        && board.getBoardCellAt(affectedPosition).getCellValue() != CellValue.EMPTY_CELL)
+                if (affectedNode == null)
+                    continue;
+
+                final CellValue affectedCellValue = board.getBoardCellAt(affectedPosition).getCellValue();
+
+                if (affectedCellValue == enemyCellValue || affectedCellValue == CellValue.MULTIPLE_PLAYER)
                     affectedNode.setCellValue(enemyCellValue, true);
             }
         }
