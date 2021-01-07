@@ -63,7 +63,7 @@ public class Game {
             Point2i randomStartPosition;
             do {
                 var randomX = random.nextInt(board.getWidth());
-                var randomY = random.nextInt(board.getWidth());
+                var randomY = random.nextInt(board.getHeight());
                 randomStartPosition = new Point2i(randomX, randomY);
             } while (notAvailableStartPositions.contains(randomStartPosition));
 
