@@ -20,7 +20,7 @@ import utility.logging.GameLogger;
  * {@link ActionsRating} objects and storing the last calculated results.
  */
 public class GraphCalculator {
-	private static final int THREAD_COUNT = 5;
+	private static final int MAX_THREAD_COUNT = 1;
 
 	private ActionsRating successRatingsResult;
 	private ActionsRating cutOffRatingsResult;
@@ -95,14 +95,16 @@ public class GraphCalculator {
 			initialEdges.put(startPlayer.getInitialAction(), initialEdge);
 		}
 
+		int threadCount = Math.min(MAX_THREAD_COUNT, (int) (deadline.getRemainingMilliseconds() / 500));
+
 		// Create a Calculation for each thread
 		List<GraphCalculation> calculations = new ArrayList<>();
-		while (calculations.size() < THREAD_COUNT)
+		while (calculations.size() < threadCount)
 			calculations.add(new GraphCalculation(graph, probabilities, minSteps, initialEdges, deadline));
 
 		// Define the number of required start players
 		final int threadBase = (graph.getHeight() + graph.getWidth()) * 10;
-		final int totalBase = threadBase * THREAD_COUNT;
+		final int totalBase = threadBase * threadCount;
 
 		// create a Base of Player states
 		GraphCalculation baseCalculation = new GraphCalculation(graph, probabilities, minSteps, initialEdges, deadline,
@@ -115,7 +117,7 @@ public class GraphCalculator {
 		addResults(baseCalculation);
 
 		for (int calculationIndex = 0; baseCalculation
-				.queueHasNext(); calculationIndex = (calculationIndex + 1) % THREAD_COUNT) {
+				.queueHasNext(); calculationIndex = (calculationIndex + 1) % threadCount) {
 			final RatedPredictiveGraphPlayer startPlayer = baseCalculation.queuePoll();
 			calculations.get(calculationIndex).addStartPlayer(startPlayer);
 		}
