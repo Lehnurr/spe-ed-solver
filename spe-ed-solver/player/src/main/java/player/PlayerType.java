@@ -20,10 +20,22 @@ public enum PlayerType {
 			return new ReachablePointsPlayer(5, 0.4f, 0.05f, ReachablePointsType.SINGLE_THREADED);
 		}
 	},
-	GRAPH {
+	GRAPH_AGGRESSIVE {
 		@Override
 		public ISpeedSolverPlayer newInstance() {
-			return new GraphPlayer(5, 0.4f, 0.6f);
+			return new GraphPlayer(5, 0.4f, 0.2f);
+		}
+	},
+	GRAPH_DEFENSIVE {
+		@Override
+		public ISpeedSolverPlayer newInstance() {
+			return new GraphPlayer(5, 0.175f, 0.425f);
+		}
+	},
+	GRAPH_BALENCED {
+		@Override
+		public ISpeedSolverPlayer newInstance() {
+			return new GraphPlayer(7, 0.3f, 0.3f);
 		}
 	};
 
