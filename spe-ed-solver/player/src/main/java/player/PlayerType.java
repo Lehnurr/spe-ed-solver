@@ -11,25 +11,25 @@ public enum PlayerType {
 	REACHABLE_POINTS {
 		@Override
 		public ISpeedSolverPlayer newInstance() {
-			return new ReachablePointsPlayer(5, 0.4f, 0.05f, ReachablePointsType.MULTI_THREADED);
+			return new ReachablePointsPlayer(7, 0.4f, 0.05f, ReachablePointsType.MULTI_THREADED);
 		}
 	},
 	REACHABLE_POINTS_SINGLE_THREADED {
 		@Override
 		public ISpeedSolverPlayer newInstance() {
-			return new ReachablePointsPlayer(5, 0.4f, 0.05f, ReachablePointsType.SINGLE_THREADED);
+			return new ReachablePointsPlayer(7, 0.4f, 0.05f, ReachablePointsType.SINGLE_THREADED);
 		}
 	},
 	GRAPH_AGGRESSIVE {
 		@Override
 		public ISpeedSolverPlayer newInstance() {
-			return new GraphPlayer(5, 0.4f, 0.2f);
+			return new GraphPlayer(7, 0.4f, 0.2f);
 		}
 	},
 	GRAPH_DEFENSIVE {
 		@Override
 		public ISpeedSolverPlayer newInstance() {
-			return new GraphPlayer(5, 0.175f, 0.425f);
+			return new GraphPlayer(7, 0.175f, 0.425f);
 		}
 	},
 	GRAPH_BALENCED {

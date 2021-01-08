@@ -46,7 +46,6 @@ public class EnemyProbabilityCalculator {
 			try {
 				thread.join();
 			} catch (InterruptedException e) {
-				// warning to logger but ignore
 				ApplicationLogger.logException(e, LoggingLevel.WARNING);
 			}
 		}
