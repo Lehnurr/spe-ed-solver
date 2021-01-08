@@ -97,6 +97,7 @@ public class RatedPredictivePlayer extends PredictivePlayer {
 	 * @param shortTail     {@link Point2i points} of the last step from the parent
 	 *                      to the child
 	 * @param relativeRound amount of round which are predictive
+	 * @param successRating the probability to reach the given state
 	 * @return new cut off rating for the child
 	 */
 	private float calculateCutOffRating(final FloatMatrix probabilities, final FloatMatrix minSteps,

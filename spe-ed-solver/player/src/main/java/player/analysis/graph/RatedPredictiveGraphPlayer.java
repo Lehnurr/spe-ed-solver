@@ -174,10 +174,11 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	 *                      consider
 	 * @param lastEdge      {@link ConcreteEdge Edge} of the last step from the
 	 *                      parent to the child
+	 * @param successRating the probability to reach the given state
 	 * @return new cut off rating for the child
 	 */
 	private float calculateCutOffRating(final FloatMatrix probabilities, final FloatMatrix minSteps,
-			final ConcreteEdge lastEdge) {
+			final ConcreteEdge lastEdge, final float successRating) {
 
 		float cutOff = 0;
 		for (final var node : lastEdge.getPath()) {
@@ -185,7 +186,7 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 				cutOff = Math.max(cutOff, probabilities.getValue(node.getPosition()));
 			}
 		}
-		return cutOff;
+		return cutOff * successRating;
 	}
 
 	/**
@@ -251,7 +252,7 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 			final Map<ConcreteEdge, Integer> parentInitialEdgeIncrements, final ConcreteEdge newEdge) {
 		if (isActive()) {
 			this.successRating = calculateSuccessRating(parentSuccessRating, probabilities, minSteps, newEdge);
-			this.cutOffRating = calculateCutOffRating(probabilities, minSteps, newEdge);
+			this.cutOffRating = calculateCutOffRating(probabilities, minSteps, newEdge, successRating);
 			this.initialEdgeIncrements = calculateInitialEdgeIncrements(initialEdges, parentInitialEdgeIncrements,
 					newEdge);
 		} else {
