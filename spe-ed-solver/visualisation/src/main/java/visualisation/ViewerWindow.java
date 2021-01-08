@@ -38,11 +38,12 @@ public class ViewerWindow {
 
 	private final JFrame jFrame = new JFrame();
 
-	private final JLabel playerTypeLabel = new JLabel("-1");
 	private final JLabel roundLabel = new JLabel("-1");
 	private final JLabel availableTimeLabel = new JLabel("-1");
 	private final JLabel performedActionLabel = new JLabel("-1");
 	private final JLabel requiredTimeLabel = new JLabel("-1");
+
+	private final JLabel playerTypeLabel = new JLabel("-1", SwingConstants.CENTER);
 
 	private final JPanel boardPanel = new JPanel();
 
@@ -85,10 +86,6 @@ public class ViewerWindow {
 		JPanel roundInfoPanel = new JPanel();
 		infoPanel.add(roundInfoPanel, BorderLayout.NORTH);
 		roundInfoPanel.setLayout(new GridLayout(0, 2, INFO_GAP_HORIZONTAL, INFO_GAP_VERTICAL));
-		roundInfoPanel.add(new JLabel("Player type:"));
-		playerTypeLabel.setText(playerType);
-		playerTypeLabel.setOpaque(true);
-		roundInfoPanel.add(playerTypeLabel);
 
 		roundInfoPanel.add(new JLabel("Game round:"));
 		roundInfoPanel.add(roundLabel);
@@ -98,6 +95,10 @@ public class ViewerWindow {
 		roundInfoPanel.add(performedActionLabel);
 		roundInfoPanel.add(new JLabel("Required time:"));
 		roundInfoPanel.add(requiredTimeLabel);
+
+		playerTypeLabel.setText(playerType);
+		playerTypeLabel.setOpaque(true);
+		infoPanel.add(playerTypeLabel, BorderLayout.SOUTH);
 
 		// set minimum size of window
 		jFrame.setMinimumSize(new Dimension(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT));
@@ -162,7 +163,6 @@ public class ViewerWindow {
 		final Color color = new Color(rgbColor);
 		playerTypeLabel.setForeground(color);
 		playerTypeLabel.setBackground(Color.BLACK);
-		playerTypeLabel.repaint();
 	}
 
 	/**
