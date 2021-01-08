@@ -57,7 +57,8 @@ public class RatedPredictivePlayer extends PredictivePlayer {
 		if (isActive()) {
 			this.successRating = calculateSuccessRating(parent.getSuccessRating(), probabilities, minSteps,
 					getShortTail(), relativeRound);
-			this.cutOffRating = calculateCutOffRating(probabilities, minSteps, getShortTail(), relativeRound);
+			this.cutOffRating = calculateCutOffRating(probabilities, minSteps, getShortTail(), relativeRound,
+					successRating);
 		} else {
 			this.successRating = 0;
 			this.cutOffRating = 0;
@@ -99,7 +100,7 @@ public class RatedPredictivePlayer extends PredictivePlayer {
 	 * @return new cut off rating for the child
 	 */
 	private float calculateCutOffRating(final FloatMatrix probabilities, final FloatMatrix minSteps,
-			final Collection<Point2i> shortTail, final int relativeRound) {
+			final Collection<Point2i> shortTail, final int relativeRound, final float successRating) {
 
 		float cutOff = 0;
 		for (final Point2i point : shortTail) {
@@ -107,7 +108,7 @@ public class RatedPredictivePlayer extends PredictivePlayer {
 				cutOff = Math.max(cutOff, probabilities.getValue(point));
 			}
 		}
-		return cutOff;
+		return cutOff * successRating;
 	}
 
 	/**
