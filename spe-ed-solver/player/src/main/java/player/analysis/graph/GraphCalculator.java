@@ -99,6 +99,14 @@ public class GraphCalculator {
 
 		// Create a Calculation for each thread
 		List<GraphCalculation> calculations = new ArrayList<>();
+
+		if (threadCount <= 1) {
+			GraphCalculation calculation = new GraphCalculation(graph, probabilities, minSteps, initialEdges, deadline);
+			calculations.add(calculation);
+			startPlayers.stream().forEach(calculation::addStartPlayer);
+			return calculations;
+		}
+
 		while (calculations.size() < threadCount)
 			calculations.add(new GraphCalculation(graph, probabilities, minSteps, initialEdges, deadline));
 
@@ -164,7 +172,6 @@ public class GraphCalculator {
 		GameLogger.logGameInformation(String.format("Calculated %d reachable points paths!", calculatedPaths));
 
 		successRatingsResult.normalize();
-		cutOffRatingsResult.normalize();
 		invertedImportanceResult.normalize();
 	}
 
@@ -174,15 +181,15 @@ public class GraphCalculator {
 			final FloatMatrix cutOffMatrix = calculation.getCutOffMatrixResult(action);
 			final FloatMatrix invertedImportanceMatrix = calculation.getInvertedImportanceMatrix(action);
 
-			successMatrixResult.compute(action, (k, v) -> v == null ? successMatrix : v.sum(successMatrix));
-			cutOffMatrixResult.compute(action, (k, v) -> v == null ? cutOffMatrix : v.sum(cutOffMatrix));
+			successMatrixResult.compute(action, (k, v) -> v == null ? successMatrix : v.max(successMatrix));
+			cutOffMatrixResult.compute(action, (k, v) -> v == null ? cutOffMatrix : v.max(cutOffMatrix));
 			if (invertedImportanceMatrixResult == null)
 				invertedImportanceMatrixResult = invertedImportanceMatrix;
 			else
 				invertedImportanceMatrixResult = invertedImportanceMatrixResult.sum(invertedImportanceMatrix);
 
 			successRatingsResult.addRating(action, successMatrix.sum());
-			cutOffRatingsResult.addRating(action, cutOffMatrix.sum());
+			cutOffRatingsResult.addRating(action, cutOffMatrix.max());
 
 			invertedImportanceResult.addRating(action, invertedImportanceMatrix.sum());
 		}
@@ -226,8 +233,8 @@ public class GraphCalculator {
 	 * 
 	 * @return success matrices map
 	 */
-	public FloatMatrix getNormalizedSuccessMatrixResult(PlayerAction action) {
-		return successMatrixResult.get(action).normalize();
+	public FloatMatrix getSuccessMatrixResult(PlayerAction action) {
+		return successMatrixResult.get(action);
 	}
 
 	/**
@@ -236,8 +243,8 @@ public class GraphCalculator {
 	 * 
 	 * @return cut off matrices map
 	 */
-	public FloatMatrix getNormalizedCutOffMatrixResult(PlayerAction action) {
-		return cutOffMatrixResult.get(action).normalize();
+	public FloatMatrix getCutOffMatrixResult(PlayerAction action) {
+		return cutOffMatrixResult.get(action);
 	}
 
 	public FloatMatrix getNormalizedInvertedImportanceMatrixResult() {
