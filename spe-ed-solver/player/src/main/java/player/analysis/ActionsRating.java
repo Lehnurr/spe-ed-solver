@@ -41,7 +41,7 @@ public class ActionsRating {
 	 * @param ratingValue  new value to add
 	 */
 	public void addRating(final PlayerAction playerAction, final float ratingValue) {
-		ratingMap.compute(playerAction, (k, v) -> v == null ? ratingValue : (v + ratingValue));
+		ratingMap.compute(playerAction, (k, v) -> v == null ? ratingValue : Math.max(v, ratingValue));
 	}
 
 	/**
