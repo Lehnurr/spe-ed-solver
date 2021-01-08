@@ -97,7 +97,7 @@ public class RatedPredictivePlayerTest {
 		RatedPredictivePlayer nextPlayer = new RatedPredictivePlayer(startPlayer, PlayerAction.CHANGE_NOTHING, board,
 				probabilitites, minSteps);
 
-		assertEquals(0.3f, nextPlayer.getCutOffRating(), 0.001f);
+		assertEquals(0.15f, nextPlayer.getCutOffRating(), 0.001f);
 	}
 	
 	@Test
