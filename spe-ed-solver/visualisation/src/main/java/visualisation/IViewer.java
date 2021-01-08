@@ -12,6 +12,7 @@ public interface IViewer {
 	/**
 	 * Stores round specific information by submitting them to the {@link IViewer}.
 	 * 
+	 * @param playerId              the id of the player who owns the window
 	 * @param availableMilliseconds available time in milliseconds
 	 * @param performedAction       {@link PlayerAction} performed in the round
 	 * @param requiredMilliseconds  required time in milliseconds
@@ -19,7 +20,7 @@ public interface IViewer {
 	 *                              {@link GameStep}
 	 * @param boardRatings          {@link ContextualFloatMatrix}s of board ratings
 	 */
-	public void commitRound(double availableTime, PlayerAction performedAction, double requiredTime, Board<Cell> board,
-			List<ContextualFloatMatrix> boardRatings);
+	public void commitRound(int playerId, double availableTime, PlayerAction performedAction, double requiredTime,
+			Board<Cell> board, List<ContextualFloatMatrix> boardRatings);
 
 }

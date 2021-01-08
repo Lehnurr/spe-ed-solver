@@ -14,8 +14,8 @@ import utility.geometry.ContextualFloatMatrix;
 public class InactiveViewer implements IViewer {
 
 	@Override
-	public void commitRound(double availableTime, PlayerAction performedAction, double requiredTime, Board<Cell> board,
-			List<ContextualFloatMatrix> boardRatings) {
+	public void commitRound(int playerId, double availableTime, PlayerAction performedAction, double requiredTime,
+			Board<Cell> board, List<ContextualFloatMatrix> boardRatings) {
 	}
 
 }

@@ -1,17 +1,16 @@
 package visualisation;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -39,6 +38,7 @@ public class ViewerWindow {
 
 	private final JFrame jFrame = new JFrame();
 
+	private final JLabel playerTypeLabel = new JLabel("-1");
 	private final JLabel roundLabel = new JLabel("-1");
 	private final JLabel availableTimeLabel = new JLabel("-1");
 	private final JLabel performedActionLabel = new JLabel("-1");
@@ -56,8 +56,10 @@ public class ViewerWindow {
 	 * @param timelineChangeHandler a handler called when the time line changes and
 	 *                              information of an other round should be
 	 *                              displayed.
+	 * @param playerType            a String representation of the Player-Type
+	 *                              represented by this {@link ViewerWindow}
 	 */
-	public ViewerWindow(final Consumer<Integer> timelineChangeHandler) {
+	public ViewerWindow(final IntConsumer timelineChangeHandler, final String playerType) {
 
 		// main panel of the whole window
 		JPanel mainPanel = new JPanel();
@@ -72,12 +74,7 @@ public class ViewerWindow {
 		timelineScrollBar.setMinimum(0);
 		timelineScrollBar.setMaximum(0);
 		timelineScrollBar.setBlockIncrement(1);
-		timelineScrollBar.addAdjustmentListener(new AdjustmentListener() {
-			@Override
-			public void adjustmentValueChanged(AdjustmentEvent event) {
-				timelineChangeHandler.accept(event.getValue());
-			}
-		});
+		timelineScrollBar.addAdjustmentListener(event -> timelineChangeHandler.accept(event.getValue()));
 
 		// panel for info
 		JPanel infoPanel = new JPanel();
@@ -88,13 +85,18 @@ public class ViewerWindow {
 		JPanel roundInfoPanel = new JPanel();
 		infoPanel.add(roundInfoPanel, BorderLayout.NORTH);
 		roundInfoPanel.setLayout(new GridLayout(0, 2, INFO_GAP_HORIZONTAL, INFO_GAP_VERTICAL));
-		roundInfoPanel.add(new JLabel("gameround"));
+		roundInfoPanel.add(new JLabel("Player type:"));
+		playerTypeLabel.setText(playerType);
+		playerTypeLabel.setOpaque(true);
+		roundInfoPanel.add(playerTypeLabel);
+
+		roundInfoPanel.add(new JLabel("Game round:"));
 		roundInfoPanel.add(roundLabel);
-		roundInfoPanel.add(new JLabel("available time"));
+		roundInfoPanel.add(new JLabel("Available time:"));
 		roundInfoPanel.add(availableTimeLabel);
-		roundInfoPanel.add(new JLabel("performed action"));
+		roundInfoPanel.add(new JLabel("Performed action:"));
 		roundInfoPanel.add(performedActionLabel);
-		roundInfoPanel.add(new JLabel("required time"));
+		roundInfoPanel.add(new JLabel("Required time:"));
 		roundInfoPanel.add(requiredTimeLabel);
 
 		// set minimum size of window
@@ -149,6 +151,18 @@ public class ViewerWindow {
 	 */
 	public void setRequiredTime(final double requiredTime) {
 		requiredTimeLabel.setText(String.format("%.4f", requiredTime));
+	}
+
+	/**
+	 * Updates the displayed Player-Color in the window.
+	 * 
+	 * @param rgbColor the rgb Color Value for the Player
+	 */
+	public void setPlayerColor(final int rgbColor) {
+		final Color color = new Color(rgbColor);
+		playerTypeLabel.setForeground(color);
+		playerTypeLabel.setBackground(Color.BLACK);
+		playerTypeLabel.repaint();
 	}
 
 	/**

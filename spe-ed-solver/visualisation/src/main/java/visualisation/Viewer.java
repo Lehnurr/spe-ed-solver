@@ -24,9 +24,11 @@ public class Viewer implements IViewer {
 
 	/**
 	 * Generates a new {@link Viewer} with the default {@link ViewerWindow}.
+	 *
+	 * @param playerType a String representation of the Player-Type
 	 */
-	public Viewer() {
-		this.window = new ViewerWindow(this::showRound);
+	public Viewer(final String playerType) {
+		this.window = new ViewerWindow(this::showRound, playerType);
 	}
 
 	/**
@@ -34,20 +36,20 @@ public class Viewer implements IViewer {
 	 * 
 	 * @param viewerWindow the window to display information in
 	 */
-	public Viewer(ViewerWindow viewerWindow) {
+	public Viewer(final ViewerWindow viewerWindow) {
 		this.window = viewerWindow;
 	}
 
 	@Override
-	public void commitRound(double availableTime, PlayerAction performedAction, double requiredTime, Board<Cell> board,
-			List<ContextualFloatMatrix> boardRatings) {
+	public void commitRound(final int playerId, final double availableTime, final PlayerAction performedAction,
+			final double requiredTime, final Board<Cell> board, final List<ContextualFloatMatrix> boardRatings) {
 
 		maxRoundIdx++;
 
-		ViewerSlice slice = new ViewerSlice(maxRoundIdx, availableTime, performedAction, requiredTime);
+		ViewerSlice slice = new ViewerSlice(playerId, maxRoundIdx, availableTime, performedAction, requiredTime);
 		slice.addImage(ImageGeneration.generateImageFromBoard(board));
-		boardRatings.stream().map((rating) -> ImageGeneration.generateImageFromMatrix(rating, DEFAULT_COLOR_GRADIENT))
-				.forEachOrdered((image) -> slice.addImage(image));
+		boardRatings.stream().map(rating -> ImageGeneration.generateImageFromMatrix(rating, DEFAULT_COLOR_GRADIENT))
+				.forEachOrdered(slice::addImage);
 		slices.add(slice);
 
 		window.setMaxTimelineValue(maxRoundIdx);
@@ -63,7 +65,7 @@ public class Viewer implements IViewer {
 	 * 
 	 * @param roundIdx the index of the round to show
 	 */
-	public void showRound(int roundIdx) {
+	public void showRound(final int roundIdx) {
 
 		if (roundIdx < 0) {
 			throw new IllegalArgumentException("referenced round index is below zero");
@@ -89,6 +91,7 @@ public class Viewer implements IViewer {
 		window.setAvailableTime(viewerSlice.getAvailableTime());
 		window.setPerformedAction(viewerSlice.getPerformedAction());
 		window.setRequiredTime(viewerSlice.getRequiredTime());
+		window.setPlayerColor(viewerSlice.getPlayerRgbColor());
 
 		window.updateBoardRatings(viewerSlice.getImages());
 	}

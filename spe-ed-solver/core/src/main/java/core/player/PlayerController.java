@@ -26,7 +26,7 @@ public class PlayerController {
 		this.player = playerType.newInstance();
 
 		if (viewerEnabled) {
-			this.viewer = new Viewer();
+			this.viewer = new Viewer(playerType.name());
 		} else {
 			this.viewer = new InactiveViewer();
 		}
@@ -54,7 +54,8 @@ public class PlayerController {
 		final long requiredMilliseconds = availableMilliseconds - gameStep.getDeadline().getRemainingMilliseconds();
 		final float requiredSeconds = requiredMilliseconds / 1000f;
 
-		viewer.commitRound(availableSeconds, action, requiredSeconds, gameStep.getBoard(), boardRatings);
+		viewer.commitRound(gameStep.getSelf().getPlayerId(), availableSeconds, action, requiredSeconds,
+				gameStep.getBoard(), boardRatings);
 
 		GameLogger.logPlayerAction(gameStep.getSelf(), action, requiredSeconds, availableSeconds);
 
