@@ -18,8 +18,13 @@ import utility.logging.LoggingLevel;
  */
 public class EnemyProbabilityCalculator {
 
+	private final int searchDepth;
 	private FloatMatrix probabilities;
 	private FloatMatrix minSteps;
+
+	public EnemyProbabilityCalculator(final int searchDepth) {
+		this.searchDepth = searchDepth;
+	}
 
 	/**
 	 * Calculates the probabilities and min steps for each of the given
@@ -29,7 +34,7 @@ public class EnemyProbabilityCalculator {
 	 * @param board       {@link Board} to check for collisions
 	 * @param searchDepth amount of recursive steps to be taken for each player
 	 */
-	public void performCalculation(final Collection<IPlayer> enemies, final Board<Cell> board, final int searchDepth) {
+	public void performCalculation(final Collection<IPlayer> enemies, final Board<Cell> board) {
 
 		final List<SingleEnemyPrediction> predictions = new ArrayList<>();
 		final List<Thread> threads = new ArrayList<>();

@@ -1,14 +1,12 @@
 package player.solver.reachablepoints;
 
-import java.util.Map;
+import java.util.Collection;
 
 import player.analysis.ActionsRating;
-import utility.game.board.Board;
-import utility.game.board.Cell;
-import utility.game.board.IBoardCell;
 import utility.game.player.IPlayer;
 import utility.game.player.PlayerAction;
-import utility.game.step.Deadline;
+import utility.game.step.GameStep;
+import utility.geometry.ContextualFloatMatrix;
 import utility.geometry.FloatMatrix;
 
 /**
@@ -16,52 +14,48 @@ import utility.geometry.FloatMatrix;
  * for calculating the success and cut off {@link ActionsRating ratings} for the
  * given information. Results should be stored until they are updated.
  */
-public interface IReachablePoints<CellType extends IBoardCell<?>> {
+public interface IReachablePoints {
 
 	/**
 	 * Performs the calculation with the given values and updates the stored
 	 * results.
 	 * 
-	 * @param self          {@link IPlayer} of yourself in the spe_ed game
-	 * @param board         {@link Board} to check for collisions
+	 * @param gameStep      {@link IPlayer} of yourself in the spe_ed game
+	 * 
 	 * @param probabilities {@link FloatMatrix} containing the enemy probability
 	 *                      values
 	 * @param minSteps      {@link FloatMatrix} containing the minimum enemy steps
 	 *                      for each element
-	 * @param deadline      {@link Deadline} which must not be exceeded
 	 */
-	void performCalculation(IPlayer self, Board<CellType> board, FloatMatrix probabilities, FloatMatrix minSteps,
-			Deadline deadline);
+	void performCalculation(GameStep gameStep, FloatMatrix probabilities, FloatMatrix minSteps);
 
 	/**
-	 * Returns the {@link ActionsRating} for the success ratings for each
-	 * {@link PlayerAction}.
+	 * Combines the last calculated {@link ActionsRating}.
 	 * 
-	 * @return success ratings
+	 * @param aggressiveWeight Weight for the {@link ActionsRating}, which
+	 *                         stimulates aggresive actions
+	 * @param defensiveWeight  Weight for the {@link ActionsRating}, which
+	 *                         stimulates defensive actions
+	 * @return The combined ratings
 	 */
-	ActionsRating getSuccessRatingsResult();
+	public ActionsRating combineActionsRating(float aggressiveWeight, float defensiveWeight);
 
 	/**
-	 * Returns the {@link ActionsRating} for the cut off ratings for each
-	 * {@link PlayerAction}.
+	 * Logs the last calculated Ratings and the combined rating as GameInformation
 	 * 
-	 * @return cut off ratings
+	 * @param combinedActionsRating the combined Rating to log
 	 */
-	ActionsRating getCutOffRatingsResult();
+	public void logGameInformation(ActionsRating combinedActionsRating);
 
 	/**
-	 * Returns a {@link FloatMatrix} containing the success ratings the given action
+	 * Creates for all last calculated Matrix-Results a
+	 * {@link ContextualFloatMatrix}
 	 * 
-	 * @param action the action for which the matrix is to be retrieved
-	 * @return success matrix for the fiven action
-	 */
-	FloatMatrix getSuccessMatrixResult(PlayerAction action);
-
-	/**
-	 * Returns a {@link FloatMatrix} containing the cut off ratings the given action
+	 * @param action for Matrix-Results grouped by Collection the Matrix for the
+	 *               given action will be used
 	 * 
-	 * @param action the action for which the matrix is to be retrieved
-	 * @return cut off matrix for the fiven action
+	 * @return A {@link Collection} of {@link ContextualFloatMatrix
+	 *         ContextualFloatMatrices}
 	 */
-	FloatMatrix getCutOffMatrixResult(PlayerAction action);
+	public Collection<ContextualFloatMatrix> getContextualFloatMatrices(PlayerAction action);
 }

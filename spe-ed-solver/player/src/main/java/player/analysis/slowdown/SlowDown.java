@@ -11,7 +11,10 @@ import utility.game.player.PlayerAction;
  * Class to calculate a {@link ActionsRating} which prioritizes
  * {@link PlayerAction PlayerActions} with a lower speed.
  */
-public class SlowDown {
+public final class SlowDown {
+
+	private SlowDown() {
+	}
 
 	/**
 	 * Calculates the {@link ActionsRating} for the given {@link Player} on the
@@ -22,7 +25,7 @@ public class SlowDown {
 	 * @param board {@link Board} to check for collisions
 	 * @return result as {@link ActionsRating}
 	 */
-	public ActionsRating getActionsRating(final IPlayer self, final Board<Cell> board) {
+	public static ActionsRating getActionsRating(final IPlayer self, final Board<Cell> board) {
 
 		final PredictivePlayer startPlayer = new PredictivePlayer(self);
 		final ActionsRating result = new ActionsRating();
@@ -44,7 +47,7 @@ public class SlowDown {
 	 * @param child  {@link IPlayer} child
 	 * @return rating value result as float
 	 */
-	private float ratingValue(final IPlayer parent, final IPlayer child) {
+	private static float ratingValue(final IPlayer parent, final IPlayer child) {
 		if (child.isActive())
 			return (parent.getSpeed() - child.getSpeed()) / 2f + 0.5f;
 		else

@@ -21,9 +21,8 @@ public class SlowDownTest {
 		Board<Cell> board = createEmptyTestBoard();
 		board.getBoardCellAt(new Point2i(6, 0)).setCellValue(CellValue.MULTIPLE_PLAYER);
 		IPlayer player = new TestPlayer(0, PlayerDirection.DOWN, 2, new Point2i(5, 0), 0, true);
-		SlowDown slowDown = new SlowDown();
 
-		ActionsRating result = slowDown.getActionsRating(player, board);
+		ActionsRating result = SlowDown.getActionsRating(player, board);
 
 		assertEquals(0f, result.getRating(PlayerAction.TURN_LEFT), 0.0001f);
 		assertEquals(0.5f, result.getRating(PlayerAction.CHANGE_NOTHING), 0.0001f);

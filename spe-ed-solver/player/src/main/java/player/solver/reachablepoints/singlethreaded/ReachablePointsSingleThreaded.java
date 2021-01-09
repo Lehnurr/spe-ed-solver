@@ -1,16 +1,21 @@
 package player.solver.reachablepoints.singlethreaded;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
 
 import player.analysis.ActionsRating;
 import player.analysis.RatedPredictivePlayer;
+import player.analysis.slowdown.SlowDown;
 import player.solver.reachablepoints.IReachablePoints;
 import utility.game.board.Board;
 import utility.game.board.Cell;
 import utility.game.player.IPlayer;
 import utility.game.player.PlayerAction;
 import utility.game.step.Deadline;
+import utility.game.step.GameStep;
+import utility.geometry.ContextualFloatMatrix;
 import utility.geometry.FloatMatrix;
 import utility.logging.GameLogger;
 
@@ -21,7 +26,7 @@ import utility.logging.GameLogger;
  * {@link GradualReachablePointsCalculation} objects which are repeatedly
  * alternated to distribute the resources equally.
  */
-public class ReachablePointsSingleThreaded implements IReachablePoints<Cell> {
+public class ReachablePointsSingleThreaded implements IReachablePoints {
 
 	private static final int DEADLINE_MILLISECOND_BUFFER = 500;
 
@@ -29,13 +34,22 @@ public class ReachablePointsSingleThreaded implements IReachablePoints<Cell> {
 
 	private ActionsRating successRating;
 	private ActionsRating cutOffRating;
+	private ActionsRating slowDownRating;
+
+	private FloatMatrix enemyProbabilitiesMatrix;
+	private FloatMatrix enemyMinStepsMatrix;
 
 	@Override
-	public void performCalculation(final IPlayer self, final Board<Cell> board, final FloatMatrix probabilities,
-			final FloatMatrix minSteps, final Deadline deadline) {
+	public void performCalculation(final GameStep gameStep, final FloatMatrix probabilities,
+			final FloatMatrix minSteps) {
 		reset();
-		initCalculations(self, board, probabilities, minSteps);
-		executeCalculationLoop(deadline);
+
+		this.enemyProbabilitiesMatrix = probabilities;
+		this.enemyMinStepsMatrix = minSteps;
+		slowDownRating = SlowDown.getActionsRating(gameStep.getSelf(), gameStep.getBoard());
+
+		initCalculations(gameStep.getSelf(), gameStep.getBoard(), probabilities, minSteps);
+		executeCalculationLoop(gameStep.getDeadline());
 		updateActionsRatings();
 	}
 
@@ -115,22 +129,28 @@ public class ReachablePointsSingleThreaded implements IReachablePoints<Cell> {
 	}
 
 	@Override
-	public ActionsRating getSuccessRatingsResult() {
-		return successRating;
+	public ActionsRating combineActionsRating(float aggressiveWeight, float defensiveWeight) {
+		return successRating.combine(cutOffRating, aggressiveWeight).combine(slowDownRating, defensiveWeight);
 	}
 
 	@Override
-	public ActionsRating getCutOffRatingsResult() {
-		return cutOffRating;
+	public void logGameInformation(ActionsRating combinedActionsRating) {
+		GameLogger.logGameInformation(String.format("success-rating:\t%s", successRating));
+		GameLogger.logGameInformation(String.format("cut-off-rating:\t%s", cutOffRating));
+		GameLogger.logGameInformation(String.format("slow-down-rating:\t%s", slowDownRating));
+		GameLogger.logGameInformation(String.format("combined-rating:\t%s", combinedActionsRating));
+
 	}
 
 	@Override
-	public FloatMatrix getSuccessMatrixResult(PlayerAction action) {
-		return calculations.get(action).getSuccessMatrixResult();
-	}
+	public Collection<ContextualFloatMatrix> getContextualFloatMatrices(PlayerAction action) {
+		final ArrayList<ContextualFloatMatrix> matrices = new ArrayList<>();
 
-	@Override
-	public FloatMatrix getCutOffMatrixResult(PlayerAction action) {
-		return calculations.get(action).getCutOffMatrixResult();
+		matrices.add(new ContextualFloatMatrix("probability", enemyProbabilitiesMatrix, 0, 1));
+		matrices.add(new ContextualFloatMatrix("min steps", enemyMinStepsMatrix));
+		matrices.add(new ContextualFloatMatrix("success", calculations.get(action).getSuccessMatrixResult(), 0, 1));
+		matrices.add(new ContextualFloatMatrix("cut off", calculations.get(action).getCutOffMatrixResult(), 0, 1));
+
+		return matrices;
 	}
 }

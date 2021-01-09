@@ -1,5 +1,6 @@
 package player;
 
+import player.solver.reachablepoints.ReachablePointsPlayer;
 import player.solver.reachablepoints.ReachablePointsType;
 
 /**
@@ -23,19 +24,19 @@ public enum PlayerType {
 	GRAPH_AGGRESSIVE {
 		@Override
 		public ISpeedSolverPlayer newInstance() {
-			return new GraphPlayer(7, 0.4f, 0.01f);
+			return new ReachablePointsPlayer(7, 0.4f, 0.01f, ReachablePointsType.GRAPH);
 		}
 	},
 	GRAPH_DEFENSIVE {
 		@Override
 		public ISpeedSolverPlayer newInstance() {
-			return new GraphPlayer(7, 0.1f, 0.35f);
+			return new ReachablePointsPlayer(7, 0.1f, 0.35f, ReachablePointsType.GRAPH);
 		}
 	},
 	GRAPH_DYNAMIC {
 		@Override
 		public ISpeedSolverPlayer newInstance() {
-			return new GraphPlayer(7, -1f, -1f);
+			return new ReachablePointsPlayer(7, -1f, -1f, ReachablePointsType.GRAPH);
 		}
 	};
 

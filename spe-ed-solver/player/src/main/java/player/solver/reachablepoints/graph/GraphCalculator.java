@@ -1,6 +1,7 @@
 package player.solver.reachablepoints.graph;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,8 @@ import utility.game.board.Board;
 import utility.game.player.IPlayer;
 import utility.game.player.PlayerAction;
 import utility.game.step.Deadline;
+import utility.game.step.GameStep;
+import utility.geometry.ContextualFloatMatrix;
 import utility.geometry.FloatMatrix;
 import utility.logging.GameLogger;
 
@@ -22,43 +25,59 @@ import utility.logging.GameLogger;
  * Calculator class calculating success and cut off ratings as
  * {@link ActionsRating} objects and storing the last calculated results.
  */
-public class GraphCalculator implements IReachablePoints<Node> {
+public class GraphCalculator implements IReachablePoints {
 	private static final int MAX_THREAD_COUNT = 1;
 
 	private ActionsRating successRatingsResult;
 	private ActionsRating cutOffRatingsResult;
 	private ActionsRating invertedImportanceResult;
+	private FloatMatrix enemyProbabilitiesMatrix;
+	private FloatMatrix enemyMinStepsMatrix;
 	private int calculatedPaths;
+	private Graph graph;
+	private int[] activeEnemiesIds;
 
 	private Map<PlayerAction, FloatMatrix> successMatrixResult;
 	private Map<PlayerAction, FloatMatrix> cutOffMatrixResult;
 	private FloatMatrix invertedImportanceMatrixResult;
 
-	/**
-	 * Performs the calculation with the given values and updates the stored
-	 * results.
-	 * 
-	 * @param self          {@link IPlayer} of yourself in the spe_ed game
-	 * @param graph         The Graph board to find the edges
-	 * @param probabilities {@link FloatMatrix} containing the enemy probability
-	 *                      values
-	 * @param minSteps      {@link FloatMatrix} containing the minimum enemy steps
-	 *                      for each element
-	 * @param deadline      {@link Deadline} which must not be exceeded
-	 */
-	public void performCalculation(final IPlayer self, final Board<Node> graph, final FloatMatrix probabilities,
-			final FloatMatrix minSteps, final Deadline deadline) {
+	public void performCalculation(final GameStep gameStep, final FloatMatrix probabilities,
+			final FloatMatrix minSteps) {
+		this.enemyProbabilitiesMatrix = probabilities;
+		this.enemyMinStepsMatrix = minSteps;
+		updateGraph(gameStep);
 
-		final List<RatedPredictiveGraphPlayer> startPlayers = RatedPredictiveGraphPlayer.getValidChildren(self, graph,
-				probabilities, minSteps, new ConcreteEdge[0], new HashMap<>());
+		final List<RatedPredictiveGraphPlayer> startPlayers = RatedPredictiveGraphPlayer.getValidChildren(
+				gameStep.getSelf(), graph, probabilities, minSteps, new ConcreteEdge[0], new HashMap<>());
+
+		final List<GraphCalculation> calculations = getCalculations(startPlayers, gameStep.getDeadline(), graph);
 
 		clearResults();
-
-		final List<GraphCalculation> calculations = getCalculations(startPlayers, probabilities, minSteps, deadline,
-				graph);
-
 		calculate(calculations);
 		addResults(calculations);
+	}
+
+	private void updateGraph(GameStep gameStep) {
+		if (this.graph == null) {
+			// Initialize the graph with an empty Node-Array
+			var emptyNodes = new Node[gameStep.getBoard().getHeight()][gameStep.getBoard().getWidth()];
+			this.graph = new Graph(emptyNodes);
+
+			// Initialize the alive player
+			this.activeEnemiesIds = gameStep.getEnemies().keySet().stream().mapToInt(Integer::intValue).toArray();
+		}
+
+		// Merge all players that were active last round into one list
+		List<IPlayer> enemies = new ArrayList<>();
+		for (int playerId : this.activeEnemiesIds)
+			enemies.add(gameStep.getEnemies().get(playerId));
+
+		// Transfer the new occupied cells to the graph
+		graph.updateGraph(gameStep.getBoard(), gameStep.getSelf(), enemies);
+
+		// Determine the currently dead players to ignore them in the following round
+		// for the graph-update.
+		this.activeEnemiesIds = enemies.stream().filter(IPlayer::isActive).mapToInt(IPlayer::getPlayerId).toArray();
 	}
 
 	/**
@@ -89,8 +108,7 @@ public class GraphCalculator implements IReachablePoints<Node> {
 	 * @return {@link GraphCalculation} objects
 	 */
 	private List<GraphCalculation> getCalculations(final List<RatedPredictiveGraphPlayer> startPlayers,
-			final FloatMatrix probabilities, final FloatMatrix minSteps, final Deadline deadline,
-			final Board<Node> graph) {
+			final Deadline deadline, final Board<Node> graph) {
 
 		// determine the initial edges based on the startplayers
 		Map<PlayerAction, ConcreteEdge> initialEdges = new EnumMap<>(PlayerAction.class);
@@ -105,22 +123,24 @@ public class GraphCalculator implements IReachablePoints<Node> {
 		List<GraphCalculation> calculations = new ArrayList<>();
 
 		if (threadCount <= 1) {
-			GraphCalculation calculation = new GraphCalculation(graph, probabilities, minSteps, initialEdges, deadline);
+			GraphCalculation calculation = new GraphCalculation(graph, this.enemyProbabilitiesMatrix,
+					this.enemyMinStepsMatrix, initialEdges, deadline);
 			calculations.add(calculation);
 			startPlayers.stream().forEach(calculation::addStartPlayer);
 			return calculations;
 		}
 
 		while (calculations.size() < threadCount)
-			calculations.add(new GraphCalculation(graph, probabilities, minSteps, initialEdges, deadline));
+			calculations.add(new GraphCalculation(graph, this.enemyProbabilitiesMatrix, this.enemyMinStepsMatrix,
+					initialEdges, deadline));
 
 		// Define the number of required start players
 		final int threadBase = (graph.getHeight() + graph.getWidth()) * 10;
 		final int totalBase = threadBase * threadCount;
 
 		// create a Base of Player states
-		GraphCalculation baseCalculation = new GraphCalculation(graph, probabilities, minSteps, initialEdges, deadline,
-				totalBase);
+		GraphCalculation baseCalculation = new GraphCalculation(graph, this.enemyProbabilitiesMatrix,
+				this.enemyMinStepsMatrix, initialEdges, deadline, totalBase);
 		startPlayers.stream().forEach(baseCalculation::addStartPlayer);
 
 		while (baseCalculation.queueHasNext() && baseCalculation.queueRemaining() < totalBase) {
@@ -177,6 +197,7 @@ public class GraphCalculator implements IReachablePoints<Node> {
 
 		successRatingsResult.normalize();
 		invertedImportanceResult.normalize();
+		invertedImportanceMatrixResult = invertedImportanceMatrixResult.normalize();
 	}
 
 	private void addResults(GraphCalculation calculation) {
@@ -201,62 +222,28 @@ public class GraphCalculator implements IReachablePoints<Node> {
 		calculatedPaths += calculation.getCalculatedPathsCount();
 	}
 
-	/**
-	 * Returns the {@link ActionsRating} for the success ratings for each
-	 * {@link PlayerAction}.
-	 * 
-	 * @return success ratings
-	 */
-	public ActionsRating getSuccessRatingsResult() {
-		return successRatingsResult;
-	}
-
-	/**
-	 * Returns the {@link ActionsRating} for the cut off ratings for each
-	 * {@link PlayerAction}.
-	 * 
-	 * @return cut off ratings
-	 */
-	public ActionsRating getCutOffRatingsResult() {
-		return cutOffRatingsResult;
-	}
-
-	/**
-	 * Returns the {@link ActionsRating} for inverted importance ratings for each
-	 * {@link PlayerAction}.
-	 * 
-	 * @return inverted importance ratings
-	 */
-	public ActionsRating getInvertedImportanceResult() {
-		return invertedImportanceResult;
-	}
-
-	public FloatMatrix getSuccessMatrixResult(PlayerAction action) {
-		return successMatrixResult.get(action);
-	}
-
-	public FloatMatrix getCutOffMatrixResult(PlayerAction action) {
-		return cutOffMatrixResult.get(action);
-	}
-
-	public FloatMatrix getNormalizedInvertedImportanceMatrixResult() {
-		return this.invertedImportanceMatrixResult.normalize();
-	}
-
 	public void logGameInformation(ActionsRating combinedActionsRating) {
-		// Log calculated Rating-Information
 		GameLogger.logGameInformation(String.format("success-rating:\t%s", successRatingsResult));
 		GameLogger.logGameInformation(String.format("cut-off-rating:\t%s", cutOffRatingsResult));
 		GameLogger.logGameInformation(String.format("inverted-importance-rating:\t%s", invertedImportanceResult));
 		GameLogger.logGameInformation(String.format("combined-rating:\t%s", combinedActionsRating));
 	}
 
-	public ActionsRating combineActionsRating(float importanceWeight, float cutOffWeight) {
-		// Calculate and combine the action ratings
-		final ActionsRating successActionsRating = getSuccessRatingsResult();
-		final ActionsRating cutOffActionsRating = getCutOffRatingsResult();
-		final ActionsRating importanceResult = getInvertedImportanceResult();
-		return successActionsRating.combine(cutOffActionsRating, cutOffWeight).combine(importanceResult,
-				importanceWeight);
+	public ActionsRating combineActionsRating(float aggressiveWeight, float defensiveWeight) {
+		return successRatingsResult.combine(cutOffRatingsResult, aggressiveWeight).combine(invertedImportanceResult,
+				defensiveWeight);
+	}
+
+	@Override
+	public Collection<ContextualFloatMatrix> getContextualFloatMatrices(PlayerAction action) {
+		final ArrayList<ContextualFloatMatrix> matrices = new ArrayList<>();
+
+		matrices.add(new ContextualFloatMatrix("success", successMatrixResult.get(action), 0, 1));
+		matrices.add(new ContextualFloatMatrix("cut off", cutOffMatrixResult.get(action), 0, 1));
+		matrices.add(new ContextualFloatMatrix("inverted importance", invertedImportanceMatrixResult, 0, 1));
+		matrices.add(new ContextualFloatMatrix("probability", enemyProbabilitiesMatrix, 0, 1));
+		matrices.add(new ContextualFloatMatrix("min steps", enemyMinStepsMatrix));
+
+		return matrices;
 	}
 }

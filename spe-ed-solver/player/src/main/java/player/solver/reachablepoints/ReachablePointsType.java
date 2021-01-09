@@ -1,5 +1,6 @@
 package player.solver.reachablepoints;
 
+import player.solver.reachablepoints.graph.GraphCalculator;
 import player.solver.reachablepoints.multithreaded.ReachablePointsMultithreaded;
 import player.solver.reachablepoints.singlethreaded.ReachablePointsSingleThreaded;
 
@@ -19,6 +20,12 @@ public enum ReachablePointsType {
 		@Override
 		public IReachablePoints newInstance() {
 			return new ReachablePointsSingleThreaded();
+		}
+	},
+	GRAPH {
+		@Override
+		public IReachablePoints newInstance() {
+			return new GraphCalculator();
 		}
 	};
 

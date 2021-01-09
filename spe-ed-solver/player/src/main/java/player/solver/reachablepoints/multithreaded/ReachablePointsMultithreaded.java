@@ -2,7 +2,6 @@ package player.solver.reachablepoints.multithreaded;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -11,12 +10,14 @@ import java.util.TimerTask;
 
 import player.analysis.ActionsRating;
 import player.analysis.RatedPredictivePlayer;
+import player.analysis.slowdown.SlowDown;
 import player.solver.reachablepoints.IReachablePoints;
 import utility.game.board.Board;
 import utility.game.board.Cell;
-import utility.game.player.IPlayer;
 import utility.game.player.PlayerAction;
 import utility.game.step.Deadline;
+import utility.game.step.GameStep;
+import utility.geometry.ContextualFloatMatrix;
 import utility.geometry.FloatMatrix;
 import utility.logging.ApplicationLogger;
 import utility.logging.GameLogger;
@@ -26,26 +27,34 @@ import utility.logging.LoggingLevel;
  * Calculator class calculating success and cut off ratings as
  * {@link ActionsRating} objects and storing the last calculated results.
  */
-public class ReachablePointsMultithreaded implements IReachablePoints<Cell> {
+public class ReachablePointsMultithreaded implements IReachablePoints {
 
 	private static final int DEADLINE_MILLISECOND_INTERRUPT = 250;
 
 	private ActionsRating successRatingsResult;
 	private ActionsRating cutOffRatingsResult;
+	private ActionsRating slowDownRatingsResult;
 
 	private Map<PlayerAction, FloatMatrix> successMatrixResult;
 	private Map<PlayerAction, FloatMatrix> cutOffMatrixResult;
 
+	private FloatMatrix enemyProbabilitiesMatrix;
+	private FloatMatrix enemyMinStepsMatrix;
+
 	@Override
-	public void performCalculation(final IPlayer self, final Board<Cell> board, final FloatMatrix probabilities,
-			final FloatMatrix minSteps, final Deadline deadline) {
+	public void performCalculation(final GameStep gameStep, final FloatMatrix probabilities,
+			final FloatMatrix minSteps) {
 
-		final RatedPredictivePlayer startPlayer = new RatedPredictivePlayer(self);
+		this.enemyProbabilitiesMatrix = probabilities;
+		this.enemyMinStepsMatrix = minSteps;
+		slowDownRatingsResult = SlowDown.getActionsRating(gameStep.getSelf(), gameStep.getBoard());
 
-		final Map<PlayerAction, DeadlineReachablePointsCalculation> calculations = getCalculations(startPlayer, board,
-				probabilities, minSteps, deadline);
+		final RatedPredictivePlayer startPlayer = new RatedPredictivePlayer(gameStep.getSelf());
 
-		calculateMultithreaded(calculations.values(), deadline);
+		final Map<PlayerAction, DeadlineReachablePointsCalculation> calculations = getCalculations(startPlayer,
+				gameStep.getBoard(), probabilities, minSteps, gameStep.getDeadline());
+
+		calculateMultithreaded(calculations.values(), gameStep.getDeadline());
 
 		updateResults(calculations);
 	}
@@ -169,22 +178,29 @@ public class ReachablePointsMultithreaded implements IReachablePoints<Cell> {
 	}
 
 	@Override
-	public ActionsRating getSuccessRatingsResult() {
-		return successRatingsResult;
+	public ActionsRating combineActionsRating(float aggressiveWeight, float defensiveWeight) {
+		return successRatingsResult.combine(cutOffRatingsResult, aggressiveWeight).combine(slowDownRatingsResult,
+				defensiveWeight);
 	}
 
 	@Override
-	public ActionsRating getCutOffRatingsResult() {
-		return cutOffRatingsResult;
+	public void logGameInformation(ActionsRating combinedActionsRating) {
+		GameLogger.logGameInformation(String.format("success-rating:\t%s", successRatingsResult));
+		GameLogger.logGameInformation(String.format("cut-off-rating:\t%s", cutOffRatingsResult));
+		GameLogger.logGameInformation(String.format("slow-down-rating:\t%s", slowDownRatingsResult));
+		GameLogger.logGameInformation(String.format("combined-rating:\t%s", combinedActionsRating));
+
 	}
 
 	@Override
-	public FloatMatrix getSuccessMatrixResult(PlayerAction action) {
-		return successMatrixResult.get(action);
-	}
+	public Collection<ContextualFloatMatrix> getContextualFloatMatrices(PlayerAction action) {
+		final ArrayList<ContextualFloatMatrix> matrices = new ArrayList<>();
 
-	@Override
-	public FloatMatrix getCutOffMatrixResult(PlayerAction action) {
-		return cutOffMatrixResult.get(action);
+		matrices.add(new ContextualFloatMatrix("probability", enemyProbabilitiesMatrix, 0, 1));
+		matrices.add(new ContextualFloatMatrix("min steps", enemyMinStepsMatrix));
+		matrices.add(new ContextualFloatMatrix("success", successMatrixResult.get(action), 0, 1));
+		matrices.add(new ContextualFloatMatrix("cut off", cutOffMatrixResult.get(action), 0, 1));
+
+		return matrices;
 	}
 }
