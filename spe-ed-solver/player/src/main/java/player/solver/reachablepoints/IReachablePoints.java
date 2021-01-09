@@ -1,4 +1,4 @@
-package player.analysis.reachablepoints;
+package player.solver.reachablepoints;
 
 import java.util.Map;
 
@@ -63,5 +63,4 @@ public interface IReachablePoints {
 	 * @return cut off matrices map
 	 */
 	Map<PlayerAction, FloatMatrix> getCutOffMatrixResult();
-
 }

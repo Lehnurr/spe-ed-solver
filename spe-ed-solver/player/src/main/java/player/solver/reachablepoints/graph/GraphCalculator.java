@@ -1,4 +1,4 @@
-package player.analysis.graph;
+package player.solver.reachablepoints.graph;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import player.analysis.ActionsRating;
-import player.boardevaluation.graph.ConcreteEdge;
-import player.boardevaluation.graph.Graph;
+import player.solver.reachablepoints.graph.board.ConcreteEdge;
+import player.solver.reachablepoints.graph.board.Graph;
 import utility.game.player.IPlayer;
 import utility.game.player.PlayerAction;
 import utility.game.step.Deadline;
@@ -249,6 +249,23 @@ public class GraphCalculator {
 
 	public FloatMatrix getNormalizedInvertedImportanceMatrixResult() {
 		return this.invertedImportanceMatrixResult.normalize();
+	}
+
+	public void logGameInformation(ActionsRating combinedActionsRating) {
+		// Log calculated Rating-Information
+		GameLogger.logGameInformation(String.format("success-rating:\t%s", successRatingsResult));
+		GameLogger.logGameInformation(String.format("cut-off-rating:\t%s", cutOffRatingsResult));
+		GameLogger.logGameInformation(String.format("inverted-importance-rating:\t%s", invertedImportanceResult));
+		GameLogger.logGameInformation(String.format("combined-rating:\t%s", combinedActionsRating));
+	}
+
+	public ActionsRating combineActionsRating(float importanceWeight, float cutOffWeight) {
+		// Calculate and combine the action ratings
+		final ActionsRating successActionsRating = getSuccessRatingsResult();
+		final ActionsRating cutOffActionsRating = getCutOffRatingsResult();
+		final ActionsRating importanceResult = getInvertedImportanceResult();
+		return successActionsRating.combine(cutOffActionsRating, cutOffWeight).combine(importanceResult,
+				importanceWeight);
 	}
 
 }

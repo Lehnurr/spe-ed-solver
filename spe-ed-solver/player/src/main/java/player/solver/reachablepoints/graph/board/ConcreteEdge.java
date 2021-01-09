@@ -1,4 +1,4 @@
-package player.boardevaluation.graph;
+package player.solver.reachablepoints.graph.board;
 
 import java.util.Objects;
 

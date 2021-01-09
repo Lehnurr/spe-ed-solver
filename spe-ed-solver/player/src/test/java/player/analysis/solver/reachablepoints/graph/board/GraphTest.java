@@ -1,4 +1,4 @@
-package player.analysis.boardevaluation.graph;
+package player.analysis.solver.reachablepoints.graph.board;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -10,8 +10,8 @@ import java.util.List;
 import org.junit.Test;
 
 import player.analysis.TestPlayer;
-import player.boardevaluation.graph.Graph;
-import player.boardevaluation.graph.Node;
+import player.solver.reachablepoints.graph.board.Graph;
+import player.solver.reachablepoints.graph.board.Node;
 import utility.game.board.Board;
 import utility.game.board.Cell;
 import utility.game.board.CellValue;

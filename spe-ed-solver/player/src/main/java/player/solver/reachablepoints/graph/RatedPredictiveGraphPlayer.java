@@ -1,12 +1,12 @@
-package player.analysis.graph;
+package player.solver.reachablepoints.graph;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import player.boardevaluation.graph.ConcreteEdge;
-import player.boardevaluation.graph.Graph;
+import player.solver.reachablepoints.graph.board.ConcreteEdge;
+import player.solver.reachablepoints.graph.board.Graph;
 import utility.game.player.IPlayer;
 import utility.game.player.PlayerAction;
 import utility.game.player.PlayerDirection;

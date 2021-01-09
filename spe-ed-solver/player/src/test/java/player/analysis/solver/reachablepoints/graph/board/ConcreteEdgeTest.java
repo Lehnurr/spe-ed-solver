@@ -1,12 +1,12 @@
-package player.analysis.boardevaluation.graph;
+package player.analysis.solver.reachablepoints.graph.board;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import player.boardevaluation.graph.Graph;
-import player.boardevaluation.graph.Node;
+import player.solver.reachablepoints.graph.board.Graph;
+import player.solver.reachablepoints.graph.board.Node;
 import utility.game.player.PlayerDirection;
 import utility.geometry.Point2i;
 

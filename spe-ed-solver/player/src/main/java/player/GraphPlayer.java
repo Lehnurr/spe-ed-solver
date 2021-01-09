@@ -6,14 +6,13 @@ import java.util.function.Consumer;
 
 import player.analysis.ActionsRating;
 import player.analysis.enemyprobability.EnemyProbabilityCalculator;
-import player.analysis.graph.GraphCalculator;
-import player.boardevaluation.graph.Graph;
-import player.boardevaluation.graph.Node;
+import player.solver.reachablepoints.graph.GraphCalculator;
+import player.solver.reachablepoints.graph.board.Graph;
+import player.solver.reachablepoints.graph.board.Node;
 import utility.game.player.IPlayer;
 import utility.game.player.PlayerAction;
 import utility.game.step.GameStep;
 import utility.geometry.ContextualFloatMatrix;
-import utility.logging.GameLogger;
 
 /**
  * GraphPlayer
@@ -44,13 +43,44 @@ public class GraphPlayer implements ISpeedSolverPlayer {
                 if (!gameStep.getSelf().isActive())
                         return PlayerAction.CHANGE_NOTHING;
 
+                updateDynamicWeights();
+
+                updateGraph(gameStep);
+
+                // Calculate enemyProbability
+                enemyProbabilityCalculator.performCalculation(gameStep.getEnemies().values(), gameStep.getBoard(),
+                                enemySearchDepth);
+
+                // Calculate the Action
+                graphCalculator.performCalculation(gameStep.getSelf(),
+                                enemyProbabilityCalculator.getProbabilitiesMatrix(),
+                                enemyProbabilityCalculator.getMinStepsMatrix(), gameStep.getDeadline(), graph);
+
+                // Combine the results
+                final ActionsRating combinedActionsRating = graphCalculator.combineActionsRating(importanceWeight,
+                                cutOffWeight);
+
+                // Log the results
+                graphCalculator.logGameInformation(combinedActionsRating);
+
+                // get the best action
+                final PlayerAction actionToTake = combinedActionsRating.maxAction();
+
+                // send the Data to the viewer
+                sendViewerData(boardRatingConsumer, actionToTake);
+
+                // send the Calculated Action
+                return actionToTake;
+        }
+
+        private void updateDynamicWeights() {
                 if (importanceIsDynamic)
                         importanceWeight = activeEnemiesIds == null ? 0 : (1 - (activeEnemiesIds.length / 10f));
                 if (cutOffIsDynamic)
                         cutOffWeight = activeEnemiesIds == null ? 1 : (activeEnemiesIds.length / 12f);
+        }
 
-                enemyProbabilityCalculator.performCalculation(gameStep.getEnemies().values(), gameStep.getBoard(), 5);
-
+        private void updateGraph(GameStep gameStep) {
                 if (this.graph == null) {
                         // Initialize the graph with an empty Node-Array
                         var emptyNodes = new Node[gameStep.getBoard().getHeight()][gameStep.getBoard().getWidth()];
@@ -73,35 +103,6 @@ public class GraphPlayer implements ISpeedSolverPlayer {
                 // for the graph-update.
                 this.activeEnemiesIds = enemies.stream().filter(IPlayer::isActive).mapToInt(IPlayer::getPlayerId)
                                 .toArray();
-
-                // Calculate the action
-                enemyProbabilityCalculator.performCalculation(gameStep.getEnemies().values(), gameStep.getBoard(),
-                                enemySearchDepth);
-
-                graphCalculator.performCalculation(gameStep.getSelf(),
-                                enemyProbabilityCalculator.getProbabilitiesMatrix(),
-                                enemyProbabilityCalculator.getMinStepsMatrix(), gameStep.getDeadline(), graph);
-
-                // Calculate and combine the action ratings
-                final ActionsRating successActionsRating = graphCalculator.getSuccessRatingsResult();
-                final ActionsRating cutOffActionsRating = graphCalculator.getCutOffRatingsResult();
-                final ActionsRating importanceResult = graphCalculator.getInvertedImportanceResult();
-                final ActionsRating combinedActionsRating = successActionsRating
-                                .combine(cutOffActionsRating, cutOffWeight).combine(importanceResult, importanceWeight);
-
-                // Log calculated Rating-Information
-                GameLogger.logGameInformation(String.format("success-rating:\t%s", successActionsRating));
-                GameLogger.logGameInformation(String.format("cut-off-rating:\t%s", cutOffActionsRating));
-                GameLogger.logGameInformation(String.format("inverted-importance-rating:\t%s", importanceResult));
-                GameLogger.logGameInformation(String.format("combined-rating:\t%s", combinedActionsRating));
-
-                // get the best action
-                final PlayerAction actionToTake = combinedActionsRating.maxAction();
-
-                sendViewerData(boardRatingConsumer, actionToTake);
-
-                // Send the Calculated Action
-                return actionToTake;
         }
 
         private void sendViewerData(final Consumer<ContextualFloatMatrix> boardRatingConsumer,

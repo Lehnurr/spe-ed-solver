@@ -1,6 +1,6 @@
 package player;
 
-import player.analysis.reachablepoints.ReachablePointsType;
+import player.solver.reachablepoints.ReachablePointsType;
 
 /**
  * {@link PlayerType} enum representing multiple types of spe_ed solver players.

@@ -1,4 +1,4 @@
-package player.analysis.reachablepoints.singlethreaded;
+package player.solver.reachablepoints.singlethreaded;
 
 import java.util.Collection;
 

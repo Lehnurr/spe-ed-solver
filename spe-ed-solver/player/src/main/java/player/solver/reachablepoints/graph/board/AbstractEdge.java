@@ -1,4 +1,4 @@
-package player.boardevaluation.graph;
+package player.solver.reachablepoints.graph.board;
 
 import utility.game.player.PlayerDirection;
 import utility.geometry.Point2i;

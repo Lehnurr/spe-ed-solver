@@ -1,4 +1,4 @@
-package player.analysis.reachablepoints.multithreaded;
+package player.solver.reachablepoints.multithreaded;
 
 import java.util.Collection;
 
@@ -58,7 +58,8 @@ public class DeadlineReachablePointsCalculation {
 	}
 
 	/**
-	 * Starts the execution for the {@link DeadlineReachablePointsCalculation} object.
+	 * Starts the execution for the {@link DeadlineReachablePointsCalculation}
+	 * object.
 	 */
 	public void execute() {
 

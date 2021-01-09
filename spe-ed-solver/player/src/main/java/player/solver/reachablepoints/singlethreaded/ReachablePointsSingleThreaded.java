@@ -1,11 +1,11 @@
-package player.analysis.reachablepoints.singlethreaded;
+package player.solver.reachablepoints.singlethreaded;
 
 import java.util.EnumMap;
 import java.util.Map;
 
 import player.analysis.ActionsRating;
 import player.analysis.RatedPredictivePlayer;
-import player.analysis.reachablepoints.IReachablePoints;
+import player.solver.reachablepoints.IReachablePoints;
 import utility.game.board.Board;
 import utility.game.board.Cell;
 import utility.game.player.IPlayer;
@@ -141,5 +141,4 @@ public class ReachablePointsSingleThreaded implements IReachablePoints {
 		}
 		return result;
 	}
-
 }

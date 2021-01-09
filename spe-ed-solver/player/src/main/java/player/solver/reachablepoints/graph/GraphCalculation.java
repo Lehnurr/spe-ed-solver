@@ -1,4 +1,4 @@
-package player.analysis.graph;
+package player.solver.reachablepoints.graph;
 
 import java.util.Collections;
 import java.util.EnumMap;
@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import player.analysis.LimitedQueue;
-import player.boardevaluation.graph.ConcreteEdge;
-import player.boardevaluation.graph.Graph;
+import player.solver.reachablepoints.graph.board.ConcreteEdge;
+import player.solver.reachablepoints.graph.board.Graph;
 import utility.game.player.PlayerAction;
 import utility.game.step.Deadline;
 import utility.geometry.FloatMatrix;

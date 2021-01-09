@@ -1,7 +1,7 @@
-package player.analysis.reachablepoints;
+package player.solver.reachablepoints;
 
-import player.analysis.reachablepoints.multithreaded.ReachablePointsMultithreaded;
-import player.analysis.reachablepoints.singlethreaded.ReachablePointsSingleThreaded;
+import player.solver.reachablepoints.multithreaded.ReachablePointsMultithreaded;
+import player.solver.reachablepoints.singlethreaded.ReachablePointsSingleThreaded;
 
 /**
  * Enum describing multiple types of the {@link IReachablePoints} calculation.

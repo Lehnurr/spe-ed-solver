@@ -4,9 +4,9 @@ import java.util.function.Consumer;
 
 import player.analysis.ActionsRating;
 import player.analysis.enemyprobability.EnemyProbabilityCalculator;
-import player.analysis.reachablepoints.IReachablePoints;
-import player.analysis.reachablepoints.ReachablePointsType;
 import player.analysis.slowdown.SlowDown;
+import player.solver.reachablepoints.IReachablePoints;
+import player.solver.reachablepoints.ReachablePointsType;
 import utility.game.player.PlayerAction;
 import utility.game.step.GameStep;
 import utility.geometry.ContextualFloatMatrix;
