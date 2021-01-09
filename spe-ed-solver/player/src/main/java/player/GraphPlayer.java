@@ -23,22 +23,31 @@ public class GraphPlayer implements ISpeedSolverPlayer {
         private final GraphCalculator graphCalculator = new GraphCalculator();
 
         private final int enemySearchDepth;
-        private final float cutOffWeight;
-        private final float importanceWeight;
+        private float cutOffWeight;
+        private float importanceWeight;
 
         private Graph graph;
         private int[] activeEnemiesIds;
+        private final boolean importanceIsDynamic;
+        private final boolean cutOffIsDynamic;
 
         public GraphPlayer(final int enemySearchDepth, final float cutOffWeight, final float importanceWeight) {
                 this.enemySearchDepth = enemySearchDepth;
                 this.cutOffWeight = cutOffWeight;
                 this.importanceWeight = importanceWeight;
+                this.cutOffIsDynamic = cutOffWeight < 0;
+                this.importanceIsDynamic = importanceWeight < 0;
         }
 
         @Override
         public PlayerAction calculateAction(GameStep gameStep, Consumer<ContextualFloatMatrix> boardRatingConsumer) {
                 if (!gameStep.getSelf().isActive())
                         return PlayerAction.CHANGE_NOTHING;
+
+                if (importanceIsDynamic)
+                        importanceWeight = activeEnemiesIds == null ? 0 : (1 - (activeEnemiesIds.length / 10f));
+                if (cutOffIsDynamic)
+                        cutOffWeight = activeEnemiesIds == null ? 1 : (activeEnemiesIds.length / 12f);
 
                 enemyProbabilityCalculator.performCalculation(gameStep.getEnemies().values(), gameStep.getBoard(), 5);
 
@@ -106,11 +115,11 @@ public class GraphPlayer implements ISpeedSolverPlayer {
                 boardRatingConsumer.accept(minStepsNamedMatrix);
 
                 var successNamedMatrix = new ContextualFloatMatrix("success",
-                                graphCalculator.getNormalizedSuccessMatrixResult(actionToTake), 0, 1);
+                                graphCalculator.getSuccessMatrixResult(actionToTake), 0, 1);
                 boardRatingConsumer.accept(successNamedMatrix);
 
                 var cutOffNamedMatrix = new ContextualFloatMatrix("cut off",
-                                graphCalculator.getNormalizedCutOffMatrixResult(actionToTake), 0, 1);
+                                graphCalculator.getCutOffMatrixResult(actionToTake), 0, 1);
                 boardRatingConsumer.accept(cutOffNamedMatrix);
 
                 var importanceNamedMatrix = new ContextualFloatMatrix("inverted importance",

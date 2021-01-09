@@ -23,7 +23,7 @@ public enum PlayerType {
 	GRAPH_AGGRESSIVE {
 		@Override
 		public ISpeedSolverPlayer newInstance() {
-			return new GraphPlayer(7, 0.4f, 0.2f);
+			return new GraphPlayer(7, 0.4f, 0.05f);
 		}
 	},
 	GRAPH_DEFENSIVE {
@@ -32,10 +32,10 @@ public enum PlayerType {
 			return new GraphPlayer(7, 0.175f, 0.425f);
 		}
 	},
-	GRAPH_BALENCED {
+	GRAPH_DYNAMIC {
 		@Override
 		public ISpeedSolverPlayer newInstance() {
-			return new GraphPlayer(7, 0.3f, 0.3f);
+			return new GraphPlayer(7, -1f, -1f);
 		}
 	};
 
