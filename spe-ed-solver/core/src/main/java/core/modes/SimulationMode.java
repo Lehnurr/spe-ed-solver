@@ -3,7 +3,7 @@ package core.modes;
 import java.util.ArrayList;
 import java.util.List;
 
-import core.player.GameController;
+import core.controller.GameController;
 import player.PlayerType;
 import simulation.Game;
 import utility.game.board.Board;

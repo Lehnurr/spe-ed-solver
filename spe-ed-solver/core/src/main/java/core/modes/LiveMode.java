@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import core.controller.GameController;
 import core.parser.EnvironmentVariableParser;
 import core.parser.EnvrionmentVariableParseException;
-import core.player.GameController;
 import player.PlayerType;
 import utility.logging.ApplicationLogger;
 import utility.logging.LoggingLevel;

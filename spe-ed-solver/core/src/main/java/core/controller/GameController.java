@@ -1,4 +1,4 @@
-package core.player;
+package core.controller;
 
 import java.util.HashMap;
 import java.util.List;

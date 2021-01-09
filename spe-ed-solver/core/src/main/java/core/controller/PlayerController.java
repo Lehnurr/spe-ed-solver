@@ -1,4 +1,4 @@
-package core.player;
+package core.controller;
 
 import java.util.ArrayList;
 import java.util.List;
