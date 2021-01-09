@@ -1,5 +1,6 @@
 package visualisation;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,10 @@ import utility.game.board.Board;
 import utility.game.board.Cell;
 import utility.game.player.PlayerAction;
 import utility.geometry.ContextualFloatMatrix;
+import utility.logging.ApplicationLogger;
+import utility.logging.LoggingLevel;
+import visualisation.files.ImageSavingException;
+import visualisation.files.ImageSavingService;
 
 /**
  * Reference implementation for the {@link IViewer} interface.
@@ -14,6 +19,8 @@ import utility.geometry.ContextualFloatMatrix;
 public class Viewer implements IViewer {
 
 	private static final ColorGradient DEFAULT_COLOR_GRADIENT = ColorGradient.FIRE;
+
+	private final ImageSavingService imageSavingService = new ImageSavingService();
 
 	private final ViewerWindow window;
 
@@ -28,7 +35,7 @@ public class Viewer implements IViewer {
 	 * @param playerType a String representation of the Player-Type
 	 */
 	public Viewer(final String playerType) {
-		this.window = new ViewerWindow(this::showRound, playerType);
+		this.window = new ViewerWindow(this::showRound, this::saveSlice, playerType);
 	}
 
 	/**
@@ -94,6 +101,24 @@ public class Viewer implements IViewer {
 		window.setPlayerColor(viewerSlice.getPlayerRgbColor());
 
 		window.updateBoardRatings(viewerSlice.getImages());
+	}
+
+	/**
+	 * Saves the current slice to a specified {@link File}.
+	 * 
+	 * @param {@link File} to save the slice data to
+	 */
+	private void saveSlice(final File file) {
+		ViewerSlice slice = slices.get(displayedRoundIdx);
+		for (final NamedImage image : slice.getImages()) {
+			try {
+				imageSavingService.saveImage(file, image);
+			} catch (final ImageSavingException e) {
+				window.showErrorMessage(e.getMessage());
+				ApplicationLogger.logException(e, LoggingLevel.WARNING);
+				ApplicationLogger.logWarning("Image of slice could not be saved!");
+			}
+		}
 	}
 
 }

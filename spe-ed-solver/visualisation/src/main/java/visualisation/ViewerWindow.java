@@ -5,16 +5,23 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.SwingConstants;
@@ -26,6 +33,8 @@ import utility.game.player.PlayerAction;
  * visualizing them.
  */
 public class ViewerWindow {
+
+	private static final String SAVE_BUTTON_NAME = "SAVE SLICE";
 
 	private static final int MIN_WINDOW_WIDTH = 700;
 	private static final int MIN_WINDOW_HEIGHT = 500;
@@ -59,8 +68,11 @@ public class ViewerWindow {
 	 *                              displayed.
 	 * @param playerType            a String representation of the Player-Type
 	 *                              represented by this {@link ViewerWindow}
+	 * @param saveSliceHandler      the {@link Consumer} to save {@link File files}
+	 *                              of {@link ViewerSlice slices}.
 	 */
-	public ViewerWindow(final IntConsumer timelineChangeHandler, final String playerType) {
+	public ViewerWindow(final IntConsumer timelineChangeHandler, final Consumer<File> saveSliceHandler,
+			final String playerType) {
 
 		// main panel of the whole window
 		JPanel mainPanel = new JPanel();
@@ -96,6 +108,21 @@ public class ViewerWindow {
 		roundInfoPanel.add(new JLabel("Required time:"));
 		roundInfoPanel.add(requiredTimeLabel);
 
+		JButton saveButton = new JButton(SAVE_BUTTON_NAME);
+		saveButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser fileChooser = new JFileChooser();
+				int userSelection = fileChooser.showSaveDialog(jFrame);
+
+				if (userSelection == JFileChooser.APPROVE_OPTION) {
+					File file = fileChooser.getSelectedFile();
+					saveSliceHandler.accept(file);
+				}
+			}
+		});
+		roundInfoPanel.add(saveButton);
+
 		playerTypeLabel.setText(playerType);
 		playerTypeLabel.setOpaque(true);
 		infoPanel.add(playerTypeLabel, BorderLayout.SOUTH);
@@ -116,6 +143,15 @@ public class ViewerWindow {
 
 		// show JFrame
 		jFrame.setVisible(true);
+	}
+
+	/**
+	 * Displays the given message as error message to the user.
+	 * 
+	 * @param message the message to display
+	 */
+	public void showErrorMessage(final String message) {
+		JOptionPane.showMessageDialog(jFrame, message, "Error", JOptionPane.ERROR_MESSAGE);
 	}
 
 	/**
