@@ -1,5 +1,4 @@
-# spe-ed-java
-
+# spe-ed-solver by team Lehnurr
 [German Readme](README.de-DE.md)
 
 - Tags for Build-Action, current version, passed tests, test coverage, docker action, ...
