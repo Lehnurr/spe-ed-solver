@@ -1,4 +1,4 @@
-package player.analysis.solver.reachablepoints.graph.board;
+package player.solver.reachablepoints.graph.board;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -9,9 +9,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import player.analysis.TestPlayer;
-import player.solver.reachablepoints.graph.board.Graph;
-import player.solver.reachablepoints.graph.board.Node;
+import player.MockPlayer;
 import utility.game.board.Board;
 import utility.game.board.Cell;
 import utility.game.board.CellValue;
@@ -33,14 +31,14 @@ public class GraphTest {
                 boardCells[i][j] = new Cell(CellValue.EMPTY_CELL);
 
         List<IPlayer> enemies = new ArrayList<>();
-        var player = new TestPlayer(1, PlayerDirection.UP, 1, new Point2i(0, 2), 1, true);
+        var player = new MockPlayer(1, PlayerDirection.UP, 1, new Point2i(0, 2), 1, true);
         boardCells[2][0] = new Cell(CellValue.PLAYER_ONE);
         boardCells[3][0] = new Cell(CellValue.PLAYER_ONE);
-        var enemy1 = new TestPlayer(2, PlayerDirection.DOWN, 1, new Point2i(2, 2), 1, true);
+        var enemy1 = new MockPlayer(2, PlayerDirection.DOWN, 1, new Point2i(2, 2), 1, true);
         boardCells[2][2] = new Cell(CellValue.PLAYER_TWO);
         boardCells[1][2] = new Cell(CellValue.PLAYER_TWO);
         enemies.add(enemy1);
-        var enemy2 = new TestPlayer(3, PlayerDirection.RIGHT, 1, new Point2i(4, 4), 1, true);
+        var enemy2 = new MockPlayer(3, PlayerDirection.RIGHT, 1, new Point2i(4, 4), 1, true);
         boardCells[4][4] = new Cell(CellValue.PLAYER_THREE);
         boardCells[4][3] = new Cell(CellValue.PLAYER_THREE);
         enemies.add(enemy2);
@@ -76,12 +74,12 @@ public class GraphTest {
 
         // next round
         enemies = new ArrayList<>();
-        player = new TestPlayer(1, PlayerDirection.UP, 1, new Point2i(0, 1), 1, true);
+        player = new MockPlayer(1, PlayerDirection.UP, 1, new Point2i(0, 1), 1, true);
         boardCells[1][0] = new Cell(CellValue.PLAYER_ONE);
-        enemy1 = new TestPlayer(2, PlayerDirection.DOWN, 1, new Point2i(2, 3), 1, true);
+        enemy1 = new MockPlayer(2, PlayerDirection.DOWN, 1, new Point2i(2, 3), 1, true);
         boardCells[3][2] = new Cell(CellValue.PLAYER_TWO);
         enemies.add(enemy1);
-        enemy2 = new TestPlayer(3, PlayerDirection.UP, 1, new Point2i(4, 3), 1, true);
+        enemy2 = new MockPlayer(3, PlayerDirection.UP, 1, new Point2i(4, 3), 1, true);
         boardCells[3][4] = new Cell(CellValue.PLAYER_THREE);
         enemies.add(enemy2);
         board = new Board<>(boardCells);

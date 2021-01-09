@@ -5,9 +5,8 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
-import player.analysis.LimitedQueue;
+import player.solver.reachablepoints.LimitedQueue;
 import player.solver.reachablepoints.graph.board.ConcreteEdge;
-import player.solver.reachablepoints.graph.board.Graph;
 import player.solver.reachablepoints.graph.board.Node;
 import utility.game.board.Board;
 import utility.game.player.PlayerAction;

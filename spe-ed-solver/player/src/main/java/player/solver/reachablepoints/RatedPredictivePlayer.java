@@ -1,9 +1,10 @@
-package player.analysis;
+package player.solver.reachablepoints;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import player.analysis.PredictivePlayer;
 import utility.game.board.Board;
 import utility.game.board.Cell;
 import utility.game.player.IPlayer;

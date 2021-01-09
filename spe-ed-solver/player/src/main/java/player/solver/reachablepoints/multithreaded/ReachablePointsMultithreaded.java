@@ -9,9 +9,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import player.analysis.ActionsRating;
-import player.analysis.RatedPredictivePlayer;
 import player.analysis.slowdown.SlowDown;
 import player.solver.reachablepoints.IReachablePoints;
+import player.solver.reachablepoints.RatedPredictivePlayer;
 import utility.game.board.Board;
 import utility.game.board.Cell;
 import utility.game.player.PlayerAction;

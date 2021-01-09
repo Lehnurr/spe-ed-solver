@@ -2,8 +2,8 @@ package player.solver.reachablepoints.singlethreaded;
 
 import java.util.Collection;
 
-import player.analysis.LimitedQueue;
-import player.analysis.RatedPredictivePlayer;
+import player.solver.reachablepoints.LimitedQueue;
+import player.solver.reachablepoints.RatedPredictivePlayer;
 import utility.game.board.Board;
 import utility.game.board.Cell;
 import utility.geometry.FloatMatrix;

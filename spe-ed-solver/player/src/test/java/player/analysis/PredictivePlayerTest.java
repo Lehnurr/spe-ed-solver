@@ -7,6 +7,7 @@ import java.util.HashSet;
 
 import org.junit.Test;
 
+import player.MockPlayer;
 import utility.game.board.Board;
 import utility.game.board.Cell;
 import utility.game.board.CellValue;
@@ -16,24 +17,24 @@ import utility.game.player.PlayerDirection;
 import utility.geometry.Point2i;
 
 public class PredictivePlayerTest {
-	
+
 	@Test
 	public void testInvalidParent() {
 		Board<Cell> board = createEmptyTestBoard();
 		board.getBoardCellAt(new Point2i(5, 6)).setCellValue(CellValue.PLAYER_FIVE);
-		IPlayer player = new TestPlayer(0, PlayerDirection.UP, 2, new Point2i(5, 5), 0, false);
+		IPlayer player = new MockPlayer(0, PlayerDirection.UP, 2, new Point2i(5, 5), 0, false);
 		PredictivePlayer startPlayer = new PredictivePlayer(player);
 
 		PredictivePlayer nextPlayer = new PredictivePlayer(startPlayer, PlayerAction.TURN_LEFT, board);
 
 		assertEquals(false, nextPlayer.isActive());
 	}
-	
+
 	@Test
 	public void testSelfCollision() {
 		Board<Cell> board = createEmptyTestBoard();
 		board.getBoardCellAt(new Point2i(5, 6)).setCellValue(CellValue.PLAYER_FIVE);
-		IPlayer player = new TestPlayer(0, PlayerDirection.UP, 2, new Point2i(5, 5), 0, true);
+		IPlayer player = new MockPlayer(0, PlayerDirection.UP, 2, new Point2i(5, 5), 0, true);
 		PredictivePlayer startPlayer = new PredictivePlayer(player);
 
 		PredictivePlayer nextPlayer0 = new PredictivePlayer(startPlayer, PlayerAction.TURN_LEFT, board);
@@ -44,12 +45,12 @@ public class PredictivePlayerTest {
 
 		assertEquals(false, nextPlayer4.isActive());
 	}
-	
+
 	@Test
 	public void testBoardCollision() {
 		Board<Cell> board = createEmptyTestBoard();
 		board.getBoardCellAt(new Point2i(5, 4)).setCellValue(CellValue.PLAYER_FIVE);
-		IPlayer player = new TestPlayer(0, PlayerDirection.UP, 2, new Point2i(5, 5), 0, true);
+		IPlayer player = new MockPlayer(0, PlayerDirection.UP, 2, new Point2i(5, 5), 0, true);
 		PredictivePlayer startPlayer = new PredictivePlayer(player);
 
 		PredictivePlayer nextPlayer = new PredictivePlayer(startPlayer, PlayerAction.SLOW_DOWN, board);
@@ -60,7 +61,7 @@ public class PredictivePlayerTest {
 	@Test
 	public void testChildSpeed() {
 		Board<Cell> board = createEmptyTestBoard();
-		IPlayer player = new TestPlayer(0, PlayerDirection.UP, 2, new Point2i(5, 5), 0, true);
+		IPlayer player = new MockPlayer(0, PlayerDirection.UP, 2, new Point2i(5, 5), 0, true);
 		PredictivePlayer startPlayer = new PredictivePlayer(player);
 
 		PredictivePlayer nextPlayer = new PredictivePlayer(startPlayer, PlayerAction.SLOW_DOWN, board);
@@ -72,7 +73,7 @@ public class PredictivePlayerTest {
 	@Test
 	public void testChildPosition() {
 		Board<Cell> board = createEmptyTestBoard();
-		IPlayer player = new TestPlayer(0, PlayerDirection.UP, 2, new Point2i(5, 5), 0, true);
+		IPlayer player = new MockPlayer(0, PlayerDirection.UP, 2, new Point2i(5, 5), 0, true);
 		PredictivePlayer startPlayer = new PredictivePlayer(player);
 
 		PredictivePlayer nextPlayer = new PredictivePlayer(startPlayer, PlayerAction.SPEED_UP, board);
@@ -83,7 +84,7 @@ public class PredictivePlayerTest {
 	@Test
 	public void testChildShortTail() {
 		Board<Cell> board = createEmptyTestBoard();
-		IPlayer player = new TestPlayer(0, PlayerDirection.UP, 2, new Point2i(5, 5), 0, true);
+		IPlayer player = new MockPlayer(0, PlayerDirection.UP, 2, new Point2i(5, 5), 0, true);
 		PredictivePlayer startPlayer = new PredictivePlayer(player);
 
 		PredictivePlayer nextPlayer = new PredictivePlayer(startPlayer, PlayerAction.SPEED_UP, board);
@@ -95,7 +96,7 @@ public class PredictivePlayerTest {
 	@Test
 	public void testChildShortTailJump() {
 		Board<Cell> board = createEmptyTestBoard();
-		IPlayer player = new TestPlayer(0, PlayerDirection.UP, 4, new Point2i(5, 5), 5, true);
+		IPlayer player = new MockPlayer(0, PlayerDirection.UP, 4, new Point2i(5, 5), 5, true);
 		PredictivePlayer startPlayer = new PredictivePlayer(player);
 
 		PredictivePlayer nextPlayer = new PredictivePlayer(startPlayer, PlayerAction.TURN_LEFT, board);

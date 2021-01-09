@@ -1,19 +1,19 @@
-package player.analysis;
+package player;
 
 import utility.game.player.IPlayer;
 import utility.game.player.PlayerDirection;
 import utility.geometry.Point2i;
 
-public class TestPlayer implements IPlayer{
-	
+public class MockPlayer implements IPlayer {
+
 	private final int playerId;
 	private final PlayerDirection direction;
 	private final int speed;
 	private final Point2i position;
 	private final int round;
 	private final boolean active;
-	
-	public TestPlayer(int playerId, PlayerDirection direction, int speed, Point2i position, int round, boolean active) {
+
+	public MockPlayer(int playerId, PlayerDirection direction, int speed, Point2i position, int round, boolean active) {
 		super();
 		this.playerId = playerId;
 		this.direction = direction;
@@ -52,7 +52,5 @@ public class TestPlayer implements IPlayer{
 	public boolean isActive() {
 		return active;
 	}
-	
-	
 
 }

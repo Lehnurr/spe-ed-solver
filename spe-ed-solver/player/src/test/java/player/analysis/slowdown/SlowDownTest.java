@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import player.MockPlayer;
 import player.analysis.ActionsRating;
-import player.analysis.TestPlayer;
 import utility.game.board.Board;
 import utility.game.board.Cell;
 import utility.game.board.CellValue;
@@ -20,7 +20,7 @@ public class SlowDownTest {
 	public void testSlowDownActionsRating() {
 		Board<Cell> board = createEmptyTestBoard();
 		board.getBoardCellAt(new Point2i(6, 0)).setCellValue(CellValue.MULTIPLE_PLAYER);
-		IPlayer player = new TestPlayer(0, PlayerDirection.DOWN, 2, new Point2i(5, 0), 0, true);
+		IPlayer player = new MockPlayer(0, PlayerDirection.DOWN, 2, new Point2i(5, 0), 0, true);
 
 		ActionsRating result = SlowDown.getActionsRating(player, board);
 

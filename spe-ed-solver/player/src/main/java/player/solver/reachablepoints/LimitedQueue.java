@@ -1,4 +1,4 @@
-package player.analysis;
+package player.solver.reachablepoints;
 
 import java.lang.reflect.Array;
 import java.util.NoSuchElementException;

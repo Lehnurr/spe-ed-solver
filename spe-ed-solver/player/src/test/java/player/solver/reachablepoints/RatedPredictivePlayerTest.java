@@ -1,9 +1,10 @@
-package player.analysis;
+package player.solver.reachablepoints;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import player.MockPlayer;
 import utility.game.board.Board;
 import utility.game.board.Cell;
 import utility.game.player.IPlayer;
@@ -16,7 +17,7 @@ public class RatedPredictivePlayerTest {
 
 	@Test
 	public void testInitialRelativeRound() {
-		IPlayer player = new TestPlayer(0, PlayerDirection.UP, 2, new Point2i(5, 5), 0, true);
+		IPlayer player = new MockPlayer(0, PlayerDirection.UP, 2, new Point2i(5, 5), 0, true);
 
 		RatedPredictivePlayer startPlayer = new RatedPredictivePlayer(player);
 
@@ -26,7 +27,7 @@ public class RatedPredictivePlayerTest {
 	@Test
 	public void testChildRelativeRound() {
 		Board<Cell> board = createEmptyTestBoard();
-		IPlayer player = new TestPlayer(0, PlayerDirection.UP, 2, new Point2i(5, 5), 0, true);
+		IPlayer player = new MockPlayer(0, PlayerDirection.UP, 2, new Point2i(5, 5), 0, true);
 		RatedPredictivePlayer startPlayer = new RatedPredictivePlayer(player);
 		FloatMatrix probabilitites = new FloatMatrix(10, 10, 0);
 		FloatMatrix minSteps = new FloatMatrix(10, 10, 0);
@@ -40,7 +41,7 @@ public class RatedPredictivePlayerTest {
 	@Test
 	public void testSuccessCalculation() {
 		Board<Cell> board = createEmptyTestBoard();
-		IPlayer player = new TestPlayer(0, PlayerDirection.UP, 4, new Point2i(5, 5), 0, true);
+		IPlayer player = new MockPlayer(0, PlayerDirection.UP, 4, new Point2i(5, 5), 0, true);
 		RatedPredictivePlayer startPlayer = new RatedPredictivePlayer(player);
 		FloatMatrix probabilitites = new FloatMatrix(10, 10, 0);
 		FloatMatrix minSteps = new FloatMatrix(10, 10, 0);
@@ -51,17 +52,17 @@ public class RatedPredictivePlayerTest {
 		minSteps.setValue(new Point2i(5, 3), 2);
 		probabilitites.setValue(new Point2i(5, 2), 0.3f);
 		minSteps.setValue(new Point2i(5, 2), 0);
-		
+
 		RatedPredictivePlayer nextPlayer = new RatedPredictivePlayer(startPlayer, PlayerAction.CHANGE_NOTHING, board,
 				probabilitites, minSteps);
 
 		assertEquals(0.5f, nextPlayer.getSuccessRating(), 0.001f);
 	}
-	
+
 	@Test
 	public void testChildSuccessCalculation() {
 		Board<Cell> board = createEmptyTestBoard();
-		IPlayer player = new TestPlayer(0, PlayerDirection.UP, 2, new Point2i(5, 5), 0, true);
+		IPlayer player = new MockPlayer(0, PlayerDirection.UP, 2, new Point2i(5, 5), 0, true);
 		RatedPredictivePlayer startPlayer = new RatedPredictivePlayer(player);
 		FloatMatrix probabilitites = new FloatMatrix(10, 10, 0);
 		FloatMatrix minSteps = new FloatMatrix(10, 10, 0);
@@ -70,7 +71,7 @@ public class RatedPredictivePlayerTest {
 		minSteps.setValue(new Point2i(5, 4), 1);
 		probabilitites.setValue(new Point2i(5, 2), 0.2f);
 		minSteps.setValue(new Point2i(5, 2), 0);
-		
+
 		RatedPredictivePlayer nextPlayer0 = new RatedPredictivePlayer(startPlayer, PlayerAction.CHANGE_NOTHING, board,
 				probabilitites, minSteps);
 		RatedPredictivePlayer nextPlayer1 = new RatedPredictivePlayer(nextPlayer0, PlayerAction.CHANGE_NOTHING, board,
@@ -78,11 +79,11 @@ public class RatedPredictivePlayerTest {
 
 		assertEquals(0.4f, nextPlayer1.getSuccessRating(), 0.001f);
 	}
-	
+
 	@Test
 	public void testCutOffCalculation() {
 		Board<Cell> board = createEmptyTestBoard();
-		IPlayer player = new TestPlayer(0, PlayerDirection.UP, 4, new Point2i(5, 5), 0, true);
+		IPlayer player = new MockPlayer(0, PlayerDirection.UP, 4, new Point2i(5, 5), 0, true);
 		RatedPredictivePlayer startPlayer = new RatedPredictivePlayer(player);
 		FloatMatrix probabilitites = new FloatMatrix(10, 10, 0);
 		FloatMatrix minSteps = new FloatMatrix(10, 10, 0);
@@ -99,11 +100,11 @@ public class RatedPredictivePlayerTest {
 
 		assertEquals(0.15f, nextPlayer.getCutOffRating(), 0.001f);
 	}
-	
+
 	@Test
 	public void testChildCutOffCalculation() {
 		Board<Cell> board = createEmptyTestBoard();
-		IPlayer player = new TestPlayer(0, PlayerDirection.UP, 2, new Point2i(5, 5), 0, true);
+		IPlayer player = new MockPlayer(0, PlayerDirection.UP, 2, new Point2i(5, 5), 0, true);
 		RatedPredictivePlayer startPlayer = new RatedPredictivePlayer(player);
 		FloatMatrix probabilitites = new FloatMatrix(10, 10, 0);
 		FloatMatrix minSteps = new FloatMatrix(10, 10, 0);
@@ -112,7 +113,7 @@ public class RatedPredictivePlayerTest {
 		minSteps.setValue(new Point2i(5, 4), 10);
 		probabilitites.setValue(new Point2i(5, 2), 0.2f);
 		minSteps.setValue(new Point2i(5, 2), 10);
-		
+
 		RatedPredictivePlayer nextPlayer0 = new RatedPredictivePlayer(startPlayer, PlayerAction.CHANGE_NOTHING, board,
 				probabilitites, minSteps);
 		RatedPredictivePlayer nextPlayer1 = new RatedPredictivePlayer(nextPlayer0, PlayerAction.CHANGE_NOTHING, board,
