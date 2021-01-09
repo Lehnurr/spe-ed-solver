@@ -23,13 +23,13 @@ public enum PlayerType {
 	GRAPH_AGGRESSIVE {
 		@Override
 		public ISpeedSolverPlayer newInstance() {
-			return new GraphPlayer(7, 0.4f, 0.05f);
+			return new GraphPlayer(7, 0.4f, 0.01f);
 		}
 	},
 	GRAPH_DEFENSIVE {
 		@Override
 		public ISpeedSolverPlayer newInstance() {
-			return new GraphPlayer(7, 0.175f, 0.425f);
+			return new GraphPlayer(7, 0.1f, 0.35f);
 		}
 	},
 	GRAPH_DYNAMIC {
