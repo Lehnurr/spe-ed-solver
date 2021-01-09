@@ -8,6 +8,8 @@ import java.util.Map;
 import player.analysis.LimitedQueue;
 import player.solver.reachablepoints.graph.board.ConcreteEdge;
 import player.solver.reachablepoints.graph.board.Graph;
+import player.solver.reachablepoints.graph.board.Node;
+import utility.game.board.Board;
 import utility.game.player.PlayerAction;
 import utility.game.step.Deadline;
 import utility.geometry.FloatMatrix;
@@ -36,7 +38,7 @@ public class GraphCalculation {
 	private final Map<PlayerAction, FloatMatrix> cutOffMatrixResult;
 
 	private int calculatedPathsCount = 0;
-	private final Graph graph;
+	private final Board<Node> graph;
 
 	/**
 	 * Creates a new {@link GraphCalculation} object.
@@ -49,7 +51,7 @@ public class GraphCalculation {
 	 * @param deadline      {@link Deadline} to limit execution time
 	 * @param queueSize     The maximum Size of elements in the queue
 	 */
-	public GraphCalculation(final Graph graph, final FloatMatrix probabilities, final FloatMatrix minSteps,
+	public GraphCalculation(final Board<Node> graph, final FloatMatrix probabilities, final FloatMatrix minSteps,
 			final Map<PlayerAction, ConcreteEdge> initialEdges, final Deadline deadline, int queueSize) {
 
 		this.probabilities = probabilities;
@@ -83,7 +85,7 @@ public class GraphCalculation {
 	 *                      round
 	 * @param deadline      {@link Deadline} to limit execution time
 	 */
-	public GraphCalculation(Graph graph, FloatMatrix probabilities, FloatMatrix minSteps,
+	public GraphCalculation(Board<Node> graph, FloatMatrix probabilities, FloatMatrix minSteps,
 			final Map<PlayerAction, ConcreteEdge> initialEdges, Deadline deadline) {
 		this(graph, probabilities, minSteps, initialEdges, deadline, DEFAULT_QUEUE_SIZE);
 	}

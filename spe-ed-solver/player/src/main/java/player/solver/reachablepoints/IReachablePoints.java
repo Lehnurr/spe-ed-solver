@@ -5,6 +5,7 @@ import java.util.Map;
 import player.analysis.ActionsRating;
 import utility.game.board.Board;
 import utility.game.board.Cell;
+import utility.game.board.IBoardCell;
 import utility.game.player.IPlayer;
 import utility.game.player.PlayerAction;
 import utility.game.step.Deadline;
@@ -15,7 +16,7 @@ import utility.geometry.FloatMatrix;
  * for calculating the success and cut off {@link ActionsRating ratings} for the
  * given information. Results should be stored until they are updated.
  */
-public interface IReachablePoints {
+public interface IReachablePoints<CellType extends IBoardCell<?>> {
 
 	/**
 	 * Performs the calculation with the given values and updates the stored
@@ -29,7 +30,7 @@ public interface IReachablePoints {
 	 *                      for each element
 	 * @param deadline      {@link Deadline} which must not be exceeded
 	 */
-	void performCalculation(IPlayer self, Board<Cell> board, FloatMatrix probabilities, FloatMatrix minSteps,
+	void performCalculation(IPlayer self, Board<CellType> board, FloatMatrix probabilities, FloatMatrix minSteps,
 			Deadline deadline);
 
 	/**
@@ -49,18 +50,18 @@ public interface IReachablePoints {
 	ActionsRating getCutOffRatingsResult();
 
 	/**
-	 * Returns a {@link Map} mapping each {@link PlayerAction} to a
-	 * {@link FloatMatrix} containing the success ratings for each element.
+	 * Returns a {@link FloatMatrix} containing the success ratings the given action
 	 * 
-	 * @return success matrices map
+	 * @param action the action for which the matrix is to be retrieved
+	 * @return success matrix for the fiven action
 	 */
-	Map<PlayerAction, FloatMatrix> getSuccessMatrixResult();
+	FloatMatrix getSuccessMatrixResult(PlayerAction action);
 
 	/**
-	 * Returns a {@link Map} mapping each {@link PlayerAction} to a
-	 * {@link FloatMatrix} containing the cut off ratings for each element.
+	 * Returns a {@link FloatMatrix} containing the cut off ratings the given action
 	 * 
-	 * @return cut off matrices map
+	 * @param action the action for which the matrix is to be retrieved
+	 * @return cut off matrix for the fiven action
 	 */
-	Map<PlayerAction, FloatMatrix> getCutOffMatrixResult();
+	FloatMatrix getCutOffMatrixResult(PlayerAction action);
 }

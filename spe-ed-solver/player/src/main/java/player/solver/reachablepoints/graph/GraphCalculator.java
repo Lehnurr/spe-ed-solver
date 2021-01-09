@@ -7,8 +7,11 @@ import java.util.List;
 import java.util.Map;
 
 import player.analysis.ActionsRating;
+import player.solver.reachablepoints.IReachablePoints;
 import player.solver.reachablepoints.graph.board.ConcreteEdge;
 import player.solver.reachablepoints.graph.board.Graph;
+import player.solver.reachablepoints.graph.board.Node;
+import utility.game.board.Board;
 import utility.game.player.IPlayer;
 import utility.game.player.PlayerAction;
 import utility.game.step.Deadline;
@@ -19,7 +22,7 @@ import utility.logging.GameLogger;
  * Calculator class calculating success and cut off ratings as
  * {@link ActionsRating} objects and storing the last calculated results.
  */
-public class GraphCalculator {
+public class GraphCalculator implements IReachablePoints<Node> {
 	private static final int MAX_THREAD_COUNT = 1;
 
 	private ActionsRating successRatingsResult;
@@ -36,15 +39,15 @@ public class GraphCalculator {
 	 * results.
 	 * 
 	 * @param self          {@link IPlayer} of yourself in the spe_ed game
+	 * @param graph         The Graph board to find the edges
 	 * @param probabilities {@link FloatMatrix} containing the enemy probability
 	 *                      values
 	 * @param minSteps      {@link FloatMatrix} containing the minimum enemy steps
 	 *                      for each element
 	 * @param deadline      {@link Deadline} which must not be exceeded
-	 * @param graph         The Graph board to find the edges
 	 */
-	public void performCalculation(final IPlayer self, final FloatMatrix probabilities, final FloatMatrix minSteps,
-			final Deadline deadline, final Graph graph) {
+	public void performCalculation(final IPlayer self, final Board<Node> graph, final FloatMatrix probabilities,
+			final FloatMatrix minSteps, final Deadline deadline) {
 
 		final List<RatedPredictiveGraphPlayer> startPlayers = RatedPredictiveGraphPlayer.getValidChildren(self, graph,
 				probabilities, minSteps, new ConcreteEdge[0], new HashMap<>());
@@ -86,7 +89,8 @@ public class GraphCalculator {
 	 * @return {@link GraphCalculation} objects
 	 */
 	private List<GraphCalculation> getCalculations(final List<RatedPredictiveGraphPlayer> startPlayers,
-			final FloatMatrix probabilities, final FloatMatrix minSteps, final Deadline deadline, final Graph graph) {
+			final FloatMatrix probabilities, final FloatMatrix minSteps, final Deadline deadline,
+			final Board<Node> graph) {
 
 		// determine the initial edges based on the startplayers
 		Map<PlayerAction, ConcreteEdge> initialEdges = new EnumMap<>(PlayerAction.class);
@@ -227,22 +231,10 @@ public class GraphCalculator {
 		return invertedImportanceResult;
 	}
 
-	/**
-	 * Returns a {@link Map} mapping each {@link PlayerAction} to a
-	 * {@link FloatMatrix} containing the success ratings for each element.
-	 * 
-	 * @return success matrices map
-	 */
 	public FloatMatrix getSuccessMatrixResult(PlayerAction action) {
 		return successMatrixResult.get(action);
 	}
 
-	/**
-	 * Returns a {@link Map} mapping each {@link PlayerAction} to a
-	 * {@link FloatMatrix} containing the cut off ratings for each element.
-	 * 
-	 * @return cut off matrices map
-	 */
 	public FloatMatrix getCutOffMatrixResult(PlayerAction action) {
 		return cutOffMatrixResult.get(action);
 	}
@@ -267,5 +259,4 @@ public class GraphCalculator {
 		return successActionsRating.combine(cutOffActionsRating, cutOffWeight).combine(importanceResult,
 				importanceWeight);
 	}
-
 }

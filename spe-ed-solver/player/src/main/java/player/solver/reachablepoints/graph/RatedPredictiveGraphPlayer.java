@@ -7,6 +7,8 @@ import java.util.Map;
 
 import player.solver.reachablepoints.graph.board.ConcreteEdge;
 import player.solver.reachablepoints.graph.board.Graph;
+import player.solver.reachablepoints.graph.board.Node;
+import utility.game.board.Board;
 import utility.game.player.IPlayer;
 import utility.game.player.PlayerAction;
 import utility.game.player.PlayerDirection;
@@ -66,7 +68,7 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	 * @param minSteps      The Min-Steps matrix
 	 * @return All valid Children
 	 */
-	public List<RatedPredictiveGraphPlayer> getValidChildren(Graph graph, FloatMatrix probabilities,
+	public List<RatedPredictiveGraphPlayer> getValidChildren(Board<Node> graph, FloatMatrix probabilities,
 			FloatMatrix minSteps, final ConcreteEdge[] initialEdges) {
 		return getValidChildren(this, this.getSuccessRating(), this.getInitialAction(), this.getRelativeRound(),
 				this.edgeTail, graph, probabilities, minSteps, initialEdges, this.getInitialEdgeIncrements());
@@ -81,7 +83,7 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	 * @param minSteps      The Min-Steps matrix
 	 * @return All valid Children
 	 */
-	public static List<RatedPredictiveGraphPlayer> getValidChildren(IPlayer parent, Graph graph,
+	public static List<RatedPredictiveGraphPlayer> getValidChildren(IPlayer parent, Board<Node> graph,
 			FloatMatrix probabilities, FloatMatrix minSteps, final ConcreteEdge[] initialEdges,
 			final Map<ConcreteEdge, Integer> parentInitialEdgeIncrements) {
 		return getValidChildren(parent, 1, null, 0, new ArrayList<>(), graph, probabilities, minSteps, initialEdges,
@@ -103,7 +105,7 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	 * @return All valid Children
 	 */
 	private static List<RatedPredictiveGraphPlayer> getValidChildren(IPlayer parent, float parentSuccessRating,
-			PlayerAction initialAction, int relativeRound, List<ConcreteEdge> parentEdgeTail, Graph graph,
+			PlayerAction initialAction, int relativeRound, List<ConcreteEdge> parentEdgeTail, Board<Node> graph,
 			FloatMatrix probabilities, FloatMatrix minSteps, final ConcreteEdge[] initialEdges,
 			final Map<ConcreteEdge, Integer> parentInitialEdgeIncrements) {
 		// TODO: Too many parameters

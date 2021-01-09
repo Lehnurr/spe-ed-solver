@@ -21,7 +21,7 @@ import utility.logging.GameLogger;
  * {@link GradualReachablePointsCalculation} objects which are repeatedly
  * alternated to distribute the resources equally.
  */
-public class ReachablePointsSingleThreaded implements IReachablePoints {
+public class ReachablePointsSingleThreaded implements IReachablePoints<Cell> {
 
 	private static final int DEADLINE_MILLISECOND_BUFFER = 500;
 
@@ -125,20 +125,12 @@ public class ReachablePointsSingleThreaded implements IReachablePoints {
 	}
 
 	@Override
-	public Map<PlayerAction, FloatMatrix> getSuccessMatrixResult() {
-		final Map<PlayerAction, FloatMatrix> result = new EnumMap<>(PlayerAction.class);
-		for (final PlayerAction action : PlayerAction.values()) {
-			result.put(action, calculations.get(action).getSuccessMatrixResult());
-		}
-		return result;
+	public FloatMatrix getSuccessMatrixResult(PlayerAction action) {
+		return calculations.get(action).getSuccessMatrixResult();
 	}
 
 	@Override
-	public Map<PlayerAction, FloatMatrix> getCutOffMatrixResult() {
-		final Map<PlayerAction, FloatMatrix> result = new EnumMap<>(PlayerAction.class);
-		for (final PlayerAction action : PlayerAction.values()) {
-			result.put(action, calculations.get(action).getCutOffMatrixResult());
-		}
-		return result;
+	public FloatMatrix getCutOffMatrixResult(PlayerAction action) {
+		return calculations.get(action).getCutOffMatrixResult();
 	}
 }

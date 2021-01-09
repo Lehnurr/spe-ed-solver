@@ -26,7 +26,7 @@ import utility.logging.LoggingLevel;
  * Calculator class calculating success and cut off ratings as
  * {@link ActionsRating} objects and storing the last calculated results.
  */
-public class ReachablePointsMultithreaded implements IReachablePoints {
+public class ReachablePointsMultithreaded implements IReachablePoints<Cell> {
 
 	private static final int DEADLINE_MILLISECOND_INTERRUPT = 250;
 
@@ -179,12 +179,12 @@ public class ReachablePointsMultithreaded implements IReachablePoints {
 	}
 
 	@Override
-	public Map<PlayerAction, FloatMatrix> getSuccessMatrixResult() {
-		return Collections.unmodifiableMap(successMatrixResult);
+	public FloatMatrix getSuccessMatrixResult(PlayerAction action) {
+		return successMatrixResult.get(action);
 	}
 
 	@Override
-	public Map<PlayerAction, FloatMatrix> getCutOffMatrixResult() {
-		return Collections.unmodifiableMap(cutOffMatrixResult);
+	public FloatMatrix getCutOffMatrixResult(PlayerAction action) {
+		return cutOffMatrixResult.get(action);
 	}
 }

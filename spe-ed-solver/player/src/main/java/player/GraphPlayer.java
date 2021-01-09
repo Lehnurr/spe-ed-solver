@@ -52,9 +52,9 @@ public class GraphPlayer implements ISpeedSolverPlayer {
                                 enemySearchDepth);
 
                 // Calculate the Action
-                graphCalculator.performCalculation(gameStep.getSelf(),
+                graphCalculator.performCalculation(gameStep.getSelf(), graph,
                                 enemyProbabilityCalculator.getProbabilitiesMatrix(),
-                                enemyProbabilityCalculator.getMinStepsMatrix(), gameStep.getDeadline(), graph);
+                                enemyProbabilityCalculator.getMinStepsMatrix(), gameStep.getDeadline());
 
                 // Combine the results
                 final ActionsRating combinedActionsRating = graphCalculator.combineActionsRating(importanceWeight,
