@@ -5,10 +5,12 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import player.analysis.ActionsRating;
 import player.solver.reachablepoints.graph.RatedPredictiveGraphPlayer;
 import player.solver.reachablepoints.graph.board.ConcreteEdge;
+import player.solver.reachablepoints.graph.board.Node;
 import utility.game.player.PlayerAction;
 import utility.geometry.FloatMatrix;
 
@@ -43,10 +45,10 @@ public class EdgeImportance {
      *                       {@link FloatMatrix}
      * @param initialPlayers the possible players for doing one action
      */
-    public EdgeImportance(int width, int height, final List<RatedPredictiveGraphPlayer> initialPlayers) {
+    public EdgeImportance(final int width, final int height, final List<RatedPredictiveGraphPlayer> initialPlayers) {
         this(height, width);
         // determine the initial edges based on the startplayers
-        for (final var startPlayer : initialPlayers) {
+        for (final RatedPredictiveGraphPlayer startPlayer : initialPlayers) {
             final ConcreteEdge initialEdge = startPlayer.getEdgeTail().get(0);
             this.initialEdges.put(startPlayer.getInitialAction(), initialEdge);
             this.initialEdgeImportance.put(initialEdge, 0);
@@ -64,7 +66,7 @@ public class EdgeImportance {
      */
     public EdgeImportance(int width, int height, final Map<PlayerAction, ConcreteEdge> initialEdges) {
         this(height, width);
-        for (final var entry : initialEdges.entrySet()) {
+        for (final Entry<PlayerAction, ConcreteEdge> entry : initialEdges.entrySet()) {
             this.initialEdges.put(entry.getKey(), entry.getValue());
             this.initialEdgeImportance.put(entry.getValue(), 0);
         }
@@ -84,8 +86,8 @@ public class EdgeImportance {
      * 
      * @param initialEdgeIncrements a Map to link an increment to an edge
      */
-    public void add(Map<ConcreteEdge, Integer> initialEdgeIncrements) {
-        for (var entry : initialEdgeIncrements.entrySet()) {
+    public void add(final Map<ConcreteEdge, Integer> initialEdgeIncrements) {
+        for (final Entry<ConcreteEdge, Integer> entry : initialEdgeIncrements.entrySet()) {
             this.initialEdgeImportance.computeIfPresent(entry.getKey(), (k, v) -> v + entry.getValue());
         }
 
@@ -99,7 +101,7 @@ public class EdgeImportance {
      * @param other a {@link EdgeImportance} whose edge-increments should be added
      *              to the edge increments of this instance
      */
-    public void add(EdgeImportance other) {
+    public void add(final EdgeImportance other) {
         for (final ConcreteEdge edge : other.initialEdgeImportance.keySet()) {
             this.initialEdgeImportance.computeIfPresent(edge, (k, v) -> v + other.initialEdgeImportance.get(k));
         }
@@ -126,7 +128,7 @@ public class EdgeImportance {
             if (maxImportance == 0)
                 return invertedRatingResult;
 
-            for (final var entry : initialEdges.entrySet()) {
+            for (final Entry<PlayerAction, ConcreteEdge> entry : initialEdges.entrySet()) {
                 final float normalizedImportance = initialEdgeImportance.getOrDefault(entry.getValue(), 0)
                         / (float) maxImportance;
 
@@ -161,7 +163,7 @@ public class EdgeImportance {
                         / (float) maxImportance;
 
                 final float invertedNormalizedImportance = 1 - normalizedImportance;
-                for (final var cell : initialEdge.getPath()) {
+                for (final Node cell : initialEdge.getPath()) {
                     invertedMatrixResult.setValue(cell.getPosition(), invertedNormalizedImportance);
                 }
             }

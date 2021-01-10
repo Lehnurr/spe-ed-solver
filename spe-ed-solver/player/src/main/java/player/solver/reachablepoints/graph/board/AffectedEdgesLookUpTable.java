@@ -28,7 +28,7 @@ public final class AffectedEdgesLookUpTable {
          */
         static {
                 // Initilize with a HashMap because it is more readable
-                var edgesHashMap = new HashMap<Vector2i, int[]>();
+                Map<Vector2i, int[]> edgesHashMap = new HashMap<>();
                 // #region Add affected Edges of west Nodes
                 edgesHashMap.put(new Vector2i(-1, 0),
                                 new int[] { Node.getIntegerIndex(PlayerDirection.RIGHT, true, 1),

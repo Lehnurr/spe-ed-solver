@@ -55,7 +55,7 @@ public final class ConcreteEdge extends LineSegment2i implements IEdge {
      * checks whether two edges intersect
      */
     public boolean intersect(final ConcreteEdge other) {
-
+        // TODO:reduce complexity
         if (this.getStepCount() <= 2 || other.getStepCount() <= 2) {
 
             if (this.getStepCount() <= 2 && other.getStepCount() <= 2) {

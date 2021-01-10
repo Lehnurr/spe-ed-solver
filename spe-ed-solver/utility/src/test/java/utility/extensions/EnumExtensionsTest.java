@@ -11,8 +11,8 @@ public class EnumExtensionsTest {
 
     @Test
     public void testGetRandomValue() {
-        var randomEnumValue = EnumExtensions.getRandomValue(PlayerDirection.class);
-        var originalValue = PlayerDirection.values()[randomEnumValue.ordinal()];
+        final PlayerDirection randomEnumValue = EnumExtensions.getRandomValue(PlayerDirection.class);
+        final PlayerDirection originalValue = PlayerDirection.values()[randomEnumValue.ordinal()];
         assertNotNull(randomEnumValue);
         assertEquals(randomEnumValue, originalValue);
     }

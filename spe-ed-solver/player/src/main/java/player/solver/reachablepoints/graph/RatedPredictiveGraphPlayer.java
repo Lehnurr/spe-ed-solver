@@ -111,7 +111,7 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 		List<RatedPredictiveGraphPlayer> children = new ArrayList<>();
 		boolean doJump = (parent.getRound() + 1) % 6 == 0;
 
-		for (var action : PlayerAction.values()) {
+		for (final PlayerAction action : PlayerAction.values()) {
 
 			int childSpeed = parent.getSpeed();
 			PlayerDirection childDirection = parent.getDirection();
@@ -129,8 +129,8 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 
 			PlayerAction childInitialAction = initialAction == null ? action : initialAction;
 
-			final var child = new RatedPredictiveGraphPlayer(parent, childSpeed, childDirection, childInitialAction,
-					relativeRound, parentEdgeTail);
+			final RatedPredictiveGraphPlayer child = new RatedPredictiveGraphPlayer(parent, childSpeed, childDirection,
+					childInitialAction, relativeRound, parentEdgeTail);
 
 			final ConcreteEdge edge = graph.getBoardCellAt(parent.getPosition()).getEdge(childDirection, doJump,
 					childSpeed);
@@ -160,7 +160,7 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	private float calculateSuccessRating(final float parentSuccessRating, final FloatMatrix probabilities,
 			final FloatMatrix minSteps, final ConcreteEdge lastEdge) {
 		float successFactor = 1;
-		for (final var node : lastEdge.getPath()) {
+		for (final Node node : lastEdge.getPath()) {
 			if (relativeRound >= minSteps.getValue(node.getPosition()))
 				successFactor = Math.min(successFactor, 1 - probabilities.getValue(node.getPosition()));
 		}
@@ -182,7 +182,7 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 			final ConcreteEdge lastEdge, final float successRating) {
 
 		float cutOff = 0;
-		for (final var node : lastEdge.getPath()) {
+		for (final Node node : lastEdge.getPath()) {
 			if (relativeRound < minSteps.getValue(node.getPosition())) {
 				cutOff = Math.max(cutOff, probabilities.getValue(node.getPosition()));
 			}
@@ -229,7 +229,7 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	 */
 	private boolean addEdge(ConcreteEdge edge) {
 
-		for (var tailPart : this.edgeTail) {
+		for (final ConcreteEdge tailPart : this.edgeTail) {
 			if (tailPart.intersect(edge))
 				return false;
 		}
@@ -274,7 +274,7 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	 * @return true if the edge has been added and the results are updated. false if
 	 *         the edge has not been added and the results have not changed
 	 */
-	public boolean addEdgeAndCalculateRating(final float parentSuccessRating, final FloatMatrix probabilities,
+	private boolean addEdgeAndCalculateRating(final float parentSuccessRating, final FloatMatrix probabilities,
 			final FloatMatrix minSteps, final ConcreteEdge[] initialEdges,
 			final Map<ConcreteEdge, Integer> parentInitialEdgeIncrements, final ConcreteEdge edge) {
 		if (addEdge(edge)) {

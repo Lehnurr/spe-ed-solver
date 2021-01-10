@@ -32,7 +32,7 @@ public final class SimulationDeadline implements Deadline {
     public void resetDeadLine() {
 
         // random number of seconds between min and max
-        var deadLineSeconds = random.nextInt(maxSeconds - minSeconds + 1) + minSeconds;
+        final int deadLineSeconds = random.nextInt(maxSeconds - minSeconds + 1) + minSeconds;
         this.deadline = ZonedDateTime.now().plusSeconds(deadLineSeconds);
     }
 

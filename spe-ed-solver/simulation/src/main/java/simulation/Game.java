@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,11 +19,12 @@ import utility.game.player.PlayerAction;
 import utility.game.player.PlayerDirection;
 import utility.game.step.GameStep;
 import utility.geometry.Point2i;
+import utility.geometry.Vector2i;
 
 /**
  * A simulated spe_ed Game
  */
-public class Game {
+public final class Game {
     private static final int JUMP_FREQUENCY = 6;
 
     private final Board<Cell> board;
@@ -38,8 +40,8 @@ public class Game {
      * @param width       Widht of the Board
      * @param playerCount Number of Simulated Players
      */
-    public Game(int height, int width, int playerCount) {
-        var cells = new Cell[height][width];
+    public Game(final int height, final int width, final int playerCount) {
+        final Cell[][] cells = new Cell[height][width];
         for (int row = 0; row < height; row++)
             for (int col = 0; col < width; col++)
                 cells[row][col] = new Cell(0);
@@ -57,13 +59,13 @@ public class Game {
      */
     public List<GameStep> startSimulation() {
         // Initialize Players with a random startposition and a random direction
-        Set<Point2i> notAvailableStartPositions = new HashSet<>();
+        final Set<Point2i> notAvailableStartPositions = new HashSet<>();
         for (int playerIndex = 0; playerIndex < players.length; playerIndex++) {
 
             Point2i randomStartPosition;
             do {
-                var randomX = random.nextInt(board.getWidth());
-                var randomY = random.nextInt(board.getHeight());
+                final int randomX = random.nextInt(board.getWidth());
+                final int randomY = random.nextInt(board.getHeight());
                 randomStartPosition = new Point2i(randomX, randomY);
             } while (notAvailableStartPositions.contains(randomStartPosition));
 
@@ -74,7 +76,7 @@ public class Game {
 
             PlayerDirection randomStartDirection = EnumExtensions.getRandomValue(PlayerDirection.class);
 
-            int playerId = playerIndex + 1;
+            final int playerId = playerIndex + 1;
             this.players[playerIndex] = new SimulationPlayer(playerId, randomStartPosition, randomStartDirection,
                     SimulationPlayer.MIN_SPEED, 0);
             setCell(randomStartPosition, playerId);
@@ -95,8 +97,8 @@ public class Game {
      * @return The next Game-State, if all Players sent an {@link PlayerAction
      *         action} for this round. Else {@code null}
      */
-    public List<GameStep> setAction(int playerId, PlayerAction action) {
-        var currentPlayer = this.players[playerId - 1];
+    public List<GameStep> setAction(final int playerId, final PlayerAction action) {
+        final SimulationPlayer currentPlayer = this.players[playerId - 1];
 
         currentPlayer.setNextAction(action);
 
@@ -117,17 +119,17 @@ public class Game {
     }
 
     private List<GameStep> generateGameSteps() {
-        List<GameStep> gameSteps = new ArrayList<>();
+        final List<GameStep> gameSteps = new ArrayList<>();
 
         // is running when more then one player is active
         boolean isRunning = Arrays.stream(players).filter(SimulationPlayer::isActive).count() > 1;
 
         long remainingDeadlineMilliseconds = deadline.getRemainingMilliseconds();
-        for (var player : this.players) {
-            var enemies = Arrays.stream(this.players).filter(p -> p != player)
+        for (final SimulationPlayer player : this.players) {
+            final Map<Integer, IPlayer> enemies = Arrays.stream(this.players).filter(p -> p != player)
                     .collect(Collectors.toMap(SimulationPlayer::getPlayerId, IPlayer.class::cast));
 
-            var individualDeadline = new PlayerDeadline(remainingDeadlineMilliseconds);
+            final PlayerDeadline individualDeadline = new PlayerDeadline(remainingDeadlineMilliseconds);
 
             gameSteps.add(new GameStep((IPlayer) player, enemies, individualDeadline, board, isRunning));
         }
@@ -141,13 +143,14 @@ public class Game {
     private void updateGameState() {
         HashMap<Point2i, Integer> newPassedCells = new HashMap<>();
 
-        for (var player : this.players) {
+        for (final SimulationPlayer player : this.players) {
             if (!player.isActive())
                 continue;
 
             // calculate the Vector to the first step by moving back (speed - 1) steps
-            var firstStepVector = player.getDirection().getDirectionVector().multiply((player.getSpeed() - 1) * -1);
-            var firstStepPosition = player.getPosition().translate(firstStepVector);
+            final Vector2i firstStepVector = player.getDirection().getDirectionVector()
+                    .multiply((player.getSpeed() - 1) * -1);
+            final Point2i firstStepPosition = player.getPosition().translate(firstStepVector);
 
             applyPassedSteps(player, firstStepPosition, newPassedCells);
         }
@@ -164,12 +167,12 @@ public class Game {
      * @param passedCellsThisRound Cells that have already been used by a player in
      *                             this round
      */
-    private void applyPassedSteps(SimulationPlayer player, Point2i oldPosition,
-            HashMap<Point2i, Integer> passedCellsThisRound) {
+    private void applyPassedSteps(final SimulationPlayer player, final Point2i oldPosition,
+            final HashMap<Point2i, Integer> passedCellsThisRound) {
         // calculate the passed steps
-        List<Point2i> steps = getPassedSteps(oldPosition, player.getPosition());
+        final List<Point2i> steps = getPassedSteps(oldPosition, player.getPosition());
 
-        for (var step : steps) {
+        for (final Point2i step : steps) {
             if (setCell(step, player.getPlayerId()) == CellValue.MULTIPLE_PLAYER) {
                 player.die();
             }
@@ -191,7 +194,7 @@ public class Game {
      * 
      * @return The passed Cells (Jumped over cells are excluded)
      */
-    private List<Point2i> getPassedSteps(Point2i positionA, Point2i positionB) {
+    private List<Point2i> getPassedSteps(final Point2i positionA, final Point2i positionB) {
         if (positionA.equals(positionB))
             return Arrays.asList(positionA);
         else if (round % JUMP_FREQUENCY == 0)
@@ -207,7 +210,7 @@ public class Game {
      * @param playerId The new playerId to set
      * @return The actual new value
      */
-    private CellValue setCell(Point2i point, int playerId) {
+    private CellValue setCell(final Point2i point, final int playerId) {
         if (!board.isOnBoard(point))
             return CellValue.MULTIPLE_PLAYER;
         else if (board.getBoardCellAt(point).getCellValue() == CellValue.EMPTY_CELL)

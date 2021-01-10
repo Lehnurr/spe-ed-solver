@@ -7,6 +7,7 @@ import utility.game.board.Cell;
 import utility.game.board.CellValue;
 import utility.game.player.IPlayer;
 import utility.geometry.Point2i;
+import utility.geometry.Vector2i;
 
 public class Graph extends Board<Node> {
 
@@ -14,15 +15,15 @@ public class Graph extends Board<Node> {
         super(emptyNodes);
 
         // initilize the graph with the same abstract edges for all Nodes
-        var defaultAbstractEdge = new AbstractEdge();
+        final AbstractEdge defaultAbstractEdge = new AbstractEdge();
         for (int row = 0; row < getHeight(); row++) {
             for (int col = 0; col < getWidth(); col++) {
 
-                var nodePosition = new Point2i(col, row);
+                final Point2i nodePosition = new Point2i(col, row);
                 // magic number
-                IEdge[] abstractEdges = new IEdge[80];
+                final IEdge[] abstractEdges = new IEdge[80];
                 Arrays.fill(abstractEdges, defaultAbstractEdge);
-                var node = new Node(this, nodePosition, abstractEdges);
+                final Node node = new Node(this, nodePosition, abstractEdges);
 
                 emptyNodes[row][col] = node;
             }
@@ -36,15 +37,15 @@ public class Graph extends Board<Node> {
      * @param self    the current Player
      * @param enemies the enemies
      */
-    public void updateGraph(Board<Cell> board, final IPlayer self, final Iterable<IPlayer> enemies) {
+    public void updateGraph(final Board<Cell> board, final IPlayer self, final Iterable<IPlayer> enemies) {
 
         // remove outgoing and incoming edges for the passed steps
         // (excluding the new end position, but including the previous end position)
-        var selfCellValue = CellValue.fromInteger(self.getPlayerId());
+        final CellValue selfCellValue = CellValue.fromInteger(self.getPlayerId());
         for (int i = 1; i <= self.getSpeed(); i++) {
-            var speedDirectionVector = self.getDirection().getDirectionVector().multiply(-1 * i);
-            var affectedPosition = self.getPosition().translate(speedDirectionVector);
-            var affectedNode = getBoardCellAt(affectedPosition);
+            final Vector2i speedDirectionVector = self.getDirection().getDirectionVector().multiply(-1 * i);
+            final Point2i affectedPosition = self.getPosition().translate(speedDirectionVector);
+            final Node affectedNode = getBoardCellAt(affectedPosition);
 
             // set the node value, if the cell is passed by any player (otherwise the cell
             // was not passed)
@@ -56,14 +57,14 @@ public class Graph extends Board<Node> {
         getBoardCellAt(self.getPosition()).setCellValue(selfCellValue, false);
 
         // remove all outgoing and incoming edges for the passed steps by enemies
-        for (var player : enemies) {
+        for (final IPlayer player : enemies) {
             final CellValue enemyCellValue = CellValue.fromInteger(player.getPlayerId());
 
             // remove outgoing and incoming edges for the passed steps
             for (int i = 0; i <= player.getSpeed(); i++) {
-                var speedDirectionVector = player.getDirection().getDirectionVector().multiply(-1 * i);
-                var affectedPosition = player.getPosition().translate(speedDirectionVector);
-                var affectedNode = getBoardCellAt(affectedPosition);
+                final Vector2i speedDirectionVector = player.getDirection().getDirectionVector().multiply(-1 * i);
+                final Point2i affectedPosition = player.getPosition().translate(speedDirectionVector);
+                final Node affectedNode = getBoardCellAt(affectedPosition);
 
                 if (affectedNode == null)
                     continue;

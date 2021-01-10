@@ -1,8 +1,11 @@
 package player.solver.reachablepoints.graph.board;
 
+import java.util.Map.Entry;
+
 import utility.game.board.*;
 import utility.game.player.PlayerDirection;
 import utility.geometry.Point2i;
+import utility.geometry.Vector2i;
 
 /**
  * Node
@@ -118,8 +121,7 @@ public class Node implements IBoardCell<CellValue> {
         if (this.value != value && value != CellValue.EMPTY_CELL) {
 
             // Destroy all edges that pass this node or end here
-            final var passingEdges = AffectedEdgesLookUpTable.getAbstractPassingEdges();
-            for (var edge : passingEdges) {
+            for (final Entry<Vector2i, int[]> edge : AffectedEdgesLookUpTable.getAbstractPassingEdges()) {
                 Point2i edgeStartingPosition = this.position.translate(edge.getKey());
                 Node edgeStartingNode = graph.getBoardCellAt(edgeStartingPosition);
 

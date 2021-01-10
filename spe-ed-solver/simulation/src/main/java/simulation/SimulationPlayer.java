@@ -2,6 +2,7 @@ package simulation;
 
 import utility.game.player.*;
 import utility.geometry.Point2i;
+import utility.geometry.Vector2i;
 
 public class SimulationPlayer extends MovablePlayer {
 
@@ -109,7 +110,7 @@ public class SimulationPlayer extends MovablePlayer {
         if (!isActive())
             return;
 
-        var speedDirectionVector = this.direction.getDirectionVector().multiply(this.speed);
+        final Vector2i speedDirectionVector = this.direction.getDirectionVector().multiply(this.speed);
         this.position = this.position.translate(speedDirectionVector);
     }
 

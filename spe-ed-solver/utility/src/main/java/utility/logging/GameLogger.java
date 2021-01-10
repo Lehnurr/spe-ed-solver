@@ -1,5 +1,7 @@
 package utility.logging;
 
+import java.util.Iterator;
+
 import utility.game.player.IPlayer;
 import utility.game.player.PlayerAction;
 import utility.game.step.GameStep;
@@ -33,8 +35,8 @@ public final class GameLogger {
 						step.getDeadline().getRemainingMilliseconds()));
 
 		// Log the Player
-		var currentPlayer = step.getSelf();
-		var iterator = step.getEnemies().values().iterator();
+		final IPlayer currentPlayer = step.getSelf();
+		final Iterator<IPlayer> iterator = step.getEnemies().values().iterator();
 		do {
 			String active;
 			if (currentPlayer.isActive())

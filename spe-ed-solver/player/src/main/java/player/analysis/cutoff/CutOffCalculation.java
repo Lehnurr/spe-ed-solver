@@ -25,8 +25,8 @@ public class CutOffCalculation {
         ratingsResult = new ActionsRating();
         this.matrixResult = new EnumMap<>(PlayerAction.class);
 
-        for (var x : PlayerAction.values()) {
-            matrixResult.put(x, new FloatMatrix(width, height, 0));
+        for (final PlayerAction action : PlayerAction.values()) {
+            matrixResult.put(action, new FloatMatrix(width, height, 0));
         }
     }
 

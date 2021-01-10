@@ -1,5 +1,6 @@
 package player.solver.reachablepoints.graph;
 
+import java.util.List;
 import java.util.Map;
 
 import player.analysis.cutoff.CutOffCalculation;
@@ -110,11 +111,11 @@ public class GraphCalculation {
 	 * @throws NoSuchElementException if no next element is available
 	 */
 	public void executeStep() {
-		var parent = queue.poll();
-		final var children = parent.getValidChildren(graph, probabilities, minSteps,
+		final RatedPredictiveGraphPlayer parent = queue.poll();
+		final List<RatedPredictiveGraphPlayer> children = parent.getValidChildren(graph, probabilities, minSteps,
 				edgeImportance.getInitialEdgeArray());
 
-		for (final var child : children) {
+		for (final RatedPredictiveGraphPlayer child : children) {
 			edgeImportance.add(parent.getInitialEdgeIncrements());
 			addPlayerToQueue(child);
 		}

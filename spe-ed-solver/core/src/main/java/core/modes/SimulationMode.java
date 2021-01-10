@@ -7,6 +7,8 @@ import core.controller.GameController;
 import player.PlayerType;
 import simulation.Game;
 import utility.game.board.Board;
+import utility.game.player.PlayerAction;
+import utility.game.step.GameStep;
 import utility.logging.ApplicationLogger;
 
 /**
@@ -43,26 +45,26 @@ public class SimulationMode implements Runnable {
 	@Override
 	public void run() {
 
-		var game = new Game(height, width, playerTypes.size());
-		var gameController = new GameController(viewerEnabled, new ArrayList<>(playerTypes));
+		final Game game = new Game(height, width, playerTypes.size());
+		final GameController gameController = new GameController(viewerEnabled, new ArrayList<>(playerTypes));
 
 		ApplicationLogger.logInformation("RUNNING SIMULATED");
 
 		// Start the Simulation and get the initial GameSteps for each Player
-		var gameSteps = game.startSimulation();
+		final List<GameStep> gameSteps = game.startSimulation();
 
 		// Iterate through all GameSteps
 		for (int i = 0; i < gameSteps.size(); i++) {
 			// Determine the current GameStep for a specific Player
-			var gameStep = gameSteps.get(i);
+			final GameStep gameStep = gameSteps.get(i);
 
 			// Send the GameStep and receive the Players chosen Action
-			var action = gameController.handleGameStep(gameStep);
+			final PlayerAction action = gameController.handleGameStep(gameStep);
 
 			if (gameStep.isRunning()) {
 				// Send the Action to the Simulation and get the new GameSteps (if every
 				// alive Player has already sent an Action)
-				var nextGameSteps = game.setAction(gameStep.getSelf().getPlayerId(), action);
+				final List<GameStep> nextGameSteps = game.setAction(gameStep.getSelf().getPlayerId(), action);
 
 				// Add all new GameSteps to the gameSteps-List
 				gameSteps.addAll(nextGameSteps);

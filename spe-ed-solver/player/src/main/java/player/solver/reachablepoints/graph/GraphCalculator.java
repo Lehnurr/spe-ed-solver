@@ -58,7 +58,7 @@ public class GraphCalculator implements IReachablePoints {
 	private void updateGraph(GameStep gameStep) {
 		if (this.graph == null) {
 			// Initialize the graph with an empty Node-Array
-			var emptyNodes = new Node[gameStep.getBoard().getHeight()][gameStep.getBoard().getWidth()];
+			final Node[][] emptyNodes = new Node[gameStep.getBoard().getHeight()][gameStep.getBoard().getWidth()];
 			this.graph = new Graph(emptyNodes);
 
 			// Initialize the alive player
