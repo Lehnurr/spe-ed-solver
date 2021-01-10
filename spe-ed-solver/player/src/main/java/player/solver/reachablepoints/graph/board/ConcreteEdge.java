@@ -67,9 +67,17 @@ public final class ConcreteEdge extends LineSegment2i implements IEdge {
         Arrays.sort(edges, (a, b) -> a.stepCount - b.stepCount);
 
         // The first path is jumped over or consists of only a few steps
-        for (var s : edges[0].getPath()) {
-            if (edges[1].contains(s.getPosition()))
-                return true;
+        if (edges[1].stepCount > 2) {
+            for (final Node node : edges[0].getPath()) {
+                if (edges[1].contains(node.getPosition()))
+                    return true;
+            }
+        } else {
+            // both paths are jumped over or consists of only a few steps
+            for (Node node : edges[0].getPath()) {
+                if (Arrays.stream(edges[1].getPath()).anyMatch(node::equals))
+                    return true;
+            }
         }
 
         return false;

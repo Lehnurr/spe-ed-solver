@@ -1,5 +1,6 @@
 package player.solver.reachablepoints.graph.board;
 
+import java.util.Objects;
 import java.util.Map.Entry;
 
 import utility.game.board.*;
@@ -145,6 +146,23 @@ public class Node implements IBoardCell<CellValue> {
 
     public boolean isEmpty() {
         return value == CellValue.EMPTY_CELL;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof Node)) {
+            return false;
+        }
+        Node node = (Node) o;
+        return Objects.equals(graph, node.graph) && Objects.equals(position, node.position)
+                && Objects.equals(value, node.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(graph, position, value);
     }
 
 }
