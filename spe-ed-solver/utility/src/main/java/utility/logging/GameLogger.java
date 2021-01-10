@@ -35,7 +35,7 @@ public final class GameLogger {
 						step.getDeadline().getRemainingMilliseconds()));
 
 		// Log the Player
-		final IPlayer currentPlayer = step.getSelf();
+		IPlayer currentPlayer = step.getSelf();
 		final Iterator<IPlayer> iterator = step.getEnemies().values().iterator();
 		do {
 			String active;

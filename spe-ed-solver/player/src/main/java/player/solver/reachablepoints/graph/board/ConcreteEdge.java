@@ -1,5 +1,6 @@
 package player.solver.reachablepoints.graph.board;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 import utility.geometry.LineSegment2i;
@@ -55,33 +56,22 @@ public final class ConcreteEdge extends LineSegment2i implements IEdge {
      * checks whether two edges intersect
      */
     public boolean intersect(final ConcreteEdge other) {
-        // TODO:reduce complexity
-        if (this.getStepCount() <= 2 || other.getStepCount() <= 2) {
 
-            if (this.getStepCount() <= 2 && other.getStepCount() <= 2) {
-                // both jumped over or few steps
-                for (var s1 : this.getPath()) {
-                    for (var s2 : other.getPath()) {
-                        if (s1.getPosition().equals(s2.getPosition()))
-                            return true;
-                    }
-                }
-            } else if (this.getStepCount() <= 2) {
-                // this jumped over or few steps
-                for (var s : this.getPath()) {
-                    if (other.contains(s.getPosition()))
-                        return true;
-                }
-            } else {
-                // other jumped over or few steps
-                for (var s : other.getPath()) {
-                    if (this.contains(s.getPosition()))
-                        return true;
-                }
-            }
-        } else {
+        if (this.stepCount > 2 && other.stepCount > 2) {
+            // no jump over, segment intersect is possible
             return super.intersect(other);
         }
+
+        ConcreteEdge[] edges = { this, other };
+        // sort so that the shorter path comes first
+        Arrays.sort(edges, (a, b) -> a.stepCount - b.stepCount);
+
+        // The first path is jumped over or consists of only a few steps
+        for (var s : edges[0].getPath()) {
+            if (edges[1].contains(s.getPosition()))
+                return true;
+        }
+
         return false;
     }
 
