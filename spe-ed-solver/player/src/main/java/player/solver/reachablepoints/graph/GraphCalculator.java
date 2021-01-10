@@ -2,10 +2,8 @@ package player.solver.reachablepoints.graph;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import player.analysis.ActionsRating;
 import player.analysis.cutoff.CutOffCalculation;
@@ -180,7 +178,7 @@ public class GraphCalculator implements IReachablePoints {
 		calculations.stream().forEach(this::addResults);
 
 		GameLogger.logGameInformation(String.format("Calculated %d reachable points paths!", calculatedPaths));
-
+		calculatedPaths = 0;
 	}
 
 	private void addResults(GraphCalculation calculation) {

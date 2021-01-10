@@ -179,9 +179,4 @@ public class GraphCalculation {
 	public int getCalculatedPathsCount() {
 		return calculatedPathsCount;
 	}
-
-	public void incrementCalculatedPathsCount() {
-		calculatedPathsCount++;
-	}
-
 }

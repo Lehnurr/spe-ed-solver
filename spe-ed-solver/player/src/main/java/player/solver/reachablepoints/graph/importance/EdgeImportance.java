@@ -48,8 +48,8 @@ public class EdgeImportance {
         // determine the initial edges based on the startplayers
         for (final var startPlayer : initialPlayers) {
             final ConcreteEdge initialEdge = startPlayer.getEdgeTail().get(0);
-            initialEdges.put(startPlayer.getInitialAction(), initialEdge);
-            initialEdgeImportance.put(initialEdge, 0);
+            this.initialEdges.put(startPlayer.getInitialAction(), initialEdge);
+            this.initialEdgeImportance.put(initialEdge, 0);
         }
     }
 
@@ -65,8 +65,8 @@ public class EdgeImportance {
     public EdgeImportance(int width, int height, final Map<PlayerAction, ConcreteEdge> initialEdges) {
         this(height, width);
         for (final var entry : initialEdges.entrySet()) {
-            initialEdges.put(entry.getKey(), entry.getValue());
-            initialEdgeImportance.put(entry.getValue(), 0);
+            this.initialEdges.put(entry.getKey(), entry.getValue());
+            this.initialEdgeImportance.put(entry.getValue(), 0);
         }
     }
 
