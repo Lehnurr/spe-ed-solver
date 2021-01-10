@@ -112,8 +112,7 @@ public class GraphCalculation {
 	 */
 	public void executeStep() {
 		final RatedPredictiveGraphPlayer parent = queue.poll();
-		final List<RatedPredictiveGraphPlayer> children = parent.getValidChildren(graph, probabilities, minSteps,
-				edgeImportance.getInitialEdgeArray());
+		final List<RatedPredictiveGraphPlayer> children = parent.getValidChildren(graph, probabilities, minSteps);
 
 		for (final RatedPredictiveGraphPlayer child : children) {
 			edgeImportance.add(parent.getInitialEdgeIncrements());

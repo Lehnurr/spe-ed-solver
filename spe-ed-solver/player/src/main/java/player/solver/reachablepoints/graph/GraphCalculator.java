@@ -2,14 +2,12 @@ package player.solver.reachablepoints.graph;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 
 import player.analysis.ActionsRating;
 import player.analysis.cutoff.CutOffCalculation;
 import player.analysis.success.SuccessCalculation;
 import player.solver.reachablepoints.IReachablePoints;
-import player.solver.reachablepoints.graph.board.ConcreteEdge;
 import player.solver.reachablepoints.graph.board.Graph;
 import player.solver.reachablepoints.graph.board.Node;
 import player.solver.reachablepoints.graph.importance.EdgeImportance;
@@ -46,8 +44,8 @@ public class GraphCalculator implements IReachablePoints {
 
 		updateGraph(gameStep);
 
-		final List<RatedPredictiveGraphPlayer> startPlayers = RatedPredictiveGraphPlayer.getValidChildren(
-				gameStep.getSelf(), graph, probabilities, minSteps, new ConcreteEdge[0], new HashMap<>());
+		final List<RatedPredictiveGraphPlayer> startPlayers = RatedPredictiveGraphPlayer
+				.getValidChildren(gameStep.getSelf(), graph, probabilities, minSteps);
 
 		final List<GraphCalculation> calculations = getCalculations(startPlayers, gameStep.getDeadline(), graph);
 
