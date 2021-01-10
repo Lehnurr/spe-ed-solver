@@ -8,10 +8,13 @@ import java.util.List;
 import java.util.Map;
 
 import player.analysis.ActionsRating;
+import player.analysis.cutoff.CutOffCalculation;
+import player.analysis.success.SuccessCalculation;
 import player.solver.reachablepoints.IReachablePoints;
 import player.solver.reachablepoints.graph.board.ConcreteEdge;
 import player.solver.reachablepoints.graph.board.Graph;
 import player.solver.reachablepoints.graph.board.Node;
+import player.solver.reachablepoints.graph.importance.EdgeImportance;
 import utility.game.board.Board;
 import utility.game.player.IPlayer;
 import utility.game.player.PlayerAction;
@@ -28,23 +31,21 @@ import utility.logging.GameLogger;
 public class GraphCalculator implements IReachablePoints {
 	private static final int MAX_THREAD_COUNT = 1;
 
-	private ActionsRating successRatingsResult;
-	private ActionsRating cutOffRatingsResult;
-	private ActionsRating invertedImportanceResult;
 	private FloatMatrix enemyProbabilitiesMatrix;
 	private FloatMatrix enemyMinStepsMatrix;
 	private int calculatedPaths;
 	private Graph graph;
 	private int[] activeEnemiesIds;
 
-	private Map<PlayerAction, FloatMatrix> successMatrixResult;
-	private Map<PlayerAction, FloatMatrix> cutOffMatrixResult;
-	private FloatMatrix invertedImportanceMatrixResult;
+	private SuccessCalculation successCalculation;
+	private CutOffCalculation cutOffCalculation;
+	private EdgeImportance importanceCalculation;
 
 	public void performCalculation(final GameStep gameStep, final FloatMatrix probabilities,
 			final FloatMatrix minSteps) {
 		this.enemyProbabilitiesMatrix = probabilities;
 		this.enemyMinStepsMatrix = minSteps;
+
 		updateGraph(gameStep);
 
 		final List<RatedPredictiveGraphPlayer> startPlayers = RatedPredictiveGraphPlayer.getValidChildren(
@@ -52,7 +53,6 @@ public class GraphCalculator implements IReachablePoints {
 
 		final List<GraphCalculation> calculations = getCalculations(startPlayers, gameStep.getDeadline(), graph);
 
-		clearResults();
 		calculate(calculations);
 		addResults(calculations);
 	}
@@ -81,19 +81,6 @@ public class GraphCalculator implements IReachablePoints {
 	}
 
 	/**
-	 * Clears all locally stored results.
-	 */
-	private void clearResults() {
-		successMatrixResult = new EnumMap<>(PlayerAction.class);
-		cutOffMatrixResult = new EnumMap<>(PlayerAction.class);
-		invertedImportanceMatrixResult = null;
-		successRatingsResult = new ActionsRating();
-		cutOffRatingsResult = new ActionsRating();
-		invertedImportanceResult = new ActionsRating();
-		calculatedPaths = 0;
-	}
-
-	/**
 	 * Generates {@link GraphCalculation} for different Threads with a base of
 	 * startPlayers
 	 * 
@@ -110,12 +97,11 @@ public class GraphCalculator implements IReachablePoints {
 	private List<GraphCalculation> getCalculations(final List<RatedPredictiveGraphPlayer> startPlayers,
 			final Deadline deadline, final Board<Node> graph) {
 
-		// determine the initial edges based on the startplayers
-		Map<PlayerAction, ConcreteEdge> initialEdges = new EnumMap<>(PlayerAction.class);
-		for (final var startPlayer : startPlayers) {
-			final ConcreteEdge initialEdge = startPlayer.getEdgeTail().get(0);
-			initialEdges.put(startPlayer.getInitialAction(), initialEdge);
-		}
+		final int width = graph.getWidth();
+		final int height = graph.getHeight();
+		successCalculation = new SuccessCalculation(width, height);
+		cutOffCalculation = new CutOffCalculation(width, height);
+		importanceCalculation = new EdgeImportance(width, height, startPlayers);
 
 		int threadCount = Math.min(MAX_THREAD_COUNT, (int) (deadline.getRemainingMilliseconds() / 500));
 
@@ -124,15 +110,15 @@ public class GraphCalculator implements IReachablePoints {
 
 		if (threadCount <= 1) {
 			GraphCalculation calculation = new GraphCalculation(graph, this.enemyProbabilitiesMatrix,
-					this.enemyMinStepsMatrix, initialEdges, deadline);
+					this.enemyMinStepsMatrix, importanceCalculation.getInitialEdges(), deadline);
 			calculations.add(calculation);
-			startPlayers.stream().forEach(calculation::addStartPlayer);
+			startPlayers.stream().forEach(calculation::addPlayerToQueue);
 			return calculations;
 		}
 
 		while (calculations.size() < threadCount)
 			calculations.add(new GraphCalculation(graph, this.enemyProbabilitiesMatrix, this.enemyMinStepsMatrix,
-					initialEdges, deadline));
+					importanceCalculation.getInitialEdges(), deadline));
 
 		// Define the number of required start players
 		final int threadBase = (graph.getHeight() + graph.getWidth()) * 10;
@@ -140,8 +126,8 @@ public class GraphCalculator implements IReachablePoints {
 
 		// create a Base of Player states
 		GraphCalculation baseCalculation = new GraphCalculation(graph, this.enemyProbabilitiesMatrix,
-				this.enemyMinStepsMatrix, initialEdges, deadline, totalBase);
-		startPlayers.stream().forEach(baseCalculation::addStartPlayer);
+				this.enemyMinStepsMatrix, importanceCalculation.getInitialEdges(), deadline, totalBase);
+		startPlayers.stream().forEach(baseCalculation::addPlayerToQueue);
 
 		while (baseCalculation.queueHasNext() && baseCalculation.queueRemaining() < totalBase) {
 			baseCalculation.executeStep();
@@ -151,7 +137,7 @@ public class GraphCalculator implements IReachablePoints {
 		for (int calculationIndex = 0; baseCalculation
 				.queueHasNext(); calculationIndex = (calculationIndex + 1) % threadCount) {
 			final RatedPredictiveGraphPlayer startPlayer = baseCalculation.queuePoll();
-			calculations.get(calculationIndex).addStartPlayer(startPlayer);
+			calculations.get(calculationIndex).addPlayerToQueue(startPlayer);
 		}
 
 		return calculations;
@@ -195,52 +181,36 @@ public class GraphCalculator implements IReachablePoints {
 
 		GameLogger.logGameInformation(String.format("Calculated %d reachable points paths!", calculatedPaths));
 
-		successRatingsResult.normalize();
-		invertedImportanceResult.normalize();
-		invertedImportanceMatrixResult = invertedImportanceMatrixResult.normalize();
 	}
 
 	private void addResults(GraphCalculation calculation) {
-		for (final PlayerAction action : PlayerAction.values()) {
-			final FloatMatrix successMatrix = calculation.getSuccessMatrixResult(action);
-			final FloatMatrix cutOffMatrix = calculation.getCutOffMatrixResult(action);
-			final FloatMatrix invertedImportanceMatrix = calculation.getInvertedImportanceMatrix(action);
-
-			successMatrixResult.compute(action, (k, v) -> v == null ? successMatrix : v.max(successMatrix));
-			cutOffMatrixResult.compute(action, (k, v) -> v == null ? cutOffMatrix : v.max(cutOffMatrix));
-			if (invertedImportanceMatrixResult == null)
-				invertedImportanceMatrixResult = invertedImportanceMatrix;
-			else
-				invertedImportanceMatrixResult = invertedImportanceMatrixResult.sum(invertedImportanceMatrix);
-
-			successRatingsResult.addRating(action, successMatrix.sum());
-			cutOffRatingsResult.addRating(action, cutOffMatrix.max());
-
-			invertedImportanceResult.addRating(action, invertedImportanceMatrix.sum());
-		}
-
+		this.successCalculation.add(calculation.getSuccessCalculation());
+		this.cutOffCalculation.add(calculation.getCutOffCalculation());
+		this.importanceCalculation.add(calculation.getEdgeImportance());
 		calculatedPaths += calculation.getCalculatedPathsCount();
 	}
 
 	public void logGameInformation(ActionsRating combinedActionsRating) {
-		GameLogger.logGameInformation(String.format("success-rating:\t%s", successRatingsResult));
-		GameLogger.logGameInformation(String.format("cut-off-rating:\t%s", cutOffRatingsResult));
-		GameLogger.logGameInformation(String.format("inverted-importance-rating:\t%s", invertedImportanceResult));
+		GameLogger.logGameInformation(String.format("success-rating:\t%s", successCalculation.getRatingResult()));
+		GameLogger.logGameInformation(String.format("cut-off-rating:\t%s", cutOffCalculation.getRatingResult()));
+		GameLogger.logGameInformation(
+				String.format("inverted-importance-rating:\t%s", importanceCalculation.getInvertedRatingResult()));
 		GameLogger.logGameInformation(String.format("combined-rating:\t%s", combinedActionsRating));
 	}
 
 	public ActionsRating combineActionsRating(float aggressiveWeight, float defensiveWeight) {
-		return successRatingsResult.combine(cutOffRatingsResult, aggressiveWeight).combine(invertedImportanceResult,
-				defensiveWeight);
+		return successCalculation.getRatingResult().combine(cutOffCalculation.getRatingResult(), aggressiveWeight)
+				.combine(importanceCalculation.getInvertedRatingResult(), defensiveWeight);
 	}
 
 	@Override
 	public Collection<ContextualFloatMatrix> getContextualFloatMatrices(PlayerAction action) {
 		final ArrayList<ContextualFloatMatrix> matrices = new ArrayList<>();
 
-		matrices.add(new ContextualFloatMatrix("success", successMatrixResult.get(action), 0, 1));
-		matrices.add(new ContextualFloatMatrix("cut off", cutOffMatrixResult.get(action), 0, 1));
-		matrices.add(new ContextualFloatMatrix("inverted importance", invertedImportanceMatrixResult, 0, 1));
+		matrices.add(new ContextualFloatMatrix("success", successCalculation.getMatrixResult(action), 0, 1));
+		matrices.add(new ContextualFloatMatrix("cut off", cutOffCalculation.getMatrixResult(action), 0, 1));
+		matrices.add(new ContextualFloatMatrix("inverted importance", importanceCalculation.getInvertedMatrixResult(),
+				0, 1));
 		matrices.add(new ContextualFloatMatrix("probability", enemyProbabilitiesMatrix, 0, 1));
 		matrices.add(new ContextualFloatMatrix("min steps", enemyMinStepsMatrix));
 

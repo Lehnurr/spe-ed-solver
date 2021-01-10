@@ -1,13 +1,13 @@
 package player.solver.reachablepoints.graph;
 
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 
+import player.analysis.cutoff.CutOffCalculation;
+import player.analysis.success.SuccessCalculation;
 import player.solver.reachablepoints.LimitedQueue;
 import player.solver.reachablepoints.graph.board.ConcreteEdge;
 import player.solver.reachablepoints.graph.board.Node;
+import player.solver.reachablepoints.graph.importance.EdgeImportance;
 import utility.game.board.Board;
 import utility.game.player.PlayerAction;
 import utility.game.step.Deadline;
@@ -28,13 +28,12 @@ public class GraphCalculation {
 
 	private final FloatMatrix probabilities;
 	private final FloatMatrix minSteps;
-	private final Map<ConcreteEdge, Integer> initialEdgeImportance;
-	private final Map<PlayerAction, ConcreteEdge> initialEdges;
 
 	private final Deadline deadline;
 
-	public final Map<PlayerAction, FloatMatrix> successMatrixResult;
-	private final Map<PlayerAction, FloatMatrix> cutOffMatrixResult;
+	private SuccessCalculation successCalculation;
+	private CutOffCalculation cutOffCalculation;
+	private EdgeImportance edgeImportance;
 
 	private int calculatedPathsCount = 0;
 	private final Board<Node> graph;
@@ -55,22 +54,15 @@ public class GraphCalculation {
 
 		this.probabilities = probabilities;
 		this.minSteps = minSteps;
-		this.initialEdges = initialEdges;
-		initialEdgeImportance = new HashMap<>(initialEdges.size());
-		for (final ConcreteEdge initialEdge : initialEdges.values())
-			initialEdgeImportance.put(initialEdge, 0);
 
 		this.deadline = deadline;
 		this.graph = graph;
 
-		this.successMatrixResult = new EnumMap<>(PlayerAction.class);
-		this.cutOffMatrixResult = new EnumMap<>(PlayerAction.class);
 		queue = new LimitedQueue<>(RatedPredictiveGraphPlayer.class, queueSize);
 
-		for (var x : PlayerAction.values()) {
-			successMatrixResult.put(x, new FloatMatrix(graph.getWidth(), graph.getHeight(), 0));
-			cutOffMatrixResult.put(x, new FloatMatrix(graph.getWidth(), graph.getHeight(), 0));
-		}
+		successCalculation = new SuccessCalculation(graph.getWidth(), graph.getHeight());
+		cutOffCalculation = new CutOffCalculation(graph.getWidth(), graph.getHeight());
+		edgeImportance = new EdgeImportance(graph.getWidth(), graph.getHeight(), initialEdges);
 	}
 
 	/**
@@ -89,12 +81,12 @@ public class GraphCalculation {
 		this(graph, probabilities, minSteps, initialEdges, deadline, DEFAULT_QUEUE_SIZE);
 	}
 
-	public void addStartPlayer(RatedPredictiveGraphPlayer startPlayer) {
+	public void addPlayerToQueue(RatedPredictiveGraphPlayer startPlayer) {
 		final PlayerAction action = startPlayer.getInitialAction();
 		final Point2i position = startPlayer.getPosition();
 
-		getSuccessMatrixResult(action).max(position, startPlayer.getSuccessRating());
-		getCutOffMatrixResult(action).max(position, startPlayer.getCutOffRating());
+		successCalculation.add(action, position, startPlayer.getSuccessRating());
+		cutOffCalculation.add(action, position, startPlayer.getCutOffRating());
 
 		queue.add(startPlayer);
 		calculatedPathsCount++;
@@ -120,18 +112,11 @@ public class GraphCalculation {
 	public void executeStep() {
 		var parent = queue.poll();
 		final var children = parent.getValidChildren(graph, probabilities, minSteps,
-				initialEdgeImportance.keySet().toArray(new ConcreteEdge[initialEdgeImportance.size()]));
+				edgeImportance.getInitialEdgeArray());
 
 		for (final var child : children) {
-			for (var x : parent.getInitialEdgeIncrements().entrySet()) {
-				initialEdgeImportance.compute(x.getKey(), (k, v) -> v == null ? x.getValue() : (v + x.getValue()));
-			}
-
-			getSuccessMatrixResult(child.getInitialAction()).max(child.getPosition(), child.getSuccessRating());
-			getCutOffMatrixResult(child.getInitialAction()).max(child.getPosition(), child.getCutOffRating());
-
-			queue.add(child);
-			calculatedPathsCount++;
+			edgeImportance.add(parent.getInitialEdgeIncrements());
+			addPlayerToQueue(child);
 		}
 	}
 
@@ -169,8 +154,8 @@ public class GraphCalculation {
 	 * 
 	 * @return success {@link FloatMatrix} result
 	 */
-	public FloatMatrix getSuccessMatrixResult(PlayerAction initialAction) {
-		return successMatrixResult.get(initialAction);
+	public SuccessCalculation getSuccessCalculation() {
+		return successCalculation;
 	}
 
 	/**
@@ -178,36 +163,12 @@ public class GraphCalculation {
 	 * 
 	 * @return cut off {@link FloatMatrix} result
 	 */
-	public FloatMatrix getCutOffMatrixResult(PlayerAction initialAction) {
-		return cutOffMatrixResult.get(initialAction);
+	public CutOffCalculation getCutOffCalculation() {
+		return cutOffCalculation;
 	}
 
-	/**
-	 * Generates the inverted importance matrix for a Player-Action
-	 * 
-	 * @param initialAction The action the matrix is created for
-	 * @return A Matrix containing the inverted importance for the cells that can be
-	 *         passed in one round
-	 */
-	public FloatMatrix getInvertedImportanceMatrix(PlayerAction initialAction) {
-		final FloatMatrix invertedImportanceMatrix = new FloatMatrix(graph.getWidth(), graph.getHeight());
-
-		if (initialEdgeImportance.isEmpty())
-			return invertedImportanceMatrix;
-
-		final int maxImportance = Collections.max(initialEdgeImportance.values());
-		final ConcreteEdge initialEdge = initialEdges.get(initialAction);
-
-		if (maxImportance == 0 || initialEdge == null)
-			return invertedImportanceMatrix;
-
-		final int invertedImportance = maxImportance - initialEdgeImportance.getOrDefault(initialEdge, 0);
-
-		for (final var cell : initialEdge.getPath()) {
-			invertedImportanceMatrix.setValue(cell.getPosition(), invertedImportance);
-		}
-
-		return invertedImportanceMatrix;
+	public EdgeImportance getEdgeImportance() {
+		return this.edgeImportance;
 	}
 
 	/**

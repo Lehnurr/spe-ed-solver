@@ -35,16 +35,6 @@ public class ActionsRating {
 	}
 
 	/**
-	 * Adds a new value for a given {@link PlayerAction}.
-	 * 
-	 * @param playerAction {@link PlayerAction} to add the value for
-	 * @param ratingValue  new value to add
-	 */
-	public void addRating(final PlayerAction playerAction, final float ratingValue) {
-		ratingMap.compute(playerAction, (k, v) -> v == null ? ratingValue : Math.max(v, ratingValue));
-	}
-
-	/**
 	 * Returns the rating value for a given {@link PlayerAction}.
 	 * 
 	 * @param playerAction {@link PlayerAction} to get the rating value for

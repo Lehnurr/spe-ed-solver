@@ -1,5 +1,6 @@
 package player;
 
+import player.solver.random.RandomPlayer;
 import player.solver.reachablepoints.ReachablePointsPlayer;
 import player.solver.reachablepoints.ReachablePointsType;
 
@@ -37,6 +38,12 @@ public enum PlayerType {
 		@Override
 		public ISpeedSolverPlayer newInstance() {
 			return new ReachablePointsPlayer(7, -1f, -1f, ReachablePointsType.GRAPH);
+		}
+	},
+	RANDOM {
+		@Override
+		public ISpeedSolverPlayer newInstance() {
+			return new RandomPlayer();
 		}
 	};
 
