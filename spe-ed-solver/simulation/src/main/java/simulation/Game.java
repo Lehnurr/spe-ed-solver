@@ -55,7 +55,7 @@ public final class Game {
     /**
      * Starts the simulation
      * 
-     * @return Initial GameStep for each Player
+     * @return Initial {@link GameStep} for each {@link SimulationPlayer}
      */
     public List<GameStep> startSimulation() {
         // Initialize Players with a random startposition and a random direction

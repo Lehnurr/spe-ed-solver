@@ -50,23 +50,15 @@ public class SimulationMode implements Runnable {
 
 		ApplicationLogger.logInformation("RUNNING SIMULATED");
 
-		// Start the Simulation and get the initial GameSteps for each Player
 		final List<GameStep> gameSteps = game.startSimulation();
 
-		// Iterate through all GameSteps
 		for (int i = 0; i < gameSteps.size(); i++) {
-			// Determine the current GameStep for a specific Player
 			final GameStep gameStep = gameSteps.get(i);
 
-			// Send the GameStep and receive the Players chosen Action
 			final PlayerAction action = gameController.handleGameStep(gameStep);
 
 			if (gameStep.isRunning()) {
-				// Send the Action to the Simulation and get the new GameSteps (if every
-				// alive Player has already sent an Action)
 				final List<GameStep> nextGameSteps = game.setAction(gameStep.getSelf().getPlayerId(), action);
-
-				// Add all new GameSteps to the gameSteps-List
 				gameSteps.addAll(nextGameSteps);
 			}
 		}

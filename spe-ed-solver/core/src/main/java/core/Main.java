@@ -11,10 +11,8 @@ import utility.logging.LoggingExceptionHandler;
 public class Main {
 
 	public static void main(String[] args) {
-		// set the default exception handler for Logging
 		Thread.setDefaultUncaughtExceptionHandler(new LoggingExceptionHandler());
 
-		// Parse the commandline commands
 		CommandLineParser commandLineParser = new CommandLineParser();
 		new CommandLine(commandLineParser).execute(args);
 	}

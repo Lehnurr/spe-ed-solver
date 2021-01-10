@@ -139,7 +139,6 @@ public class ReachablePointsSingleThreaded implements IReachablePoints {
 		GameLogger.logGameInformation(String.format("cut-off-rating:\t%s", cutOffRating));
 		GameLogger.logGameInformation(String.format("slow-down-rating:\t%s", slowDownRating));
 		GameLogger.logGameInformation(String.format("combined-rating:\t%s", combinedActionsRating));
-
 	}
 
 	@Override

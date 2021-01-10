@@ -29,8 +29,8 @@ public class ReachablePointsPlayer implements ISpeedSolverPlayer {
 	 * values.
 	 * 
 	 * @param enemySearchDepth recursive search depth to search for enemy actions
-	 * @param cutOffWeight     relative weight for the cut off {@link ActionsRating}
-	 * @param slowDownWeight   relative weight for the slow down
+	 * @param aggressiveWeight relative weight for aggressive {@link ActionsRating}
+	 * @param defensiveWeight  relative weight for the defensive
 	 *                         {@link ActionsRating}
 	 * @param type             the {@link ReachablePointsType} of the calculation
 	 */

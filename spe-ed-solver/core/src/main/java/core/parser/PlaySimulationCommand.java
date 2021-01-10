@@ -17,7 +17,8 @@ import utility.logging.LoggingLevel;
 
 /**
  * {@link Command} which runs a {@link SimulationMode} which simulates the game
- * spe_ed with the given command line arguments.
+ * spe_ed with the given command line arguments. Throws
+ * {@link ParameterException } in case of a wrong input.
  */
 @Command(name = "simulated", description = "Starts a game of spe_ed locally with the given players and simulates the game.")
 public class PlaySimulationCommand implements Runnable {
@@ -40,7 +41,6 @@ public class PlaySimulationCommand implements Runnable {
 	@Option(names = { "-w", "--width" }, description = "The width of the game board.")
 	public void setBoardWidth(final int boardWidth) {
 		if (boardWidth <= 0) {
-			// no logging needed; handled by picocli
 			throw new ParameterException(spec.commandLine(), "The board width must be > 0!");
 		}
 		this.boardWidth = boardWidth;
@@ -49,7 +49,6 @@ public class PlaySimulationCommand implements Runnable {
 	@Option(names = { "-h", "--height" }, description = "The height of the game board.")
 	public void setBoardHeight(final int boardHeight) {
 		if (boardHeight <= 0) {
-			// no logging needed; handled by picocli
 			throw new ParameterException(spec.commandLine(), "The board height must be > 0!");
 		}
 		this.boardHeight = boardHeight;
@@ -108,7 +107,6 @@ public class PlaySimulationCommand implements Runnable {
 			}
 		}
 
-		// no logging needed; handled by picocli
 		throw new ParameterException(spec.commandLine(), loggingLevel + " Is not a valid logging level!");
 	}
 

@@ -11,7 +11,7 @@ import utility.game.step.GameStep;
 import utility.logging.ApplicationLogger;
 
 /**
- * GameController for one or multiple players
+ * {@link GameController} for one or multiple players.
  */
 public class GameController {
 
