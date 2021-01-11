@@ -11,26 +11,26 @@
 <a class="jxr_linenumber" name="1" href="#1">1</a>   <strong class="jxr_keyword">package</strong> utility.game.board;
 <a class="jxr_linenumber" name="2" href="#2">2</a>   
 <a class="jxr_linenumber" name="3" href="#3">3</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="4" href="#4">4</a>   <em class="jxr_javadoccomment"> * IBoardCell</em>
+<a class="jxr_linenumber" name="4" href="#4">4</a>   <em class="jxr_javadoccomment"> * Generalization for cells of a {@link Board}</em>
 <a class="jxr_linenumber" name="5" href="#5">5</a>   <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="6" href="#6">6</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> IBoardCell&lt;CellType&gt; {
 <a class="jxr_linenumber" name="7" href="#7">7</a>   
 <a class="jxr_linenumber" name="8" href="#8">8</a>   	<em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="9" href="#9">9</a>   <em class="jxr_javadoccomment">	 * @return The Cells value</em>
+<a class="jxr_linenumber" name="9" href="#9">9</a>   <em class="jxr_javadoccomment">	 * @return The value of the {@link IBoardCell}</em>
 <a class="jxr_linenumber" name="10" href="#10">10</a>  <em class="jxr_javadoccomment">	 */</em>
 <a class="jxr_linenumber" name="11" href="#11">11</a>  	CellType getCellValue();
 <a class="jxr_linenumber" name="12" href="#12">12</a>  
 <a class="jxr_linenumber" name="13" href="#13">13</a>  	<em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="14" href="#14">14</a>  <em class="jxr_javadoccomment">	 * Sets the Cells value</em>
+<a class="jxr_linenumber" name="14" href="#14">14</a>  <em class="jxr_javadoccomment">	 * Sets the value of the {@link IBoardCell}</em>
 <a class="jxr_linenumber" name="15" href="#15">15</a>  <em class="jxr_javadoccomment">	 * </em>
 <a class="jxr_linenumber" name="16" href="#16">16</a>  <em class="jxr_javadoccomment">	 * @param value the new value to set</em>
 <a class="jxr_linenumber" name="17" href="#17">17</a>  <em class="jxr_javadoccomment">	 */</em>
 <a class="jxr_linenumber" name="18" href="#18">18</a>  	<strong class="jxr_keyword">void</strong> setCellValue(CellType value);
 <a class="jxr_linenumber" name="19" href="#19">19</a>  
 <a class="jxr_linenumber" name="20" href="#20">20</a>  	<em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="21" href="#21">21</a>  <em class="jxr_javadoccomment">	 * Checks if the Cell is not in Use by any Player</em>
+<a class="jxr_linenumber" name="21" href="#21">21</a>  <em class="jxr_javadoccomment">	 * Checks if the {@link IBoardCell} is not in Use by any Player</em>
 <a class="jxr_linenumber" name="22" href="#22">22</a>  <em class="jxr_javadoccomment">	 * </em>
-<a class="jxr_linenumber" name="23" href="#23">23</a>  <em class="jxr_javadoccomment">	 * @return true if the cell can be passed</em>
+<a class="jxr_linenumber" name="23" href="#23">23</a>  <em class="jxr_javadoccomment">	 * @return true if the {@link IBoardCell} can be passed</em>
 <a class="jxr_linenumber" name="24" href="#24">24</a>  <em class="jxr_javadoccomment">	 */</em>
 <a class="jxr_linenumber" name="25" href="#25">25</a>  	<strong class="jxr_keyword">boolean</strong> isEmpty();
 <a class="jxr_linenumber" name="26" href="#26">26</a>  }
