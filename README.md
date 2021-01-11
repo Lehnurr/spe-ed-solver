@@ -1,12 +1,11 @@
+# spe-ed-solver by team Lehnurr
+
 ![build](https://github.com/Lehnurr/spe-ed-solver/workflows/Build/badge.svg)
 ![tests](https://github.com/Lehnurr/spe-ed-solver/workflows/Tests/badge.svg)
 ![java docs](https://github.com/Lehnurr/spe-ed-solver/workflows/Update%20Html%20JavaDocs/badge.svg?event=push)
 ![release](https://github.com/Lehnurr/spe-ed-solver/workflows/Publish%20DockerImage%20on%20GitHub/badge.svg?event=release)
 
-# spe-ed-solver by team Lehnurr
 [German Readme](README.de-DE.md)
-
-- Tags for Build-Action, current version, passed tests, test coverage, docker action, ...
 
 - Information about the informaticup
 
