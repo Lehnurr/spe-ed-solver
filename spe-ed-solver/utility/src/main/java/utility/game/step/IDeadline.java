@@ -9,7 +9,7 @@ public interface IDeadline {
 	/**
 	 * The amount of milliseconds until the {@link IDeadline} is reached.
 	 * 
-	 * @return the amount of milliseconds (< 0 if the deadline exceeded)
+	 * @return the amount of milliseconds (&lt; 0 if the deadline exceeded)
 	 */
 	long getRemainingMilliseconds();
 

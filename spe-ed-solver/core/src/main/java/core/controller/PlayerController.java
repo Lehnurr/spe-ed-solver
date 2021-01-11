@@ -26,7 +26,7 @@ public class PlayerController {
 	 * A Controller to control one {@link ISpeedSolverPlayer}.
 	 * 
 	 * @param viewerEnabled true if the viewer should be enabled for the players
-	 * @param playerTypes   the type of the controlled {@link ISpeedSolverPlayer}
+	 * @param playerType    the type of the controlled {@link ISpeedSolverPlayer}
 	 */
 	public PlayerController(final boolean viewerEnabled, final PlayerType playerType) {
 		this.player = playerType.newInstance();

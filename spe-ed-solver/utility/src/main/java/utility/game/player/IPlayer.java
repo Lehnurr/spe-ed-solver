@@ -41,7 +41,7 @@ public interface IPlayer {
 	/**
 	 * The round in which the {@link IPlayer} is.
 	 * 
-	 * @return the current round (>=0)
+	 * @return the current round (&gt;=0)
 	 */
 	int getRound();
 

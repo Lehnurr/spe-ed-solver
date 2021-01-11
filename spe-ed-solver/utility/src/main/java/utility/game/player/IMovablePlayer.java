@@ -6,7 +6,7 @@ package utility.game.player;
 public interface IMovablePlayer extends IPlayer {
 
     /**
-     * Sets the to do {@link PlayerAction action}. The {@SimulationPlayer} dies, if
+     * Sets the to do {@link PlayerAction action}. The {@link SimulationPlayer} dies, if
      * an {@link PlayerAction action} is already set.
      * 
      * @param action the action that the player should do

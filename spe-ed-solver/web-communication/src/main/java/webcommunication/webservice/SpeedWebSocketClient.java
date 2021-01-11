@@ -20,7 +20,8 @@ public class SpeedWebSocketClient {
 	 * a spe_ed webservice and initializes the {@link WebSocketClient} to connect
 	 * {@link SpeedWebSocket}.
 	 * 
-	 * @throws ConnectionInitializationException
+	 * @throws ConnectionInitializationException thrown when the connection could
+	 *                                           not be initialized
 	 */
 	public SpeedWebSocketClient() throws ConnectionInitializationException {
 

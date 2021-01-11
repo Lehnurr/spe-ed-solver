@@ -79,7 +79,8 @@ public class TimeAPIClient {
 	 * Sends a new HTTP GET request to the given server and returns the received
 	 * response as {@link String}.
 	 * 
-	 * @param uri {@link URI} of the server
+	 * @param uri    {@link URI} of the server
+	 * @param client the {@link HttpClient} to send requests to
 	 * @return response as {@link String}
 	 * @throws TimeRequestException thrown when the time API could not be reached
 	 */
