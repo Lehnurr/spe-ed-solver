@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import core.controller.GameController;
+import solver.ISpeedSolver;
 import solver.SolverType;
 import simulation.Game;
 import utility.game.board.Board;
