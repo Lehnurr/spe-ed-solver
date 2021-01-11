@@ -24,7 +24,7 @@ public class SingleEnemyPrediction {
 	private FloatMatrix minSteps;
 
 	/**
-	 * Creates a new {@link SingleEnemyForwardPrediction} calculation object for the
+	 * Creates a new {@link SingleEnemyPrediction} calculation object for the
 	 * given {@link IPlayer}.
 	 * 
 	 * @param board  {@link Board} the player moves on

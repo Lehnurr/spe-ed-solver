@@ -17,16 +17,22 @@ public interface IPlayer {
 
 	/**
 	 * Returns the players current direction
+	 * 
+	 * @return the {@link PlayerDirection}
 	 */
 	PlayerDirection getDirection();
 
 	/**
 	 * Returns the players current speed
+	 * 
+	 * @return speed as int
 	 */
 	int getSpeed();
 
 	/**
 	 * Returns the players current position
+	 * 
+	 * @return the {@link Point2i} of the position
 	 */
 	Point2i getPosition();
 

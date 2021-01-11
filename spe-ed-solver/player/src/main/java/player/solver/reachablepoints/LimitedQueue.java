@@ -71,7 +71,6 @@ public class LimitedQueue<Element> {
 	 * Returns the next value of the {@link LimitedQueue}.
 	 * 
 	 * @return the next value
-	 * @throws NoSuchElementException if no next element is available
 	 */
 	public Element poll() {
 		if (!hasNext())

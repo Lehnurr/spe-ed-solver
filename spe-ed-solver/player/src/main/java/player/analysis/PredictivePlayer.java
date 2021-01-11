@@ -34,7 +34,6 @@ public class PredictivePlayer implements IPlayer {
 	 * Initializes a new {@link PredictivePlayer} from a {@link IPlayer}.
 	 * 
 	 * @param player abstract {@link IPlayer} as initialization base
-	 * @param round  round the {@link IPlayer} is relevant for
 	 */
 	public PredictivePlayer(final IPlayer player) {
 
@@ -111,7 +110,7 @@ public class PredictivePlayer implements IPlayer {
 	}
 
 	/**
-	 * Calculates the short tail of the {@link PreddictivePlayer} as {@link List} of
+	 * Calculates the short tail of the {@link PredictivePlayer} as {@link List} of
 	 * {@link Point2i points}.
 	 * 
 	 * @param parentPosition  {@link Point2i} position of the parent
@@ -162,6 +161,7 @@ public class PredictivePlayer implements IPlayer {
 	 * 
 	 * @param shortTail short tail as {@link List}
 	 * @param longTail  long tail as {@link Set}
+	 * @param board     the {@link Board} to check for collisions
 	 * @return true if a self collision is detected
 	 */
 	private boolean isTailColliding(final List<Point2i> shortTail, final Set<Point2i> longTail,

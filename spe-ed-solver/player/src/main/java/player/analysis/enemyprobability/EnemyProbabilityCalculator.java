@@ -30,9 +30,8 @@ public class EnemyProbabilityCalculator {
 	 * Calculates the probabilities and min steps for each of the given
 	 * {@link IPlayer} enemies.
 	 * 
-	 * @param enemies     {@link IPlayer players} to calculate the probabilities for
-	 * @param board       {@link Board} to check for collisions
-	 * @param searchDepth amount of recursive steps to be taken for each player
+	 * @param enemies {@link IPlayer players} to calculate the probabilities for
+	 * @param board   {@link Board} to check for collisions
 	 */
 	public void performCalculation(final Collection<IPlayer> enemies, final Board<Cell> board) {
 

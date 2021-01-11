@@ -9,8 +9,8 @@ import utility.game.player.IPlayer;
 
 /**
  * Class for storing all informations available to the players in one game step.
- * This contains the updated {@link InputBoard}, deadlines and information about
- * you and all the {@link InputPlayer}.
+ * This contains the updated {@link Board}, deadlines and information about you
+ * and all the {@link IPlayer players}.
  */
 public class GameStep {
 

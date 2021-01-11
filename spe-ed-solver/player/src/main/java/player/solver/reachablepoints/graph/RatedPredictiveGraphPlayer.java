@@ -37,12 +37,13 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	 * Creates a new {@link RatedPredictiveGraphPlayer} from a given
 	 * {@link RatedPredictiveGraphPlayer RatedPredictiveGraphPlayer-Parent}
 	 * 
-	 * @param parent        The previous player
-	 * @param speed         The changed speed value
-	 * @param direction     The changed direction value
-	 * @param initialAction The action that the player should perform
-	 * @param relativeRound The number of rounds passed since the initialAction was
-	 *                      set
+	 * @param parent         The previous player
+	 * @param speed          The changed speed value
+	 * @param direction      The changed direction value
+	 * @param initialAction  The action that the player should perform
+	 * @param relativeRound  The number of rounds passed since the initialAction was
+	 *                       set
+	 * @param parentEdgeTail the tail as {@link List} of {@link ConcreteEdge edges}
 	 */
 	private RatedPredictiveGraphPlayer(IPlayer parent, int speed, PlayerDirection direction, PlayerAction initialAction,
 			int relativeRound, List<ConcreteEdge> parentEdgeTail) {
@@ -192,7 +193,6 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	 * Calculates the increment-amount for the initial edge importance by applying a
 	 * new passed edge
 	 * 
-	 * @param initialEdges                all initial edges
 	 * @param parentInitialEdgeIncrements the increment values from the parent
 	 * @param newEdge                     the passed edge
 	 * @return a new InitialEdgeIncrements-map if the edge intersects an initial
@@ -240,11 +240,12 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	/**
 	 * Calculates the Success and CutOff Rating with the given Parameters
 	 * 
-	 * @param parentSuccessRating The parents successration (base for the childs
-	 *                            rating)
-	 * @param probabilities       The enemy probabilities matrix
-	 * @param minSteps            the min-steps-matrix
-	 * @param newEdge             the new passsed edge
+	 * @param parentSuccessRating         The parents successration (base for the
+	 *                                    childs rating)
+	 * @param probabilities               The enemy probabilities matrix
+	 * @param minSteps                    the min-steps-matrix
+	 * @param parentInitialEdgeIncrements the initial increments from the parent
+	 * @param newEdge                     the new passsed edge
 	 */
 	private void calculateRating(final float parentSuccessRating, final FloatMatrix probabilities,
 			final FloatMatrix minSteps, final Map<ConcreteEdge, Integer> parentInitialEdgeIncrements,
@@ -260,14 +261,15 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	}
 
 	/**
-	 * Adds an Edge to the Edge-Tail (if possible) and recalculates the Succedd- &
+	 * Adds an Edge to the Edge-Tail (if possible) and recalculates the Succedd- and
 	 * Cut-Off ratings, if the Edge-addition was successfull
 	 * 
-	 * @param parentSuccessRating The parents successration (base for the childs
-	 *                            rating)
-	 * @param probabilities       The enemy probabilities matrix
-	 * @param minSteps            the min-steps-matrix
-	 * @param edge                the new passsed edge
+	 * @param parentSuccessRating         The parents successration (base for the
+	 *                                    childs rating)
+	 * @param probabilities               The enemy probabilities matrix
+	 * @param minSteps                    the min-steps-matrix
+	 * @param parentInitialEdgeIncrements the initial increments from the parent
+	 * @param edge                        the new passsed edge
 	 * @return true if the edge has been added and the results are updated. false if
 	 *         the edge has not been added and the results have not changed
 	 */

@@ -34,7 +34,9 @@ public class EnvironmentVariableParser {
 	 * 
 	 * @param name the name of the variable in the system
 	 * @return {@link String} representation of the environment variable
-	 * @throws EnvrionmentVariableParseException
+	 * @throws EnvrionmentVariableParseException thrown when the environment
+	 *                                           variable is not available in a
+	 *                                           valid format
 	 */
 	private String getEnvironmentVariableAsString(final String name) throws EnvrionmentVariableParseException {
 		final String variable = environmentVariables.getOrDefault(name, "");
@@ -48,7 +50,9 @@ public class EnvironmentVariableParser {
 	 * Returns the URL of the spe_ed webservice as {@link URI}.
 	 * 
 	 * @return URL of the webservice as {@link URI}
-	 * @throws EnvrionmentVariableParseException
+	 * @throws EnvrionmentVariableParseException thrown when the environment
+	 *                                           variable is not available in a
+	 *                                           valid format
 	 */
 	public URI getWebserviceUrl() throws EnvrionmentVariableParseException {
 		final String stringValue = getEnvironmentVariableAsString(WEBSERVICE_URL_ENV_NAME);
@@ -67,7 +71,9 @@ public class EnvironmentVariableParser {
 	 * webservice.
 	 * 
 	 * @return API Key as {@link String}
-	 * @throws EnvrionmentVariableParseException
+	 * @throws EnvrionmentVariableParseException thrown when the environment
+	 *                                           variable is not available in a
+	 *                                           valid format
 	 */
 	public String getApiKey() throws EnvrionmentVariableParseException {
 		final String stringValue = getEnvironmentVariableAsString(API_KEY_ENV_NAME);
@@ -79,7 +85,9 @@ public class EnvironmentVariableParser {
 	 * the spe_ed webservice server.
 	 * 
 	 * @return the {@link WebserviceConnectionURI} for the webservice
-	 * @throws EnvrionmentVariableParseException
+	 * @throws EnvrionmentVariableParseException thrown when the environment
+	 *                                           variable is not available in a
+	 *                                           valid format
 	 */
 	public WebserviceConnectionURI getWebserviceConnectionUri() throws EnvrionmentVariableParseException {
 		final URI webserviceURI = getWebserviceUrl();
@@ -97,7 +105,9 @@ public class EnvironmentVariableParser {
 	 * Returns the URL of the spe_ed time API as {@link URI}.
 	 * 
 	 * @return URL of the time API as {@link URI}
-	 * @throws EnvrionmentVariableParseException
+	 * @throws EnvrionmentVariableParseException thrown when the environment
+	 *                                           variable is not available in a
+	 *                                           valid format
 	 */
 	public URI getTimeUrl() throws EnvrionmentVariableParseException {
 		final String stringValue = getEnvironmentVariableAsString(TIME_URL_ENV_NAME);

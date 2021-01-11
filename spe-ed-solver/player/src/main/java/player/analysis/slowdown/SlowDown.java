@@ -17,7 +17,7 @@ public final class SlowDown {
 	}
 
 	/**
-	 * Calculates the {@link ActionsRating} for the given {@link Player} on the
+	 * Calculates the {@link ActionsRating} for the given {@link IPlayer} on the
 	 * given {@link Board}. The {@link ActionsRating} is favoring
 	 * {@link PlayerAction actions} slower speeds.
 	 * 

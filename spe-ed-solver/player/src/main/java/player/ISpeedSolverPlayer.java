@@ -15,8 +15,8 @@ public interface ISpeedSolverPlayer {
 	 * @param boardRatingConsumer {@link Consumer} which consumes
 	 *                            {@link ContextualFloatMatrix} for documentation of
 	 *                            the decision made
+	 * @return the {@link PlayerAction} result
 	 */
 	PlayerAction calculateAction(GameStep gameStep, Consumer<ContextualFloatMatrix> boardRatingConsumer);
-
 
 }

@@ -11,6 +11,7 @@ import player.solver.reachablepoints.IReachablePoints;
 import player.solver.reachablepoints.graph.board.Graph;
 import player.solver.reachablepoints.graph.board.Node;
 import player.solver.reachablepoints.graph.importance.EdgeImportance;
+import player.solver.reachablepoints.singlethreaded.GradualReachablePointsCalculation;
 import utility.game.board.Board;
 import utility.game.player.IPlayer;
 import utility.game.player.PlayerAction;
@@ -80,14 +81,10 @@ public class GraphCalculator implements IReachablePoints {
 	 * Generates {@link GraphCalculation} for different Threads with a base of
 	 * startPlayers
 	 * 
-	 * @param startPlayer   {@link RatedPredictiveGraphPlayer} to start the
-	 *                      calculations with
-	 * @param probabilities {@link FloatMatrix} containing the enemy probability
-	 *                      values
-	 * @param minSteps      {@link FloatMatrix} containing the minimum enemy steps
-	 *                      for each element
-	 * @param deadline      {@link Deadline} which must not be exceeded
-	 * @param graph         The Graph board to find the edges
+	 * @param startPlayers {@link RatedPredictiveGraphPlayer players} to start the
+	 *                     calculations with
+	 * @param deadline     {@link Deadline} which must not be exceeded
+	 * @param graph        The Graph board to find the edges
 	 * @return {@link GraphCalculation} objects
 	 */
 	private List<GraphCalculation> getCalculations(final List<RatedPredictiveGraphPlayer> startPlayers,
@@ -167,10 +164,10 @@ public class GraphCalculator implements IReachablePoints {
 
 	/**
 	 * Updates all the locally stored results by collecting all result of the
-	 * {@link GradualReachablePointsCalculation} objects.
+	 * {@link GraphCalculation} objects.
 	 * 
-	 * @param calculations {@link GradualReachablePointsCalculation} objects mapped
-	 *                     to the taken {@link PlayerAction}
+	 * @param calculations {@link GraphCalculation} objects mapped to the taken
+	 *                     {@link PlayerAction}
 	 */
 	private void addResults(final List<GraphCalculation> calculations) {
 		calculations.stream().forEach(this::addResults);

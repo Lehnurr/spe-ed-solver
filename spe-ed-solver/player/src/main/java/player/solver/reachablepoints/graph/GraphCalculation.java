@@ -143,7 +143,6 @@ public class GraphCalculation {
 	 * Returns the next value of the {@link GraphCalculation#queue}.
 	 * 
 	 * @return the next value
-	 * @throws NoSuchElementException if no next element is available
 	 */
 	public RatedPredictiveGraphPlayer queuePoll() {
 		return queue.poll();

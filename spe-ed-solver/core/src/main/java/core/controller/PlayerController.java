@@ -34,7 +34,7 @@ public class PlayerController {
 	}
 
 	/**
-	 * Sends the new {@link GameStep} to the {@link SpeedSolverPlayer} and returns
+	 * Sends the new {@link GameStep} to the {@link ISpeedSolverPlayer} and returns
 	 * the chosen {@link PlayerAction}.
 	 * 
 	 * @param gameStep the current {@link GameStep}

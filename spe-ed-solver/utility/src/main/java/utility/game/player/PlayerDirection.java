@@ -17,8 +17,8 @@ public enum PlayerDirection {
 	 * Applies an {@link PlayerAction} to the current direction and returns the new
 	 * adapted direction.
 	 * 
-	 * @param playerAction
-	 * @return new direction
+	 * @param playerAction the {@link PlayerAction} to execute
+	 * @return the resulting {@link PlayerDirection}
 	 */
 	public PlayerDirection doAction(PlayerAction playerAction) {
 
