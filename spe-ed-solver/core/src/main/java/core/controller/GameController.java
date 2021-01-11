@@ -4,34 +4,34 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import solver.PlayerType;
+import solver.SolverType;
 import utility.game.player.IPlayer;
 import utility.game.player.PlayerAction;
 import utility.game.step.GameStep;
 import utility.logging.ApplicationLogger;
 
 /**
- * {@link GameController} to control multiple {@link PlayerController
- * PlayerControllers}.
+ * {@link GameController} to control multiple {@link SolverController}.
  */
 public class GameController {
 
-	private final List<PlayerType> playerTypes;
+	private final List<SolverType> solverTypes;
 
-	private final Map<Integer, PlayerController> playerControllers;
+	private final Map<Integer, SolverController> solverController;
 
 	private final boolean viewerEnabled;
 
 	/**
-	 * A Controller to Control multiple {@link PlayerController PlayerControllers}.
+	 * A Controller to Control multiple {@link SolverController}.
 	 * 
-	 * @param viewerEnabled true if the viewer should be enabled for the players
-	 * @param playerTypes   {@link List} of {@link PlayerType} of the players
-	 *                      participating
+	 * @param viewerEnabled true if the viewer should be enabled for the
+	 *                      {@link SolverController solvers}
+	 * @param solverTypes   {@link List} of {@link SolverType} of the
+	 *                      {@link SolverController solvers} participating
 	 */
-	public GameController(final boolean viewerEnabled, final List<PlayerType> playerTypes) {
-		this.playerTypes = playerTypes;
-		this.playerControllers = new HashMap<>();
+	public GameController(final boolean viewerEnabled, final List<SolverType> solverTypes) {
+		this.solverTypes = solverTypes;
+		this.solverController = new HashMap<>();
 		this.viewerEnabled = viewerEnabled;
 	}
 
@@ -45,13 +45,13 @@ public class GameController {
 	public PlayerAction handleGameStep(final GameStep gameStep) {
 		final int playerId = gameStep.getSelf().getPlayerId();
 
-		playerControllers.computeIfAbsent(playerId, key -> {
-			final PlayerType playerType = playerTypes.remove(0);
+		solverController.computeIfAbsent(playerId, key -> {
+			final SolverType solverType = solverTypes.remove(0);
 			ApplicationLogger
-					.logInformation(String.format("Registered player of type %s and id %d.", playerType.name(), key));
-			return new PlayerController(viewerEnabled, playerType);
+					.logInformation(String.format("Registered solver of type %s and id %d.", solverType.name(), key));
+			return new SolverController(viewerEnabled, solverType);
 		});
 
-		return this.playerControllers.get(playerId).calculateAction(gameStep);
+		return this.solverController.get(playerId).calculateAction(gameStep);
 	}
 }

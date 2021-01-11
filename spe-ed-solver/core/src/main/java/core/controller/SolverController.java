@@ -3,8 +3,8 @@ package core.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import solver.ISpeedSolverPlayer;
-import solver.PlayerType;
+import solver.ISpeedSolver;
+import solver.SolverType;
 import utility.game.player.PlayerAction;
 import utility.game.step.GameStep;
 import utility.geometry.ContextualFloatMatrix;
@@ -14,25 +14,26 @@ import visualisation.InactiveViewer;
 import visualisation.Viewer;
 
 /**
- * {@link PlayerController} to control one {@link ISpeedSolverPlayer}
+ * {@link SolverController} to control one {@link ISpeedSolver}
  */
-public class PlayerController {
+public class SolverController {
 
-	private final ISpeedSolverPlayer player;
+	private final ISpeedSolver solver;
 
 	private final IViewer viewer;
 
 	/**
-	 * A Controller to control one {@link ISpeedSolverPlayer}.
+	 * A Controller to control one {@link ISpeedSolver}.
 	 * 
-	 * @param viewerEnabled true if the viewer should be enabled for the players
-	 * @param playerType    the type of the controlled {@link ISpeedSolverPlayer}
+	 * @param viewerEnabled true if the viewer should be enabled for the
+	 *                      {@link ISpeedSolver solver}
+	 * @param solverType    the type of the controlled {@link ISpeedSolver solver}
 	 */
-	public PlayerController(final boolean viewerEnabled, final PlayerType playerType) {
-		this.player = playerType.newInstance();
+	public SolverController(final boolean viewerEnabled, final SolverType solverType) {
+		this.solver = solverType.newInstance();
 
 		if (viewerEnabled) {
-			this.viewer = new Viewer(playerType.name());
+			this.viewer = new Viewer(solverType.name());
 		} else {
 			this.viewer = new InactiveViewer();
 		}
@@ -40,11 +41,11 @@ public class PlayerController {
 	}
 
 	/**
-	 * Sends the new {@link GameStep} to the {@link ISpeedSolverPlayer} and returns
-	 * the chosen {@link PlayerAction}.
+	 * Sends the new {@link GameStep} to the {@link ISpeedSolver} and returns the
+	 * chosen {@link PlayerAction}.
 	 * 
 	 * @param gameStep the current {@link GameStep}
-	 * @return the {@link PlayerAction} chosen by the player
+	 * @return the {@link PlayerAction} chosen by the {@link ISpeedSolver solver}
 	 */
 	public PlayerAction calculateAction(GameStep gameStep) {
 
@@ -55,7 +56,7 @@ public class PlayerController {
 
 		final List<ContextualFloatMatrix> boardRatings = new ArrayList<>();
 
-		final PlayerAction action = player.calculateAction(gameStep, boardRatings::add);
+		final PlayerAction action = solver.calculateAction(gameStep, boardRatings::add);
 
 		final long requiredMilliseconds = availableMilliseconds - gameStep.getDeadline().getRemainingMilliseconds();
 		final float requiredSeconds = requiredMilliseconds / 1000f;

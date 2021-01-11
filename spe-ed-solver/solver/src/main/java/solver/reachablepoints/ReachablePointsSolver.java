@@ -2,8 +2,8 @@ package solver.reachablepoints;
 
 import java.util.function.Consumer;
 
-import solver.ISpeedSolverPlayer;
-import solver.PlayerType;
+import solver.ISpeedSolver;
+import solver.SolverType;
 import solver.analysis.ActionsRating;
 import solver.analysis.enemyprobability.EnemyProbabilityCalculator;
 import utility.game.player.PlayerAction;
@@ -11,14 +11,14 @@ import utility.game.step.GameStep;
 import utility.geometry.ContextualFloatMatrix;
 
 /**
- * Player implementing {@link ISpeedSolverPlayer} used for multiple
- * {@link PlayerType} values. For each possible {@link PlayerAction} the
- * reachable points are determined. For each reachable point is rated for its
- * success and for the cut off potential. The {@link ActionsRating} is used to
- * give each analysis its weight. The overall highest rated {@link PlayerAction}
- * gets chosen for each {@link GameStep}.
+ * Player implementing {@link ISpeedSolver} used for multiple {@link SolverType}
+ * values. For each possible {@link PlayerAction} the reachable points are
+ * determined. For each reachable point is rated for its success and for the cut
+ * off potential. The {@link ActionsRating} is used to give each analysis its
+ * weight. The overall highest rated {@link PlayerAction} gets chosen for each
+ * {@link GameStep}.
  */
-public class ReachablePointsPlayer implements ISpeedSolverPlayer {
+public class ReachablePointsSolver implements ISpeedSolver {
 
 	private final EnemyProbabilityCalculator enemyProbabilityCalculator;
 	private final IReachablePoints reachablePointsCalculator;
@@ -26,7 +26,7 @@ public class ReachablePointsPlayer implements ISpeedSolverPlayer {
 	private final float defensiveWeight;
 
 	/**
-	 * Creates a new {@link ReachablePointsPlayer} with the given configuration
+	 * Creates a new {@link ReachablePointsSolver} with the given configuration
 	 * values.
 	 * 
 	 * @param enemySearchDepth recursive search depth to search for enemy actions
@@ -35,7 +35,7 @@ public class ReachablePointsPlayer implements ISpeedSolverPlayer {
 	 *                         {@link ActionsRating}
 	 * @param type             the {@link ReachablePointsType} of the calculation
 	 */
-	public ReachablePointsPlayer(final int enemySearchDepth, float aggressiveWeight, float defensiveWeight,
+	public ReachablePointsSolver(final int enemySearchDepth, float aggressiveWeight, float defensiveWeight,
 			final ReachablePointsType type) {
 		this.enemyProbabilityCalculator = new EnemyProbabilityCalculator(enemySearchDepth);
 		this.reachablePointsCalculator = type.newInstance();

@@ -10,7 +10,7 @@ import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.ParameterException;
 import picocli.CommandLine.Spec;
-import solver.PlayerType;
+import solver.SolverType;
 import simulation.SimulationDeadline;
 import utility.logging.ApplicationLogger;
 import utility.logging.LoggingLevel;
@@ -20,7 +20,7 @@ import utility.logging.LoggingLevel;
  * spe_ed with the given command line arguments. Throws
  * {@link ParameterException } in case of a wrong input.
  */
-@Command(name = "simulated", description = "Starts a game of spe_ed locally with the given players and simulates the game.")
+@Command(name = "simulated", description = "Starts a game of spe_ed locally with the given solvers and simulates the game.")
 public class PlaySimulationCommand implements Runnable {
 
 	@Spec
@@ -31,7 +31,7 @@ public class PlaySimulationCommand implements Runnable {
 	private int boardWidth;
 	private int boardHeight;
 
-	private List<PlayerType> playerTypes = Arrays.asList(PlayerType.getDefault(), PlayerType.getDefault());
+	private List<SolverType> solverTypes = Arrays.asList(SolverType.getDefault(), SolverType.getDefault());
 
 	@Option(names = { "-v", "--viewer" }, description = "If specified the viewer will be enabled.")
 	public void setViewerEnabled(final boolean viewerEnabled) {
@@ -54,30 +54,30 @@ public class PlaySimulationCommand implements Runnable {
 		this.boardHeight = boardHeight;
 	}
 
-	@Option(names = { "-p",
-			"--players" }, description = "Sets the player types to play the game with, seperated with \",\"")
-	public void setPlayerTypes(final String playerTypesString) {
+	@Option(names = { "-s",
+			"--solvers" }, description = "Sets the solver types to play the game with, seperated with \",\"")
+	public void setSolverTypes(final String solverTypesString) {
 
-		final List<PlayerType> playerTypes = new ArrayList<>();
+		final List<SolverType> solverTypes = new ArrayList<>();
 
-		final String[] playerTypeStrings = playerTypesString.split(",");
-		for (final String playerTypeString : playerTypeStrings) {
+		final String[] solverTypeStrings = solverTypesString.split(",");
+		for (final String solverTypeString : solverTypeStrings) {
 			try {
-				playerTypes.add(PlayerType.valueOf(playerTypeString));
+				solverTypes.add(SolverType.valueOf(solverTypeString));
 			} catch (final IllegalArgumentException e) {
 				throw new ParameterException(spec.commandLine(),
-						String.format("The %s player type is unknown! Valid values are %s seperated by \",\".",
-								playerTypeString, Arrays.asList(PlayerType.values())));
+						String.format("The %s solver type is unknown! Valid values are %s seperated by \",\".",
+								solverTypeString, Arrays.asList(SolverType.values())));
 			}
 		}
 
-		if (playerTypes.size() < 2)
-			throw new ParameterException(spec.commandLine(), "You need at least 2 players to simulate a game!");
+		if (solverTypes.size() < 2)
+			throw new ParameterException(spec.commandLine(), "You need at least 2 solvers to simulate a game!");
 
-		if (playerTypes.size() > 6)
-			throw new ParameterException(spec.commandLine(), "You can't play spe_ed with more than 6 players!");
+		if (solverTypes.size() > 6)
+			throw new ParameterException(spec.commandLine(), "You can't play spe_ed with more than 6 solvers!");
 
-		this.playerTypes = playerTypes;
+		this.solverTypes = solverTypes;
 	}
 
 	@Option(names = { "-l",
@@ -137,7 +137,7 @@ public class PlaySimulationCommand implements Runnable {
 
 	@Override
 	public void run() {
-		new SimulationMode(boardHeight, boardWidth, playerTypes, viewerEnabled).run();
+		new SimulationMode(boardHeight, boardWidth, solverTypes, viewerEnabled).run();
 	}
 
 }

@@ -7,7 +7,7 @@ import utility.logging.ApplicationLogger;
 import utility.logging.LoggingLevel;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
-import solver.PlayerType;
+import solver.SolverType;
 import picocli.CommandLine.ParameterException;
 
 /**
@@ -18,7 +18,7 @@ import picocli.CommandLine.ParameterException;
  * application. Therefore fulfilling the requirements to be able to run in the
  * desired docker container.
  */
-@Command(name = "live", description = "Starts a game of spe_ed on the given webservice with one player instance.")
+@Command(name = "live", description = "Starts a game of spe_ed on the given webservice with one solver instance.")
 public class PlayLiveCommand implements Runnable {
 
 	@Spec
@@ -26,16 +26,16 @@ public class PlayLiveCommand implements Runnable {
 
 	private boolean viewerEnabled = false;
 
-	private PlayerType playerType = PlayerType.REACHABLE_POINTS;
+	private SolverType solverType = SolverType.REACHABLE_POINTS;
 
 	@Option(names = { "-v", "--viewer" }, description = "If specified the viewer will be enabled.")
 	public void setViewerEnabled(final boolean viewerEnabled) {
 		this.viewerEnabled = viewerEnabled;
 	}
 
-	@Option(names = { "-p", "--player" }, description = "Sets the player type to play the game with.")
-	public void setPlayerType(final PlayerType playerType) {
-		this.playerType = playerType;
+	@Option(names = { "-s", "--solver" }, description = "Sets the solver type to play the game with.")
+	public void setSolverType(final SolverType solverType) {
+		this.solverType = solverType;
 	}
 
 	@Option(names = { "-l",
@@ -76,7 +76,7 @@ public class PlayLiveCommand implements Runnable {
 
 	@Override
 	public void run() {
-		new LiveMode(viewerEnabled, playerType).run();
+		new LiveMode(viewerEnabled, solverType).run();
 	}
 
 }

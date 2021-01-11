@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import core.controller.GameController;
-import solver.PlayerType;
+import solver.SolverType;
 import simulation.Game;
 import utility.game.board.Board;
 import utility.game.player.PlayerAction;
@@ -20,7 +20,7 @@ public class SimulationMode implements Runnable {
 	private final int height;
 	private final int width;
 
-	private final List<PlayerType> playerTypes;
+	private final List<SolverType> solverTypes;
 	private final boolean viewerEnabled;
 
 	/**
@@ -29,24 +29,25 @@ public class SimulationMode implements Runnable {
 	 * 
 	 * @param height        height of the {@link Board}
 	 * @param width         width of the {@link Board}
-	 * @param playerTypes   {@link List} of {@link PlayerType} of the players
-	 *                      participating
-	 * @param viewerEnabled true if the viewer should be enabled for the players
+	 * @param solverTypes   {@link List} of {@link SolverType} of the
+	 *                      {@link ISpeedSolver solvers} participating
+	 * @param viewerEnabled true if the viewer should be enabled for the
+	 *                      {@link ISpeedSolver solvers}
 	 * 
 	 */
-	public SimulationMode(final int height, final int width, final List<PlayerType> playerTypes,
+	public SimulationMode(final int height, final int width, final List<SolverType> solverTypes,
 			final boolean viewerEnabled) {
 		this.height = height;
 		this.width = width;
-		this.playerTypes = playerTypes;
+		this.solverTypes = solverTypes;
 		this.viewerEnabled = viewerEnabled;
 	}
 
 	@Override
 	public void run() {
 
-		final Game game = new Game(height, width, playerTypes.size());
-		final GameController gameController = new GameController(viewerEnabled, new ArrayList<>(playerTypes));
+		final Game game = new Game(height, width, solverTypes.size());
+		final GameController gameController = new GameController(viewerEnabled, new ArrayList<>(solverTypes));
 
 		ApplicationLogger.logInformation("RUNNING SIMULATED");
 

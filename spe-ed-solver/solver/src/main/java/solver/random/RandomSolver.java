@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import solver.ISpeedSolverPlayer;
+import solver.ISpeedSolver;
 import solver.analysis.PredictivePlayer;
 import utility.game.player.PlayerAction;
 import utility.game.step.GameStep;
@@ -18,7 +18,7 @@ import utility.geometry.ContextualFloatMatrix;
 /**
  * A Player that sends a random Action that doesn't cause suicide
  */
-public final class RandomPlayer implements ISpeedSolverPlayer {
+public final class RandomSolver implements ISpeedSolver {
 
     private static final Collector<?, ?, ?> SHUFFLER = Collectors
             .collectingAndThen(Collectors.toCollection(ArrayList::new), list -> {

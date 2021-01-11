@@ -6,7 +6,7 @@ import utility.game.player.PlayerAction;
 import utility.game.step.GameStep;
 import utility.geometry.ContextualFloatMatrix;
 
-public interface ISpeedSolverPlayer {
+public interface ISpeedSolver {
 
 	/**
 	 * Starts the Player to calculate a Action for the given GameStep
