@@ -7,7 +7,7 @@ import utility.logging.ApplicationLogger;
 import utility.logging.LoggingLevel;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
-import player.PlayerType;
+import solver.PlayerType;
 import picocli.CommandLine.ParameterException;
 
 /**

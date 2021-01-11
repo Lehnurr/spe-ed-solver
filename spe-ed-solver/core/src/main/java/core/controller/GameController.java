@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import player.PlayerType;
+import solver.PlayerType;
 import utility.game.player.IPlayer;
 import utility.game.player.PlayerAction;
 import utility.game.step.GameStep;

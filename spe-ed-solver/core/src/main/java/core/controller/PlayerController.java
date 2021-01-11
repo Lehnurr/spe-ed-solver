@@ -3,8 +3,8 @@ package core.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import player.ISpeedSolverPlayer;
-import player.PlayerType;
+import solver.ISpeedSolverPlayer;
+import solver.PlayerType;
 import utility.game.player.PlayerAction;
 import utility.game.step.GameStep;
 import utility.geometry.ContextualFloatMatrix;

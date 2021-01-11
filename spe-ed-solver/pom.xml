@@ -11,7 +11,7 @@
 		<module>core</module>
 		<module>utility</module>
 		<module>visualisation</module>
-		<module>player</module>
+		<module>solver</module>
 		<module>simulation</module>
 		<module>web-communication</module>
 	</modules>
@@ -92,8 +92,8 @@
 
 	<distributionManagement>
 		<site>
-			<id>www.lehnurr.de</id>
-			<url>https://www.lehnurr.de/docs/</url>
+			<id>spe-ed-docs.lehnurr.de</id>
+			<url>https://spe-ed-docs.lehnurr.de</url>
 		</site>
 	</distributionManagement>
 

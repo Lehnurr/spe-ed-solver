@@ -3,7 +3,7 @@ FROM maven:3.6.1-jdk-11-slim as DEPS
 
 WORKDIR /app
 COPY spe-ed-solver/core/pom.xml core/pom.xml
-COPY spe-ed-solver/player/pom.xml player/pom.xml
+COPY spe-ed-solver/solver/pom.xml solver/pom.xml
 COPY spe-ed-solver/simulation/pom.xml simulation/pom.xml
 COPY spe-ed-solver/utility/pom.xml utility/pom.xml
 COPY spe-ed-solver/visualisation/pom.xml visualisation/pom.xml
@@ -19,7 +19,7 @@ WORKDIR /app
 COPY --from=deps /root/.m2 /root/.m2
 COPY --from=deps /app/ /app
 COPY spe-ed-solver/core/src /app/core/src 
-COPY spe-ed-solver/player/src /app/player/src 
+COPY spe-ed-solver/solver/src /app/solver/src 
 COPY spe-ed-solver/simulation/src /app/simulation/src 
 COPY spe-ed-solver/utility/src /app/utility/src 
 COPY spe-ed-solver/visualisation/src /app/visualisation/src 
@@ -31,7 +31,7 @@ RUN mvn -B -e clean install -DskipTests=true
 FROM openjdk:11-jre-slim
 WORKDIR /app
 COPY --from=builder /app/core/target/core-0.0.1-SNAPSHOT-jar-with-dependencies.jar .
-COPY --from=builder /app/player/target/player-0.0.1-SNAPSHOT.jar .
+COPY --from=builder /app/solver/target/solver-0.0.1-SNAPSHOT.jar .
 COPY --from=builder /app/simulation/target/simulation-0.0.1-SNAPSHOT.jar .
 COPY --from=builder /app/utility/target/utility-0.0.1-SNAPSHOT.jar .
 COPY --from=builder /app/visualisation/target/visualisation-0.0.1-SNAPSHOT.jar .

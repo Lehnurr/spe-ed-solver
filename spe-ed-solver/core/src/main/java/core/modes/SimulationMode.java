@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import core.controller.GameController;
-import player.PlayerType;
+import solver.PlayerType;
 import simulation.Game;
 import utility.game.board.Board;
 import utility.game.player.PlayerAction;

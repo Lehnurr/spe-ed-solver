@@ -8,7 +8,7 @@ import java.util.List;
 import core.controller.GameController;
 import core.parser.EnvironmentVariableParser;
 import core.parser.EnvrionmentVariableParseException;
-import player.PlayerType;
+import solver.PlayerType;
 import utility.logging.ApplicationLogger;
 import utility.logging.LoggingLevel;
 import webcommunication.webservice.ConnectionInitializationException;

@@ -10,7 +10,7 @@ import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.ParameterException;
 import picocli.CommandLine.Spec;
-import player.PlayerType;
+import solver.PlayerType;
 import simulation.SimulationDeadline;
 import utility.logging.ApplicationLogger;
 import utility.logging.LoggingLevel;
