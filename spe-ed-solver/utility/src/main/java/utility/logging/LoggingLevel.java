@@ -27,20 +27,31 @@ public enum LoggingLevel {
         this.level = level;
     }
 
+    /**
+     * The integer Value of the {@link LoggingLevel}. Must not equals the ordinal
+     * value of the enum
+     * 
+     * @return The integer-{@link LoggingLevel level} Value
+     */
     public int getLevel() {
         return this.level;
     }
 
+    /**
+     * A string representation of the {@link LoggingLevel} for the output.
+     * 
+     * @return the name of the {@link LoggingLevel} with brackets around it
+     */
     public String getTag() {
         return "[" + name() + "]";
     }
 
     /**
-     * Returns the {@link LoggingLevel} for a given integer value. If no
-     * {@link LoggingLevel} was found a {@link IllegalArgumentException} is thrown.
+     * Returns the {@link LoggingLevel} for a given integer value.
      * 
-     * @param intValue integer value
-     * @return {@link LoggingLevel}
+     * @param intValue the integer value a {@link LoggingLevel} is searched for
+     * @return the found {@link LoggingLevel}
+     * @throws IllegalArgumentException if no {@link LoggingLevel} was found
      */
     public static LoggingLevel fromInteger(final int intValue) {
         if (intValue < ERROR.getLevel() || intValue > WARNING.getLevel()) {

@@ -11,11 +11,10 @@ import player.solver.reachablepoints.IReachablePoints;
 import player.solver.reachablepoints.graph.board.Graph;
 import player.solver.reachablepoints.graph.board.Node;
 import player.solver.reachablepoints.graph.importance.EdgeImportance;
-import player.solver.reachablepoints.singlethreaded.GradualReachablePointsCalculation;
 import utility.game.board.Board;
 import utility.game.player.IPlayer;
 import utility.game.player.PlayerAction;
-import utility.game.step.Deadline;
+import utility.game.step.IDeadline;
 import utility.game.step.GameStep;
 import utility.geometry.ContextualFloatMatrix;
 import utility.geometry.FloatMatrix;
@@ -83,12 +82,12 @@ public class GraphCalculator implements IReachablePoints {
 	 * 
 	 * @param startPlayers {@link RatedPredictiveGraphPlayer players} to start the
 	 *                     calculations with
-	 * @param deadline     {@link Deadline} which must not be exceeded
+	 * @param deadline     {@link IDeadline} which must not be exceeded
 	 * @param graph        The Graph board to find the edges
 	 * @return {@link GraphCalculation} objects
 	 */
 	private List<GraphCalculation> getCalculations(final List<RatedPredictiveGraphPlayer> startPlayers,
-			final Deadline deadline, final Board<Node> graph) {
+			final IDeadline deadline, final Board<Node> graph) {
 
 		final int width = graph.getWidth();
 		final int height = graph.getHeight();

@@ -21,8 +21,7 @@ public class JettyHttpClientFactory {
 		final SslContextFactory sslContextFactory = new SslContextFactory.Client();
 		sslContextFactory.setEndpointIdentificationAlgorithm(JETTY_ENDPOINT_IDENTIFICATION_ALGORITHM);
 
-		final HttpClient client = new HttpClient(sslContextFactory);
-		return client;
+		return new HttpClient(sslContextFactory);
 	}
 
 }

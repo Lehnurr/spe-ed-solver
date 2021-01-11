@@ -6,12 +6,20 @@ import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * A {@link WebserviceConnectionURI} allows the connection to a spe_ed
+ * webservice.
+ */
 public class WebserviceConnectionURI {
 
-	// name of the parameter used to identify the APi key for the webservice
+	/**
+	 * Name of the parameter used to identify the APi key for the webservice
+	 */
 	private static final String KEY_PARAMETER_NAME = "key";
 
-	// encoding used to encode the api key
+	/**
+	 * Encoding used to encode the api key
+	 */
 	private static final String KEY_ENCODING = StandardCharsets.UTF_8.toString();
 
 	private final URI uri;

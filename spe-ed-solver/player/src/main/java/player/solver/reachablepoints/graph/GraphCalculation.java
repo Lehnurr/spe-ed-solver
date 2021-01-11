@@ -11,13 +11,13 @@ import player.solver.reachablepoints.graph.board.Node;
 import player.solver.reachablepoints.graph.importance.EdgeImportance;
 import utility.game.board.Board;
 import utility.game.player.PlayerAction;
-import utility.game.step.Deadline;
+import utility.game.step.IDeadline;
 import utility.geometry.FloatMatrix;
 import utility.geometry.Point2i;
 
 /**
  * Calculation object for calculating success and cut off ratings based on some
- * initial players until a {@link Deadline} is reached. Calculations are
+ * initial players until a {@link IDeadline} is reached. Calculations are
  * graph-based and queued up based on their local solution improvement and a
  * small random value.
  */
@@ -30,7 +30,7 @@ public class GraphCalculation {
 	private final FloatMatrix probabilities;
 	private final FloatMatrix minSteps;
 
-	private final Deadline deadline;
+	private final IDeadline deadline;
 
 	private SuccessCalculation successCalculation;
 	private CutOffCalculation cutOffCalculation;
@@ -47,11 +47,11 @@ public class GraphCalculation {
 	 * @param minSteps      {@link FloatMatrix} with minimum steps
 	 * @param initialEdges  All possible Edges the player can do for the current
 	 *                      round
-	 * @param deadline      {@link Deadline} to limit execution time
+	 * @param deadline      {@link IDeadline} to limit execution time
 	 * @param queueSize     The maximum Size of elements in the queue
 	 */
 	public GraphCalculation(final Board<Node> graph, final FloatMatrix probabilities, final FloatMatrix minSteps,
-			final Map<PlayerAction, ConcreteEdge> initialEdges, final Deadline deadline, int queueSize) {
+			final Map<PlayerAction, ConcreteEdge> initialEdges, final IDeadline deadline, int queueSize) {
 
 		this.probabilities = probabilities;
 		this.minSteps = minSteps;
@@ -75,10 +75,10 @@ public class GraphCalculation {
 	 * @param minSteps      {@link FloatMatrix} with minimum steps * @param
 	 * @param initialEdges  All possible Edges the player can do for the current
 	 *                      round
-	 * @param deadline      {@link Deadline} to limit execution time
+	 * @param deadline      {@link IDeadline} to limit execution time
 	 */
 	public GraphCalculation(Board<Node> graph, FloatMatrix probabilities, FloatMatrix minSteps,
-			final Map<PlayerAction, ConcreteEdge> initialEdges, Deadline deadline) {
+			final Map<PlayerAction, ConcreteEdge> initialEdges, IDeadline deadline) {
 		this(graph, probabilities, minSteps, initialEdges, deadline, DEFAULT_QUEUE_SIZE);
 	}
 

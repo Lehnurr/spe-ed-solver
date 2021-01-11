@@ -1,7 +1,7 @@
 package utility.game.player;
 
 /**
- * MovablePlayer
+ * An abstract implementation of an {@link IMovablePlayer}
  */
 public abstract class MovablePlayer implements IMovablePlayer {
 
@@ -10,14 +10,14 @@ public abstract class MovablePlayer implements IMovablePlayer {
     /**
      * Iitilizes a new movable Player.
      * 
-     * @param round The current Game Round
+     * @param round the current Game Round
      */
     protected MovablePlayer(int round) {
         this.round = round;
     }
 
     /**
-     * Sets the IsActive-State of the Player to false
+     * Sets the IsActive-State of the Player to false.
      */
     public abstract void die();
 

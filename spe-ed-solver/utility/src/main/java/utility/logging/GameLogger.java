@@ -8,7 +8,7 @@ import utility.game.step.GameStep;
 
 /**
  * Uses the {@link ApplicationLogger#ApplicationLogger ApplicationLogger} to Log
- * information about the Game
+ * information about the Game.
  */
 public final class GameLogger {
 
@@ -16,9 +16,9 @@ public final class GameLogger {
 	}
 
 	/**
-	 * Logs the Data of a GameStep
+	 * Logs the Data of a GameStep.
 	 * 
-	 * @param step The {@link GameStep Step} to log
+	 * @param step the {@link GameStep Step} to log
 	 */
 	public static void logGameStep(GameStep step) {
 
@@ -67,10 +67,10 @@ public final class GameLogger {
 
 	/**
 	 * 
-	 * Logs the data of a Player State
+	 * Logs the data of a Player State.
 	 * 
-	 * @param player           The {@link IPlayer Player} to log
-	 * @param action           The players chosen {@link PlayerAction}
+	 * @param player           the {@link IPlayer Player} to log
+	 * @param action           the players chosen {@link PlayerAction}
 	 * @param requiredSeconds  seconds required by the player to calculate the
 	 *                         {@link PlayerAction}
 	 * @param availableSeconds seconds available to the player to calculate the

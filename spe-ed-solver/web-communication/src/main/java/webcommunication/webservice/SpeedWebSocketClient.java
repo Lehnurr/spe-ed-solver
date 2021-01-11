@@ -8,6 +8,9 @@ import org.eclipse.jetty.websocket.client.WebSocketClient;
 
 import webcommunication.JettyHttpClientFactory;
 
+/**
+ * A {@link SpeedWebSocketClient} to connect {@link SpeedWebSocket}.
+ */
 public class SpeedWebSocketClient {
 
 	private final WebSocketClient websocketClient;

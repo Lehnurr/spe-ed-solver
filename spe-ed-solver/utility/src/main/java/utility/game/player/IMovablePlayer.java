@@ -1,30 +1,42 @@
 package utility.game.player;
 
+/**
+ * A mutable {@link IPlayer} that can do {@link PlayerAction actions} and move.
+ */
 public interface IMovablePlayer extends IPlayer {
 
     /**
-     * Sets the Action that the Player will do
+     * Sets the to do {@link PlayerAction action}. The {@SimulationPlayer} dies, if
+     * an {@link PlayerAction action} is already set.
      * 
-     * @param action The ToDo-Action
+     * @param action the action that the player should do
      */
     void setNextAction(PlayerAction action);
 
+    /**
+     * The {@link PlayerAction} that was set as next action.
+     * 
+     * @return the last set {@link PlayerAction}
+     */
     PlayerAction getNextAction();
 
     /**
-     * Applies the last set {@link PlayerAction action}
+     * Applies the last set {@link PlayerAction action} to the Player. This affects
+     * the speed or {@link PlayerDirection}.
      */
     void doAction();
 
     /**
-     * Moves the player for speed Cells forward
+     * Changes the {@link IPlayer players} Position depending on the
+     * {@link IPlayer#getDirection()} and the {@link IPlayer#getSpeed()}, if the
+     * player {@link IPlayer#isActive() is active}
      */
     void doMove();
 
     /**
-     * Creates a Copy of the Movable
+     * Creates a Copy of the {@link IMovablePlayer}.
      * 
-     * @return The Copy of the IMovable
+     * @return the Copy of the {@link IMovablePlayer}
      */
     IMovablePlayer copy();
 }

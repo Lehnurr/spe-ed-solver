@@ -6,13 +6,13 @@ import player.solver.reachablepoints.LimitedQueue;
 import player.solver.reachablepoints.RatedPredictivePlayer;
 import utility.game.board.Board;
 import utility.game.board.Cell;
-import utility.game.step.Deadline;
+import utility.game.step.IDeadline;
 import utility.geometry.FloatMatrix;
 import utility.geometry.Point2i;
 
 /**
  * Calculation object for calculating success and cut off ratings based on an
- * initial player until a {@link Deadline} is reached. Calculations are queued
+ * initial player until a {@link IDeadline} is reached. Calculations are queued
  * up based on their local solution improvement and a small random value.
  */
 public class DeadlineReachablePointsCalculation {
@@ -27,7 +27,7 @@ public class DeadlineReachablePointsCalculation {
 
 	private final RatedPredictivePlayer startPlayer;
 
-	private final Deadline deadline;
+	private final IDeadline deadline;
 
 	private final FloatMatrix successMatrixResult;
 	private final FloatMatrix cutOffMatrixResult;
@@ -41,10 +41,10 @@ public class DeadlineReachablePointsCalculation {
 	 * @param probabilities {@link FloatMatrix} with probabilities
 	 * @param minSteps      {@link FloatMatrix} with minimum steps
 	 * @param startPlayer   {@link RatedPredictivePlayer} to start with
-	 * @param deadline      {@link Deadline} to limit execution time
+	 * @param deadline      {@link IDeadline} to limit execution time
 	 */
 	public DeadlineReachablePointsCalculation(final Board<Cell> board, final FloatMatrix probabilities,
-			final FloatMatrix minSteps, final RatedPredictivePlayer startPlayer, final Deadline deadline) {
+			final FloatMatrix minSteps, final RatedPredictivePlayer startPlayer, final IDeadline deadline) {
 
 		this.board = board;
 		this.probabilities = probabilities;

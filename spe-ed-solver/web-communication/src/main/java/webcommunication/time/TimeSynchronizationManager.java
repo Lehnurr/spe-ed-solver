@@ -3,7 +3,7 @@ package webcommunication.time;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 
-import utility.game.step.Deadline;
+import utility.game.step.IDeadline;
 import utility.logging.ApplicationLogger;
 import utility.logging.LoggingLevel;
 
@@ -12,15 +12,15 @@ import utility.logging.LoggingLevel;
  */
 public class TimeSynchronizationManager {
 
-	private static final long BUFFER_NANOSECONDS = 500000000;
+	private static final long BUFFER_NANOSECONDS = 500_000_000;
 
 	private final Duration serverTimeOffset;
 
 	/**
 	 * Creates a new {@link TimeSynchronizationManager} which initially synchronizes
 	 * the local client time with the server time. The created
-	 * {@link TimeSynchronizationManager} can then be used to create {@link Deadline
-	 * Deadlines} which can be used on the client side.
+	 * {@link TimeSynchronizationManager} can then be used to create
+	 * {@link IDeadline Deadlines} which can be used on the client side.
 	 * 
 	 * @param timeApiClient {@link TimeAPIClient} to get the server time from
 	 */
@@ -38,8 +38,7 @@ public class TimeSynchronizationManager {
 					.logWarning("The time API couldn't be reached. Running without synchronization from now on!");
 			serverTimeOffset = Duration.ZERO;
 		}
-		ApplicationLogger
-				.logInformation(String.format("Server time offset: %d ms", serverTimeOffset.toMillis()));
+		ApplicationLogger.logInformation(String.format("Server time offset: %d ms", serverTimeOffset.toMillis()));
 		this.serverTimeOffset = serverTimeOffset;
 	}
 
@@ -53,14 +52,14 @@ public class TimeSynchronizationManager {
 	}
 
 	/**
-	 * Creates a new {@link Deadline} which is synchronized with the server.
+	 * Creates a new {@link IDeadline} which is synchronized with the server.
 	 * 
 	 * @param deadlineTime {@link ZonedDateTime} of the deadline on the server
-	 * @return {@link Deadline} which can be used on the client
+	 * @return {@link IDeadline} which can be used on the client
 	 */
-	public Deadline createDeadline(final ZonedDateTime deadlineTime) {
+	public IDeadline createDeadline(final ZonedDateTime deadlineTime) {
 
-		return new Deadline() {
+		return new IDeadline() {
 
 			final ZonedDateTime targetTime = deadlineTime.minus(serverTimeOffset).minusNanos(BUFFER_NANOSECONDS);
 

@@ -4,6 +4,7 @@ package webcommunication.webservice;
  * Exception wrapper thrown when a webservice client tried to send a message,
  * which could not be sent.
  */
+@SuppressWarnings("serial")
 public class MessageSendingException extends Exception {
 
 	public MessageSendingException(String message) {

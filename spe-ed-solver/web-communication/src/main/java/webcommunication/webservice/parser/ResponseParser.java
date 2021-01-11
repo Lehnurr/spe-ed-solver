@@ -36,11 +36,11 @@ public class ResponseParser {
 	 * {@link String} format.
 	 * 
 	 * @param playerAction {@link PlayerAction} to respond with
-	 * @return {@link String JSON String} of the answer 
+	 * @return {@link String JSON String} of the answer
 	 */
 	public String parseResponse(final PlayerAction playerAction) {
 		final JSONResponse jsonResponse = new JSONResponse(playerAction.getName());
-		return gson.toJson(jsonResponse).toString();
+		return gson.toJson(jsonResponse);
 	}
 
 }

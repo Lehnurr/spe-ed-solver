@@ -3,7 +3,7 @@ package utility.game.player;
 import utility.geometry.Point2i;
 
 /**
- * IPlayer
+ * The state of a spe-ed-player in a specific round.
  */
 public interface IPlayer {
 
@@ -11,33 +11,37 @@ public interface IPlayer {
 	public static final int MIN_SPEED = 1;
 
 	/**
-	 * @return Returns the integer-ID of the Player
+	 * The Players unique Id.
+	 * 
+	 * @return returns the integer-ID of the {@link IPlayer Player}
 	 */
 	int getPlayerId();
 
 	/**
-	 * Returns the players current direction
+	 * The players current {@link PlayerDirection}.
 	 * 
 	 * @return the {@link PlayerDirection}
 	 */
 	PlayerDirection getDirection();
 
 	/**
-	 * Returns the players current speed
+	 * The players current speed.
 	 * 
 	 * @return speed as int
 	 */
 	int getSpeed();
 
 	/**
-	 * Returns the players current position
+	 * The players current {@link Point2i Position}.
 	 * 
 	 * @return the {@link Point2i} of the position
 	 */
 	Point2i getPosition();
 
 	/**
-	 * @return the round the {@link IPlayer} is valid for
+	 * The round in which the {@link IPlayer} is.
+	 * 
+	 * @return the current round (>=0)
 	 */
 	int getRound();
 

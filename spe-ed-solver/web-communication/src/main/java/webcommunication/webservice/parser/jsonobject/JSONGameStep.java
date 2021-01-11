@@ -13,7 +13,7 @@ public class JSONGameStep {
 	public int height;
 
 	public int[][] cells;
-	
+
 	public Map<String, JSONGameStepPlayer> players;
 
 	public int you;

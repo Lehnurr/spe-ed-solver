@@ -50,9 +50,7 @@ public class TimeAPIClient {
 
 		closeHttpClient(client);
 
-		ZonedDateTime time = serverTimeParser.parseTimeAPIResponse(responseString);
-
-		return time;
+		return serverTimeParser.parseTimeAPIResponse(responseString);
 	}
 
 	/**

@@ -15,7 +15,7 @@ import player.solver.reachablepoints.RatedPredictivePlayer;
 import utility.game.board.Board;
 import utility.game.board.Cell;
 import utility.game.player.PlayerAction;
-import utility.game.step.Deadline;
+import utility.game.step.IDeadline;
 import utility.game.step.GameStep;
 import utility.geometry.ContextualFloatMatrix;
 import utility.geometry.FloatMatrix;
@@ -71,13 +71,13 @@ public class ReachablePointsMultithreaded implements IReachablePoints {
 	 *                      values
 	 * @param minSteps      {@link FloatMatrix} containing the minimum enemy steps
 	 *                      for each element
-	 * @param deadline      {@link Deadline} which must not be exceeded
+	 * @param deadline      {@link IDeadline} which must not be exceeded
 	 * @return {@link DeadlineReachablePointsCalculation} objects mapped to the
 	 *         taken child {@link PlayerAction}
 	 */
 	private Map<PlayerAction, DeadlineReachablePointsCalculation> getCalculations(
 			final RatedPredictivePlayer startPlayer, final Board<Cell> board, final FloatMatrix probabilities,
-			final FloatMatrix minSteps, final Deadline deadline) {
+			final FloatMatrix minSteps, final IDeadline deadline) {
 
 		final Map<PlayerAction, DeadlineReachablePointsCalculation> result = new EnumMap<>(PlayerAction.class);
 
@@ -99,10 +99,10 @@ public class ReachablePointsMultithreaded implements IReachablePoints {
 	 * 
 	 * @param calculations {@link DeadlineReachablePointsCalculation} objects to
 	 *                     execute the calculation for
-	 * @param deadline     {@link Deadline} for the calculations
+	 * @param deadline     {@link IDeadline} for the calculations
 	 */
 	private void calculateMultithreaded(final Collection<DeadlineReachablePointsCalculation> calculations,
-			final Deadline deadline) {
+			final IDeadline deadline) {
 
 		final List<Thread> threads = new ArrayList<>();
 

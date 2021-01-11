@@ -25,7 +25,7 @@ import webcommunication.webservice.parser.ResponseParser;
 @WebSocket
 public class SpeedWebSocket {
 
-	private static final long JETTY_WEBSOCKET_TIMEOUT = 3600000;
+	private static final long JETTY_WEBSOCKET_TIMEOUT = 3_600_000;
 
 	private final GameStepParser gameStepParser;
 	private final ResponseParser responseParser;

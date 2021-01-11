@@ -14,7 +14,7 @@ import utility.game.board.Cell;
 import utility.game.board.CellValue;
 import utility.game.player.IPlayer;
 import utility.game.player.PlayerAction;
-import utility.game.step.Deadline;
+import utility.game.step.IDeadline;
 import utility.game.step.GameStep;
 import webcommunication.time.TimeSynchronizationManager;
 import webcommunication.webservice.parser.jsonobject.JSONGameStep;
@@ -55,18 +55,14 @@ public class GameStepParser {
 
 		final JSONGameStep jsonObject = gson.fromJson(jsonString, JSONGameStep.class);
 
-		final Deadline deadline;
-		if (jsonObject.running) { // if game is over, no deadline is available
+		final IDeadline deadline;
+		if (jsonObject.running) {
 			final ZonedDateTime deadlineTime = ZonedDateTime.ofInstant(jsonObject.deadline.toInstant(),
 					ZoneId.of(SPE_ED_TIME_FORMAT));
 			deadline = timeSynchronizationManager.createDeadline(deadlineTime);
 		} else {
-			deadline = new Deadline() {
-				@Override
-				public long getRemainingMilliseconds() {
-					return 0;
-				}
-			};
+			// if the game is over, no deadline is available
+			deadline = () -> 0;
 		}
 
 		final int boardWidth = jsonObject.cells[0].length;
@@ -79,7 +75,7 @@ public class GameStepParser {
 				cells[y][x] = new Cell(cellValue);
 			}
 		}
-		final Board<Cell> board = new Board<Cell>(cells);
+		final Board<Cell> board = new Board<>(cells);
 
 		final boolean running = jsonObject.running;
 
@@ -95,9 +91,7 @@ public class GameStepParser {
 			enemies.put(playerId, gameStepPlayer);
 		}
 
-		final GameStep result = new GameStep(self, enemies, deadline, board, running);
-
-		return result;
+		return new GameStep(self, enemies, deadline, board, running);
 	}
 
 }

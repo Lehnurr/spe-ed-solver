@@ -22,7 +22,7 @@ import utility.geometry.Point2i;
 import utility.geometry.Vector2i;
 
 /**
- * A simulated spe_ed Game
+ * A simulated spe_ed Game.
  */
 public final class Game {
 	private static final int JUMP_FREQUENCY = 6;
@@ -34,11 +34,11 @@ public final class Game {
 	private int round = 1;
 
 	/**
-	 * Initilizes a new Simulated Spe-ed Game
+	 * Initilizes a new Simulated Spe-ed Game.
 	 * 
-	 * @param height      Height of the Board
-	 * @param width       Widht of the Board
-	 * @param playerCount Number of Simulated Players
+	 * @param height      height of the Board
+	 * @param width       widht of the Board
+	 * @param playerCount number of Simulated Players
 	 */
 	public Game(final int height, final int width, final int playerCount) {
 		final Cell[][] cells = new Cell[height][width];
@@ -53,9 +53,9 @@ public final class Game {
 	}
 
 	/**
-	 * Starts the simulation
+	 * Starts the {@link Game simulated Game}.
 	 * 
-	 * @return Initial {@link GameStep} for each {@link SimulationPlayer}
+	 * @return initial {@link GameStep} for each {@link SimulationPlayer}
 	 */
 	public List<GameStep> startSimulation() {
 		// Initialize Players with a random startposition and a random direction
@@ -88,13 +88,14 @@ public final class Game {
 	}
 
 	/**
-	 * Applies an action to a simulated player. The Player dies if this is the
-	 * second action in the same turn. When all Players applied an Action, a new
-	 * round will start.
+	 * Applies an {@link PlayerAction action} to a {@link SimulationPlayer}. The
+	 * {@link SimulationPlayer player} dies if this is the second
+	 * {@link PlayerAction action action} in the same round. When all Players
+	 * applied an {@link PlayerAction action action}, a new round will start.
 	 * 
 	 * @param playerId the Players Id (1 - 6)
 	 * @param action   the action to be applied
-	 * @return The next Game-State, if all Players sent an {@link PlayerAction
+	 * @return the next Game-State, if all Players sent an {@link PlayerAction
 	 *         action} for this round. Else {@code null}
 	 */
 	public List<GameStep> setAction(final int playerId, final PlayerAction action) {
@@ -104,13 +105,10 @@ public final class Game {
 
 		// End round, if all players sent an Action
 		if (Arrays.stream(players).allMatch(SimulationPlayer::isReadyToMove)) {
-			// Do Actions & move the player
+
 			Arrays.stream(players).forEach(SimulationPlayer::doActionAndMove);
-			// update the board and the players alive-state
 			updateGameState();
-			// reset the deadline
 			deadline.resetDeadLine();
-			// return the new GameState as JSON
 			return generateGameSteps();
 		} else {
 			// return new list, because no new gameState is available
@@ -118,6 +116,12 @@ public final class Game {
 		}
 	}
 
+	/**
+	 * Generates for each {@link SimulationPlayer} a {@link GameStep gameStep
+	 * object}.
+	 * 
+	 * @return a {@link List} of {@link GameStep GameSteps}
+	 */
 	private List<GameStep> generateGameSteps() {
 		final List<GameStep> gameSteps = new ArrayList<>();
 
@@ -138,7 +142,7 @@ public final class Game {
 	}
 
 	/**
-	 * Applies the did steps to the board, processes collisions and increse round
+	 * Applies the did steps to the Board, processes collisions and increse round.
 	 */
 	private void updateGameState() {
 		HashMap<Point2i, Integer> newPassedCells = new HashMap<>();
@@ -159,8 +163,8 @@ public final class Game {
 	}
 
 	/**
-	 * Applys the last steps from a player to the Board. The Player dies, if he
-	 * causes a collision
+	 * Applies the last steps from a {@link SimulationPlayer} to the Board. The
+	 * {@link SimulationPlayer} dies, if he causes a collision.
 	 * 
 	 * @param player               the player whose steps are to be applied
 	 * @param oldPosition          the players position at the start of this round
@@ -169,10 +173,10 @@ public final class Game {
 	 */
 	private void applyPassedSteps(final SimulationPlayer player, final Point2i oldPosition,
 			final HashMap<Point2i, Integer> passedCellsThisRound) {
-		// calculate the passed steps
-		final List<Point2i> steps = getPassedSteps(oldPosition, player.getPosition());
 
-		for (final Point2i step : steps) {
+		final List<Point2i> passedSteps = getPassedSteps(oldPosition, player.getPosition());
+
+		for (final Point2i step : passedSteps) {
 			if (setCell(step, player.getPlayerId()) == CellValue.MULTIPLE_PLAYER) {
 				player.die();
 			}
@@ -194,7 +198,8 @@ public final class Game {
 	 * 
 	 * @param positionA the first {@link Point2i position}
 	 * @param positionB the second {@link Point2i position}
-	 * @return The passed Cells (Jumped over cells are excluded)
+	 * @return the passed {@link Point2i cell positions} (Jumped over cells are
+	 *         excluded)
 	 */
 	private List<Point2i> getPassedSteps(final Point2i positionA, final Point2i positionB) {
 		if (positionA.equals(positionB))
@@ -206,11 +211,11 @@ public final class Game {
 	}
 
 	/**
-	 * Sets a Board Cell with a value (playerId) and returns the new value
+	 * Sets a Board Cell with a value (playerId) and returns the new value.
 	 * 
-	 * @param point    The point to set
+	 * @param point    The {@link Point2i} to set
 	 * @param playerId The new playerId to set
-	 * @return The actual new value
+	 * @return The actual new {@link CellValue value}
 	 */
 	private CellValue setCell(final Point2i point, final int playerId) {
 		if (!board.isOnBoard(point))

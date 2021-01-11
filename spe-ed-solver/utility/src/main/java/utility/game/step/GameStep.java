@@ -18,13 +18,13 @@ public class GameStep {
 
 	private final Map<Integer, IPlayer> enemies;
 
-	private final Deadline deadline;
+	private final IDeadline deadline;
 
 	private final Board<Cell> board;
 
 	private final boolean running;
 
-	public GameStep(final IPlayer self, final Map<Integer, IPlayer> enemies, final Deadline deadline,
+	public GameStep(final IPlayer self, final Map<Integer, IPlayer> enemies, final IDeadline deadline,
 			final Board<Cell> board, final boolean running) {
 		this.self = self;
 		this.enemies = Collections.unmodifiableMap(enemies);
@@ -50,7 +50,7 @@ public class GameStep {
 	/**
 	 * @return the deadline
 	 */
-	public Deadline getDeadline() {
+	public IDeadline getDeadline() {
 		return deadline;
 	}
 

@@ -6,7 +6,6 @@ import java.util.function.Function;
 import utility.game.player.PlayerAction;
 import utility.game.step.GameStep;
 import webcommunication.time.TimeAPIClient;
-import webcommunication.time.TimeRequestException;
 import webcommunication.time.TimeSynchronizationManager;
 import webcommunication.time.parser.ServerTimeParser;
 import webcommunication.webservice.parser.GameStepParser;
@@ -19,8 +18,8 @@ import webcommunication.webservice.parser.ResponseParser;
  */
 public class SpeedConnectionManager {
 
-	final WebserviceConnectionURI webserviceConnectionURI;
-	final TimeSynchronizationManager timeSynchronizationManager;
+	private final WebserviceConnectionURI webserviceConnectionURI;
+	private final TimeSynchronizationManager timeSynchronizationManager;
 
 	/**
 	 * Creates a new {@link SpeedConnectionManager} with a given

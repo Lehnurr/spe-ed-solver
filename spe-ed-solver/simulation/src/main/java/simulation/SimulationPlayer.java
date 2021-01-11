@@ -4,6 +4,10 @@ import utility.game.player.*;
 import utility.geometry.Point2i;
 import utility.geometry.Vector2i;
 
+/**
+ * A movable {@link SimulationPlayer Player} which is controlled by the
+ * {@link Game Simulated Game}.
+ */
 public class SimulationPlayer extends MovablePlayer {
 
     private int playerId;
@@ -13,10 +17,27 @@ public class SimulationPlayer extends MovablePlayer {
     private boolean isActive;
     private int speed;
 
+    /**
+     * Creates a new {@SimulationPlayer Simulated Player} starting at round 1.
+     * 
+     * @param playerId         the Id of the Player
+     * @param initialPosition  the Player's start position
+     * @param initialDirection the Player's start direction
+     * @param initialSpeed     the Player's start speed (usually 1)
+     */
     public SimulationPlayer(int playerId, Point2i initialPosition, PlayerDirection initialDirection, int initialSpeed) {
         this(playerId, initialPosition, initialDirection, initialSpeed, 1);
     }
 
+    /**
+     * Creates a new {@SimulationPlayer Simulated Player}.
+     * 
+     * @param playerId         the Id of the Player
+     * @param initialPosition  the Player's start position
+     * @param initialDirection the Player's start direction
+     * @param initialSpeed     the Player's start speed (usually 1)
+     * @param initialRound     the round in which the player should be initialized
+     */
     public SimulationPlayer(int playerId, Point2i initialPosition, PlayerDirection initialDirection, int initialSpeed,
             int initialRound) {
         super(initialRound);
@@ -65,9 +86,6 @@ public class SimulationPlayer extends MovablePlayer {
     }
 
     @Override
-    /**
-     * Sets the to do action. The Player dies, if an action is already set.
-     */
     public void setNextAction(PlayerAction action) {
         // in the simulation it is not allowed to overwrite the set action
         if (this.lastSetAction != null)
@@ -83,10 +101,6 @@ public class SimulationPlayer extends MovablePlayer {
     }
 
     @Override
-    /**
-     * Applies the {@link SimulationPlayer#lastSetAction} to the Player, if the
-     * player is alive and resets the Action
-     */
     public void doAction() {
         if (!isActive())
             return;
@@ -102,10 +116,6 @@ public class SimulationPlayer extends MovablePlayer {
     }
 
     @Override
-    /**
-     * Changes the Players Position depending on direction and speed, if the player
-     * is alive
-     */
     public void doMove() {
         if (!isActive())
             return;

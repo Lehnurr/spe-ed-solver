@@ -13,7 +13,7 @@ import utility.game.board.Board;
 import utility.game.board.Cell;
 import utility.game.player.IPlayer;
 import utility.game.player.PlayerAction;
-import utility.game.step.Deadline;
+import utility.game.step.IDeadline;
 import utility.game.step.GameStep;
 import utility.geometry.ContextualFloatMatrix;
 import utility.geometry.FloatMatrix;
@@ -88,12 +88,12 @@ public class ReachablePointsSingleThreaded implements IReachablePoints {
 	/**
 	 * Executes the main calculation loop. Thereby multiple
 	 * {@link GradualReachablePointsCalculation calculations} are repeatedly
-	 * alternated until a {@link Deadline} is reached.
+	 * alternated until a {@link IDeadline} is reached.
 	 * 
-	 * @param deadline {@link Deadline} for the
+	 * @param deadline {@link IDeadline} for the
 	 *                 {@link GradualReachablePointsCalculation calculations}
 	 */
-	private void executeCalculationLoop(final Deadline deadline) {
+	private void executeCalculationLoop(final IDeadline deadline) {
 
 		boolean finished = false;
 
