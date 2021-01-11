@@ -3,7 +3,7 @@ package utility.extensions;
 import java.util.Random;
 
 /**
- * EnumExtensions
+ * Generic Extension functions for Enums.
  */
 public final class EnumExtensions {
 
@@ -11,10 +11,10 @@ public final class EnumExtensions {
 	}
 
 	/**
-	 * Returns a random Enum-Value
+	 * Returns a random Enum-Value.
 	 * 
 	 * @param <EnumType> the type of the result
-	 * @param enumClass  The class of the enum, from which a random value should be
+	 * @param enumClass  the class of the enum, from which a random value should be
 	 *                   chosen
 	 * @return a random Enum-Value of the given Enum-Class
 	 */

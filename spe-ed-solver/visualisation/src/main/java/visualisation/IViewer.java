@@ -8,6 +8,10 @@ import utility.game.player.PlayerAction;
 import utility.game.step.GameStep;
 import utility.geometry.ContextualFloatMatrix;
 
+/**
+ * Generalization to be able to use the {@link Viewer active Viewer} and the
+ * {@link InactiveViewer inactive Viewer} equally
+ */
 public interface IViewer {
 
 	/**

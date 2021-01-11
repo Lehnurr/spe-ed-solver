@@ -12,9 +12,12 @@ import utility.geometry.Point2i;
  * Class for generating {@link NamedImage NamedImages} from
  * {@link ContextualFloatMatrix Matrices} with a {@link ColorGradient}.
  */
-public class ImageGeneration {
+public final class ImageGeneration {
 
 	private static final String BOARD_IMAGE_NAME = "Board";
+
+	private ImageGeneration() {
+	}
 
 	/**
 	 * Generates a {@link BufferedImage} from a given {@link ContextualFloatMatrix}
@@ -43,8 +46,7 @@ public class ImageGeneration {
 			}
 		}
 
-		final NamedImage result = new NamedImage(matrix.getName(), bufferedImage);
-		return result;
+		return new NamedImage(matrix.getName(), bufferedImage);
 	}
 
 	/**
@@ -70,8 +72,7 @@ public class ImageGeneration {
 			}
 		}
 
-		final NamedImage result = new NamedImage(BOARD_IMAGE_NAME, bufferedImage);
-		return result;
+		return new NamedImage(BOARD_IMAGE_NAME, bufferedImage);
 	}
 
 }

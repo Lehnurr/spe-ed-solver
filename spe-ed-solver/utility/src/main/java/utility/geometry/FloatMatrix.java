@@ -1,5 +1,8 @@
 package utility.geometry;
 
+/**
+ * A Matrix with float values.
+ */
 public class FloatMatrix {
 
 	private final float[][] values;

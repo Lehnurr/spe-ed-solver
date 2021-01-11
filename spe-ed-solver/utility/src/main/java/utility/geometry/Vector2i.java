@@ -5,8 +5,14 @@ package utility.geometry;
  */
 public final class Vector2i {
 
-	// size of the vector in each dimension
+	/**
+	 * size of the vector in the x-dimension.
+	 */
 	private final int x;
+
+	/**
+	 * size of the vector in the y-dimension.
+	 */
 	private final int y;
 
 	/**
@@ -50,7 +56,7 @@ public final class Vector2i {
 
 	@Override
 	/**
-	 * Representation as row vector
+	 * Representation as row vector.
 	 */
 	public String toString() {
 		return "(" + x + " , " + y + ")";

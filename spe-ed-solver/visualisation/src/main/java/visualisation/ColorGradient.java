@@ -8,7 +8,7 @@ import java.awt.Color;
 public enum ColorGradient {
 
 	/**
-	 * Red dominant color gradient: black - red - orange - yellow - white
+	 * Red dominant color gradient: black - red - orange - yellow - white.
 	 */
 	FIRE {
 		@Override

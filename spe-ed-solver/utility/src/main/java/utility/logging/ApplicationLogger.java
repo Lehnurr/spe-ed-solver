@@ -13,7 +13,8 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * A Logger for Console or File output. Logs nothing by Default.
+ * A Logger for Console or File output. Logs {@link LoggingLevel#INFO} by
+ * default
  */
 public final class ApplicationLogger {
 	private static LoggingLevel consoleLoggingLevel = LoggingLevel.INFO;
@@ -26,7 +27,7 @@ public final class ApplicationLogger {
 	}
 
 	/**
-	 * Determines whether the log entries are output to the console
+	 * Determines whether the log entries are output to the console.
 	 * 
 	 * @param loggingLevel the {@link LoggingLevel} for the console
 	 */
@@ -37,10 +38,10 @@ public final class ApplicationLogger {
 
 	/**
 	 * Determines whether debug information (e.g. stacktrace of exceptions) are
-	 * displayed on the console
+	 * displayed on the console.
 	 * 
-	 * @param debugEnabled True, if all available information is to be displayed on
-	 *                     the console.
+	 * @param debugEnabled true, if all available information is to be displayed on
+	 *                     the console
 	 */
 	public static void setDebugMode(boolean debugEnabled) {
 		setConsoleLoggingLevel(LoggingLevel.WARNING);
@@ -50,14 +51,13 @@ public final class ApplicationLogger {
 	/**
 	 * Specifies whether and where to store the log file(s).
 	 * 
-	 * @param logFileDirectory A Path (Empty string for the execution path) to a
+	 * @param logFileDirectory a Path (Empty string for the execution path) to a
 	 *                         Directory or null if no file should be created.
-	 *                         Default is null.
+	 *                         Default is "log"
 	 */
 	public static void setLogFilePath(String logFileDirectory) {
 
 		if (logFileDirectory == null) {
-			// Disable File Logging
 			logFilePath = null;
 			return;
 		}
@@ -90,18 +90,20 @@ public final class ApplicationLogger {
 	}
 
 	/**
-	 * Logs a simple Information-String with the Information-Tag and a Time-Stamp
+	 * Logs a simple Information-String with the {@link LoggingLevel#INFO INFO-Tag}
+	 * and a Time-Stamp
 	 * 
-	 * @param informationMessage The Message to log
+	 * @param informationMessage the Message to log
 	 */
 	public static void logInformation(String informationMessage) {
 		logMessage(LoggingLevel.INFO, informationMessage, LoggingLevel.INFO, informationMessage);
 	}
 
 	/**
-	 * Logs a simple Warning-String with the Warning-Tag and a Time-Stamp
+	 * Logs a simple Warning-String with the {@link LoggingLevel#WARNING
+	 * WARNING-Tag} and a Time-Stamp.
 	 * 
-	 * @param warningMessage The Message to log
+	 * @param warningMessage the Message to log
 	 */
 	public static void logWarning(String warningMessage) {
 		if (logFilePath == null && consoleLoggingLevel.getLevel() < LoggingLevel.WARNING.getLevel())
@@ -111,22 +113,23 @@ public final class ApplicationLogger {
 	}
 
 	/**
-	 * Logs a simple Error-String with the Error-Tag and a Time-Stamp
+	 * Logs a simple Error-String with the {@link LoggingLevel#ERROR ERROR-Tag} and
+	 * a Time-Stamp.
 	 * 
-	 * @param errorMessage The Message to log
+	 * @param errorMessage the Message to log
 	 */
 	public static void logError(String errorMessage) {
 		logMessage(LoggingLevel.ERROR, errorMessage, LoggingLevel.ERROR, errorMessage);
 	}
 
 	/**
-	 * Logs a Exception with a Time-Stamp. Additionally, a seperate level for the
-	 * console output can be secified
+	 * Logs an {@link Throwable} with a Time-Stamp. Additionally, a seperate
+	 * {@link LoggingLevel} for the console output can be secified.
 	 * 
-	 * @param exception         The occurred exception
-	 * @param exceptionLoglevel The level for the exception
-	 * @param messageLoglevel   The level for the console output of the exception
-	 *                          message
+	 * @param exception         the occurred {@link Throwable}
+	 * @param exceptionLoglevel the {@link LoggingLevel} for the {@link Throwable}
+	 * @param messageLoglevel   the {@link LoggingLevel} for the console output of
+	 *                          the {@link Throwable} message
 	 */
 	public static void logException(Throwable exception, LoggingLevel exceptionLoglevel, LoggingLevel messageLoglevel) {
 		final StringBuilder exceptionOutput = new StringBuilder();
@@ -147,10 +150,11 @@ public final class ApplicationLogger {
 	}
 
 	/**
-	 * Logs a Exception with a Time-Stamp.
+	 * Logs a {@link Throwable} with a Time-Stamp.
 	 * 
-	 * @param exception                   The occurred exception
-	 * @param exceptionAndMessageLoglevel The level for the exception
+	 * @param exception                   The occurred {@link Throwable}
+	 * @param exceptionAndMessageLoglevel The {@link LoggingLevel} for the
+	 *                                    {@link Throwable}
 	 */
 	public static void logException(Throwable exception, LoggingLevel exceptionAndMessageLoglevel) {
 		logException(exception, exceptionAndMessageLoglevel, exceptionAndMessageLoglevel);

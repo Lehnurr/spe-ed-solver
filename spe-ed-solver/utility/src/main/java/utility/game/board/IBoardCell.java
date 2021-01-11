@@ -1,26 +1,26 @@
 package utility.game.board;
 
 /**
- * IBoardCell
+ * Generalization for cells of a {@link Board}
  */
 public interface IBoardCell<CellType> {
 
 	/**
-	 * @return The Cells value
+	 * @return The value of the {@link IBoardCell}
 	 */
 	CellType getCellValue();
 
 	/**
-	 * Sets the Cells value
+	 * Sets the value of the {@link IBoardCell}
 	 * 
 	 * @param value the new value to set
 	 */
 	void setCellValue(CellType value);
 
 	/**
-	 * Checks if the Cell is not in Use by any Player
+	 * Checks if the {@link IBoardCell} is not in Use by any Player
 	 * 
-	 * @return true if the cell can be passed
+	 * @return true if the {@link IBoardCell} can be passed
 	 */
 	boolean isEmpty();
 }

@@ -3,19 +3,23 @@ package utility.geometry;
 import java.util.Objects;
 
 /**
- * A line segment is a part of a vertical or horizontal line that is bounded by
- * two distinct points
+ * A {@link LineSegment2i Line segment} is a part of a vertical or horizontal
+ * line that is bounded by two distinct {@link Point2i points}.
  */
 public class LineSegment2i {
     private final Point2i pointA;
     private final Point2i pointB;
 
     /**
-     * Initializes the segment by two given points
+     * Initializes the {@link LineSegment2i segment} by two given {@link Point2i
+     * points}.
      * 
-     * @param pointA The first point of the segment
-     * @param pointB The second point of the segment
-     * @throws IllegalArgumentException if the segment is not vertical or horizontal
+     * @param pointA the first {@link Point2i point} of the {@link LineSegment2i
+     *               segment}
+     * @param pointB the second {@link Point2i point} of the {@link LineSegment2i
+     *               segment}
+     * @throws IllegalArgumentException if the {@link LineSegment2i segment} is not
+     *                                  vertical or horizontal
      */
     public LineSegment2i(Point2i pointA, Point2i pointB) {
         this.pointA = pointA;
@@ -26,19 +30,31 @@ public class LineSegment2i {
         }
     }
 
+    /**
+     * The first {@link Point2i} of the {@link LineSegment2i segment}.
+     * 
+     * @return a {@link Point2i} that limits the {@link LineSegment2i segment}
+     */
     public Point2i getPointA() {
         return this.pointA;
     }
 
+    /**
+     * The second {@link Point2i} of the {@link LineSegment2i segment}.
+     * 
+     * @return a {@link Point2i} that limits the {@link LineSegment2i segment}
+     */
     public Point2i getPointB() {
         return this.pointB;
     }
 
     /**
-     * Check for Intersection (Euclidean geometry) with the existing edges
+     * Check for Intersection (Euclidean geometry) with another {@link LineSegment2i
+     * segment}.
      * 
-     * @param other the other segment
-     * @return true if the segments intersect, otherwise false
+     * @param other the other {@link LineSegment2i segment}
+     * @return true if the {@link LineSegment2i segment segments} intersect,
+     *         otherwise false
      */
     public boolean intersect(LineSegment2i other) {
         if (this.isVertical() == other.isVertical()) {
@@ -75,10 +91,11 @@ public class LineSegment2i {
     }
 
     /**
-     * Checks if the segment contains a point
+     * Checks if the {@link LineSegment2i segment} contains a {@link Point2i}.
      * 
-     * @param point The point to check
-     * @return true if the segment contains the point
+     * @param point the {@link Point2i} to check
+     * @return true if the {@link LineSegment2i segment} contains the
+     *         {@link Point2i}
      */
     public boolean contains(Point2i point) {
         int aValue;
@@ -103,9 +120,10 @@ public class LineSegment2i {
     }
 
     /**
-     * Checks if the segment is veritcal
+     * Checks if the {@link LineSegment2i segment} is veritcal
      * 
-     * @return true if the segment is vertical, false if the segment is horizontal
+     * @return true if the {@link LineSegment2i segment} is vertical, false if the
+     *         {@link LineSegment2i segment} is horizontal
      */
     public boolean isVertical() {
         return this.pointA.getY() == this.pointB.getY();

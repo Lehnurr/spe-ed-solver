@@ -2,11 +2,16 @@ package utility.game.player;
 
 import utility.geometry.Vector2i;
 
+/**
+ * Enum to describe every possible {@link PlayerDirection} a player can look at.
+ */
 public enum PlayerDirection {
 
 	UP(new Vector2i(0, -1)), RIGHT(new Vector2i(1, 0)), DOWN(new Vector2i(0, 1)), LEFT(new Vector2i(-1, 0));
 
-	// vector of the direction on the game board
+	/**
+	 * Vector of the direction on the game board.
+	 */
 	private final Vector2i vector;
 
 	private PlayerDirection(Vector2i vector) {
@@ -45,7 +50,7 @@ public enum PlayerDirection {
 	}
 
 	/**
-	 * Inverts the direction (180° turn)
+	 * Inverts the direction (180° turn).
 	 * 
 	 * @return inverted direction
 	 */

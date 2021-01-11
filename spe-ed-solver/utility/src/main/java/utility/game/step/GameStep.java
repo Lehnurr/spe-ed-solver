@@ -24,6 +24,16 @@ public class GameStep {
 
 	private final boolean running;
 
+	/**
+	 * Initilizes a new {@link GameStep}.
+	 * 
+	 * @param self     the {@link IPlayer} that received the {@link GameStep}
+	 * @param enemies  a {@link Map} of {@link IPlayer self's} enemies
+	 * @param deadline the {@link IDeadline} for the current game round
+	 * @param board    the {@link Board} with all set {@link Cell cells}
+	 * @param running  true, if the game is still runnning, false if the game is
+	 *                 finished
+	 */
 	public GameStep(final IPlayer self, final Map<Integer, IPlayer> enemies, final IDeadline deadline,
 			final Board<Cell> board, final boolean running) {
 		this.self = self;
@@ -34,40 +44,45 @@ public class GameStep {
 	}
 
 	/**
-	 * @return the self
+	 * @return the {@link IPlayer} that received the {@link GameStep}
 	 */
 	public IPlayer getSelf() {
 		return self;
 	}
 
 	/**
-	 * @return the enemies
+	 * @return a {@link Map} of {@link GameStep#getSelf() self's} enemies
 	 */
 	public Map<Integer, IPlayer> getEnemies() {
 		return enemies;
 	}
 
 	/**
-	 * @return the deadline
+	 * @return the {@link IDeadline} for the current game round
 	 */
 	public IDeadline getDeadline() {
 		return deadline;
 	}
 
 	/**
-	 * @return the board
+	 * @return the {@link Board} with all set {@link Cell cells}
 	 */
 	public Board<Cell> getBoard() {
 		return board;
 	}
 
 	/**
-	 * @return the running
+	 * @return true, if the game is still runnning, false if the game is finished
 	 */
 	public boolean isRunning() {
 		return running;
 	}
 
+	/**
+	 * The number of dead and alive players that are part of the game.
+	 * 
+	 * @return the playercount (2, 3, 4, 5 or 6)
+	 */
 	public int getPlayerCount() {
 		return this.getEnemies().size() + 1;
 	}

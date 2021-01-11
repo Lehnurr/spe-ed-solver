@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * The representation of a integer 2d coordinate
+ * The representation of a integer 2d coordinate.
  */
 public class Point2i {
 
@@ -42,7 +42,7 @@ public class Point2i {
 	}
 
 	/**
-	 * Calculates the manhattan distance between self and other {@link Point2i}
+	 * Calculates the manhattan distance between self and other {@link Point2i}.
 	 * 
 	 * @param other the other {@link Point2i} to use
 	 * @return value of manhattan distance
@@ -63,7 +63,7 @@ public class Point2i {
 
 	/**
 	 * Calculates all contained Points in a rectangle defined by two diagonal
-	 * corner-Points
+	 * corner-Points.
 	 * 
 	 * @param other the other {@link Point2i} to use
 	 * @return all Points in the defined rectangle
@@ -83,7 +83,7 @@ public class Point2i {
 	}
 
 	/**
-	 * Calculates the von Neumann neighborhood (4-neighborhood)
+	 * Calculates the von Neumann neighborhood (4-neighborhood).
 	 * 
 	 * @return 4 neighbors (top, bottom, left, right)
 	 */
@@ -96,7 +96,7 @@ public class Point2i {
 	}
 
 	/**
-	 * Calculates the von Moore neighborhood (8-neighborhood)
+	 * Calculates the von Moore neighborhood (8-neighborhood).
 	 * 
 	 * @return 8 neighbors (all surrounding cells)
 	 */
