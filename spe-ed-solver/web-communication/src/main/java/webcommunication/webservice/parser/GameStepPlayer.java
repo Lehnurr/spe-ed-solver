@@ -1,7 +1,9 @@
 package webcommunication.webservice.parser;
 
+import utility.game.board.Board;
 import utility.game.player.IPlayer;
 import utility.game.player.PlayerDirection;
+import utility.game.step.GameStep;
 import utility.geometry.Point2i;
 import webcommunication.webservice.parser.jsonobject.JSONGameStepPlayer;
 
@@ -25,7 +27,7 @@ public class GameStepPlayer implements IPlayer {
 	 * @param active    shows if the player is alive
 	 * @param direction direction the player is currently moving in
 	 * @param speed     current speed the player is moving with
-	 * @param position  position as {@link Position2i} of the player on the
+	 * @param position  position as {@link Point2i} of the player on the
 	 *                  {@link Board}
 	 * @param round     round the information is valid for
 	 */

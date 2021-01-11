@@ -12,8 +12,8 @@ public final class Vector2i {
 	/**
 	 * Generates a new vector.
 	 * 
-	 * @param x
-	 * @param y
+	 * @param x the x element
+	 * @param y the y element
 	 */
 	public Vector2i(int x, int y) {
 		this.x = x;

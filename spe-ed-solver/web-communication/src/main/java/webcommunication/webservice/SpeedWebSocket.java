@@ -37,17 +37,15 @@ public class SpeedWebSocket {
 	private int roundCounter = 0;
 
 	/**
-	 * Creates a new {@link SpeedClientSocket} which is able to connect to a spe_ed
+	 * Creates a new {@link SpeedWebSocket} which is able to connect to a spe_ed
 	 * webservice server.
 	 * 
 	 * @param handleStepFunction {@link Function} which handles a single game step
 	 * @param gameStepParser     {@link GameStepParser} to parse a JSON game step
 	 * @param responseParser     {@link ResponseParser} to parse JSON responses
-	 * @throws ConnectionInitializationException
 	 */
 	public SpeedWebSocket(final Function<GameStep, PlayerAction> handleStepFunction,
-			final GameStepParser gameStepParser, final ResponseParser responseParser)
-			throws ConnectionInitializationException {
+			final GameStepParser gameStepParser, final ResponseParser responseParser) {
 
 		this.gameStepParser = gameStepParser;
 		this.responseParser = responseParser;
@@ -101,7 +99,8 @@ public class SpeedWebSocket {
 	 * Asynchronous wait for the closure of the {@link SpeedWebSocket}. Blocks until
 	 * the {@link SpeedWebSocket} is closed.
 	 * 
-	 * @throws InterruptedException
+	 * @throws InterruptedException thrown when the await is interrupted by another
+	 *                              thread
 	 */
 	public void awaitClosure() throws InterruptedException {
 		try {

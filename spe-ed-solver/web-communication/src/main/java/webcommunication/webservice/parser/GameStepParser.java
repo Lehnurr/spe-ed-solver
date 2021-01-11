@@ -34,6 +34,9 @@ public class GameStepParser {
 	/**
 	 * Creates a new @{@link GameStepParser} with {@link Gson} object by using the
 	 * default {@link GsonBuilder}.
+	 * 
+	 * @param timeSynchronizationManager the {@link TimeSynchronizationManager} to
+	 *                                   synchronize incoming times with
 	 */
 	public GameStepParser(final TimeSynchronizationManager timeSynchronizationManager) {
 		this.gson = new GsonBuilder().create();
@@ -44,9 +47,9 @@ public class GameStepParser {
 	 * Transforms a given {@link PlayerAction} to a valid JSON response in
 	 * {@link String} format.
 	 * 
-	 * @param playerAction {@link PlayeAction} to respond with
-	 * @param round        round which has to be parsed
-	 * @return {@link String JSON String} of the answer
+	 * @param jsonString {@link String JSON String} of the {@link GameStep}
+	 * @param round      round which has to be parsed
+	 * @return the {@link GameStep} result
 	 */
 	public GameStep parseGameStep(final String jsonString, final int round) {
 

@@ -30,7 +30,6 @@ public class SpeedConnectionManager {
 	 * @param webserviceConnectionURI of the spe_ed server
 	 * @param timeApiUri              {@link URI} of the API for the spe_ed_server
 	 *                                time
-	 * @throws TimeRequestException
 	 */
 	public SpeedConnectionManager(final WebserviceConnectionURI webserviceConnectionURI, final URI timeApiUri) {
 		this.webserviceConnectionURI = webserviceConnectionURI;
@@ -48,9 +47,13 @@ public class SpeedConnectionManager {
 	 * @param gameStepHandler {@link Function} to handle a {@link GameStep} by
 	 *                        processing its contents and returning a
 	 *                        {@link PlayerAction}
-	 * @throws ConnectionInitializationException
-	 * @throws ConnectionTerminationException
-	 * @throws InterruptedException
+	 * @throws ConnectionInitializationException thrown when the connection to the
+	 *                                           server could not be initialized
+	 * @throws ConnectionTerminationException    thrown when the connection to the
+	 *                                           server could not be terminated as
+	 *                                           planned
+	 * @throws InterruptedException              thrown when the await for the
+	 *                                           server closure was interrupted
 	 */
 	public void play(final Function<GameStep, PlayerAction> gameStepHandler)
 			throws ConnectionInitializationException, ConnectionTerminationException, InterruptedException {

@@ -7,8 +7,8 @@ public class FloatMatrix {
 	/**
 	 * Generates a new 2d matrix with the given dimensions.
 	 * 
-	 * @param width
-	 * @param height
+	 * @param width  the width of the {@link FloatMatrix}
+	 * @param height the height of the {@link FloatMatrix}
 	 */
 	public FloatMatrix(int width, int height) {
 		this.values = new float[height][width];
@@ -18,9 +18,9 @@ public class FloatMatrix {
 	 * Generates a new 2d matrix with the given dimensions and a default value for
 	 * each element.
 	 * 
-	 * @param width
-	 * @param height
-	 * @param initialValue
+	 * @param width        the width of the {@link FloatMatrix}
+	 * @param height       the height of the {@link FloatMatrix}
+	 * @param initialValue the initial value for all elements
 	 */
 	public FloatMatrix(int width, int height, float initialValue) {
 		this(width, height);
@@ -36,7 +36,7 @@ public class FloatMatrix {
 	 * Copy Constructor for duplicating the {@link FloatMatrix} by duplicating each
 	 * value.
 	 * 
-	 * @param sourceMatrix
+	 * @param sourceMatrix the {@link FloatMatrix} to get the initial values from
 	 */
 	public FloatMatrix(final FloatMatrix sourceMatrix) {
 		this(sourceMatrix.getWidth(), sourceMatrix.getHeight());
@@ -66,9 +66,9 @@ public class FloatMatrix {
 	}
 
 	/**
-	 * Returns the float value stored at the given point.
+	 * Returns the float value stored at the given position.
 	 * 
-	 * @param point
+	 * @param point {@link Point2i} of the position
 	 * @return float value at the given position
 	 */
 	public float getValue(Point2i point) {
@@ -78,8 +78,8 @@ public class FloatMatrix {
 	/**
 	 * Returns the float value stored at the given coordinates.
 	 * 
-	 * @param x
-	 * @param y
+	 * @param x the x coordinate
+	 * @param y the y coordinate
 	 * @return float value at the given position
 	 */
 	public float getValue(int x, int y) {
@@ -89,19 +89,19 @@ public class FloatMatrix {
 	/**
 	 * Changes the value at a given {@link Point2i}.
 	 * 
-	 * @param point
-	 * @param value
+	 * @param point the {@link Point2i position} to set the value for
+	 * @param value the new value to set
 	 */
 	public void setValue(Point2i point, float value) {
 		setValue(point.getX(), point.getY(), value);
 	}
 
 	/**
-	 * Changes the value at a given coordinate.
+	 * Changes the value at the given coordinates.
 	 * 
-	 * @param x
-	 * @param y
-	 * @param value
+	 * @param x     the x coordinate
+	 * @param y     thy y coordinates
+	 * @param value the new value to set
 	 */
 	public void setValue(int x, int y, float value) {
 		values[y][x] = value;
@@ -135,7 +135,7 @@ public class FloatMatrix {
 	/**
 	 * Builds a new {@link FloatMatrix} with the max value for each element.
 	 * 
-	 * @param other
+	 * @param other the other {@link FloatMatrix} to find the maximum value
 	 * @return {@link FloatMatrix} of max values
 	 */
 	public FloatMatrix max(FloatMatrix other) {
@@ -173,7 +173,7 @@ public class FloatMatrix {
 	/**
 	 * Builds a new {@link FloatMatrix} with the min value for each element.
 	 * 
-	 * @param other
+	 * @param other the other {@link FloatMatrix} to find the minimum value
 	 * @return {@link FloatMatrix} of min values
 	 */
 	public FloatMatrix min(FloatMatrix other) {
@@ -196,7 +196,7 @@ public class FloatMatrix {
 	/**
 	 * Builds a new {@link FloatMatrix} with the multiplied value for each element.
 	 * 
-	 * @param other
+	 * @param other the other {@link FloatMatrix} to multiply
 	 * @return {@link FloatMatrix} of products
 	 */
 	public FloatMatrix mul(FloatMatrix other) {
@@ -219,7 +219,7 @@ public class FloatMatrix {
 	/**
 	 * Builds a new {@link FloatMatrix} with the summed up value for each element.
 	 * 
-	 * @param other
+	 * @param other the other {@link FloatMatrix} to add
 	 * @return {@link FloatMatrix} of sums
 	 */
 	public FloatMatrix sum(FloatMatrix other) {

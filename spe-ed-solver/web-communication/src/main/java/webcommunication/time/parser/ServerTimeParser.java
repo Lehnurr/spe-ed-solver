@@ -7,7 +7,6 @@ import java.util.Date;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-
 /**
  * Responsible for parsing a {@link JSONServerTime}.
  */
@@ -36,22 +35,22 @@ public class ServerTimeParser {
 	}
 
 	/**
-	 * Parses a given response as {@link String} and returns the received
-	 * {@link ServerTime}.
+	 * Parses a given response as {@link String} and returns the received server
+	 * time.
 	 * 
 	 * @param responseString server response as {@link String}
-	 * @return received {@link ServerTime}
+	 * @return received server time
 	 */
 	public ZonedDateTime parseTimeAPIResponse(final String responseString) {
 
 		final JSONServerTime jsonObject = gson.fromJson(responseString, JSONServerTime.class);
-		
+
 		final Date baseDate = jsonObject.time;
 		final ZonedDateTime baseTime = ZonedDateTime.ofInstant(baseDate.toInstant(), ZoneId.of(SERVER_TIME_FORMAT));
-		
+
 		final long additionalNanos = jsonObject.milliseconds * 1000000;
 		final ZonedDateTime adaptedTime = baseTime.plusNanos(additionalNanos);
-		
+
 		return adaptedTime;
 	}
 

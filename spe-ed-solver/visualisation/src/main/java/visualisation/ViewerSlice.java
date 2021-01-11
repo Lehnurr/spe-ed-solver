@@ -33,7 +33,7 @@ public class ViewerSlice {
 	 * @param availableTime   the available time in seconds
 	 * @param performedAction the {@link PlayerAction} chosen by the player for the
 	 *                        given round
-	 * @param timeRequired    the required time in seconds
+	 * @param requiredTime    the required time in seconds
 	 */
 	public ViewerSlice(final int playerId, final int round, final double availableTime,
 			final PlayerAction performedAction, final double requiredTime) {

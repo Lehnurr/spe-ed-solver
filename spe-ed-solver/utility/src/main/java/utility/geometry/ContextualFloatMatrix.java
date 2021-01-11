@@ -5,13 +5,10 @@ package utility.geometry;
  */
 public class ContextualFloatMatrix {
 
-	// name describing the matrix content
 	private final String name;
 
-	// copy of the actual matrix with its content
 	private final FloatMatrix matrix;
 
-	// range in which the element values reside
 	private final float rangeMin;
 	private final float rangeMax;
 
@@ -19,8 +16,8 @@ public class ContextualFloatMatrix {
 	 * Generates a {@link ContextualFloatMatrix} only with its name. Range values
 	 * are determined by the range of the input {@link FloatMatrix}.
 	 * 
-	 * @param name
-	 * @param matrix
+	 * @param name   the describing name of the matrix
+	 * @param matrix the represented {@link FloatMatrix}
 	 */
 	public ContextualFloatMatrix(final String name, final FloatMatrix matrix) {
 		this(name, matrix, matrix.min(), matrix.max());
@@ -29,10 +26,10 @@ public class ContextualFloatMatrix {
 	/**
 	 * Generates a {@link ContextualFloatMatrix} with name and range values.
 	 * 
-	 * @param name
-	 * @param matrix
-	 * @param rangeMin
-	 * @param rangeMax
+	 * @param name     the describing name of the matrix
+	 * @param matrix   the represented {@link FloatMatrix}
+	 * @param rangeMin the minimum meaningful value
+	 * @param rangeMax the maximum meaningful value
 	 */
 	public ContextualFloatMatrix(final String name, final FloatMatrix matrix, final float rangeMin,
 			final float rangeMax) {
@@ -54,24 +51,24 @@ public class ContextualFloatMatrix {
 	/**
 	 * Returns the value of the underlying matrix at the given position.
 	 * 
-	 * @param point
+	 * @param point the {@link Point2i position} to get the value from
 	 * @return float value at the given coordinates
 	 */
 	public float getValue(Point2i point) {
 		return matrix.getValue(point);
 	}
-	
+
 	/**
 	 * Returns the value of the underlying matrix at the given position.
 	 * 
-	 * @param x
-	 * @param y
+	 * @param x the x coordinate
+	 * @param y the y coordinate
 	 * @return float value at the given coordinates
 	 */
 	public float getValue(int x, int y) {
 		return matrix.getValue(x, y);
 	}
-	
+
 	/**
 	 * Returns the width of the underlying {@link FloatMatrix}.
 	 * 
@@ -80,7 +77,7 @@ public class ContextualFloatMatrix {
 	public int getWidth() {
 		return matrix.getWidth();
 	}
-	
+
 	/**
 	 * Returns the height of the underlying {@link FloatMatrix}.
 	 * 

@@ -48,11 +48,9 @@ public class ImageGeneration {
 	}
 
 	/**
-	 * Generates a {@link BufferedImage} from a given {@link Board}
+	 * Generates a {@link BufferedImage} from a given {@link Board}.
 	 * 
-	 * @param board         {@link Board}
-	 * @param colorGradient {@link ColorGradient} to transform matrix values into
-	 *                      colors
+	 * @param board {@link Board} to generate the {@link BufferedImage} for
 	 * @return {@link NamedImage} as result
 	 */
 	public static NamedImage generateImageFromBoard(final Board<Cell> board) {

@@ -106,7 +106,7 @@ public class Viewer implements IViewer {
 	/**
 	 * Saves the current slice to a specified {@link File}.
 	 * 
-	 * @param {@link File} to save the slice data to
+	 * @param file {@link File} to save the slice data to
 	 */
 	private void saveSlice(final File file) {
 		ViewerSlice slice = slices.get(displayedRoundIdx);

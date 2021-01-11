@@ -32,7 +32,8 @@ public class SpeedWebSocketClient {
 	 * Starts the connection to the {@link WebSocketClient} if it is not started
 	 * already.
 	 * 
-	 * @throws ConnectionInitializationException
+	 * @throws ConnectionInitializationException thrown when the connection could
+	 *                                           not be initialized
 	 */
 	private synchronized void assureStarted() throws ConnectionInitializationException {
 
@@ -47,9 +48,10 @@ public class SpeedWebSocketClient {
 
 	/**
 	 * Assures that the {@link WebSocketClient} is closed. This includes closing all
-	 * {@link Sessions}.
+	 * {@link Session}.
 	 * 
-	 * @throws ConnectionTerminationException
+	 * @throws ConnectionTerminationException thrown when the connection could not
+	 *                                        be terminated
 	 */
 	public synchronized void assureStopped() throws ConnectionTerminationException {
 		for (final Session session : websocketClient.getOpenSessions()) {
@@ -72,7 +74,8 @@ public class SpeedWebSocketClient {
 	 *                                connected
 	 * @param webserviceConnectionURI the {@link WebserviceConnectionURI} of the
 	 *                                webserver
-	 * @throws ConnectionInitializationException
+	 * @throws ConnectionInitializationException thrown when no connection can be
+	 *                                           initialized
 	 */
 	public void connectToServer(final SpeedWebSocket speedWebSocket,
 			final WebserviceConnectionURI webserviceConnectionURI) throws ConnectionInitializationException {

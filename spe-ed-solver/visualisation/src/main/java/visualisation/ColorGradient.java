@@ -43,7 +43,7 @@ public enum ColorGradient {
 	 * Clipping value to range between 0 and 1 and applying RGB gradient
 	 * transformation.
 	 * 
-	 * @param value
+	 * @param value the float value to get the RGB value for
 	 * @return RGB value as int (0 - 0xFFFFFF)
 	 */
 	public final int apply(final float value) {

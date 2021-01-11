@@ -202,7 +202,7 @@ public class ViewerWindow {
 	}
 
 	/**
-	 * Adds multiple {@link NamedImages} to the {@link ViewerWindow}.
+	 * Adds multiple {@link NamedImage} to the {@link ViewerWindow}.
 	 * 
 	 * @param namedImages the {@link NamedImage images} to display as board ratings
 	 */

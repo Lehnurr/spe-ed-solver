@@ -15,8 +15,8 @@ public class Point2i {
 	/**
 	 * Generates a 2d Point.
 	 * 
-	 * @param x
-	 * @param y
+	 * @param x the x coordinate
+	 * @param y the y coordinate
 	 */
 	public Point2i(int x, int y) {
 		this.x = x;
@@ -42,9 +42,9 @@ public class Point2i {
 	}
 
 	/**
-	 * Calculates the manhattan distance between self and other {@link Point}
+	 * Calculates the manhattan distance between self and other {@link Point2i}
 	 * 
-	 * @param other
+	 * @param other the other {@link Point2i} to use
 	 * @return value of manhattan distance
 	 */
 	public int manhattanDistance(Point2i other) {
@@ -54,7 +54,7 @@ public class Point2i {
 	/**
 	 * Calculates the new {@link Point2i} when translated with a {@link Vector2i}.
 	 * 
-	 * @param offsetVector
+	 * @param offsetVector the vector to translate the {@link Point2i} with
 	 * @return new {@link Point2i} with adapted position
 	 */
 	public Point2i translate(Vector2i offsetVector) {
@@ -65,6 +65,7 @@ public class Point2i {
 	 * Calculates all contained Points in a rectangle defined by two diagonal
 	 * corner-Points
 	 * 
+	 * @param other the other {@link Point2i} to use
 	 * @return all Points in the defined rectangle
 	 */
 	public List<Point2i> pointsInRectangle(Point2i other) {

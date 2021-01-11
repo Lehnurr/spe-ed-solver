@@ -35,7 +35,7 @@ public class ResponseParser {
 	 * Transforms a given {@link PlayerAction} to a valid JSON response in
 	 * {@link String} format.
 	 * 
-	 * @param playerAction {@link PlayeAction} to respond with
+	 * @param playerAction {@link PlayerAction} to respond with
 	 * @return {@link String JSON String} of the answer 
 	 */
 	public String parseResponse(final PlayerAction playerAction) {
