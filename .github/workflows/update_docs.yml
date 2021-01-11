@@ -1,31 +1,30 @@
 # updating the documentation
 
-name: Update Docs
+name: Update Html JavaDocs
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   update:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 11
-      uses: actions/setup-java@v1
-      with:
+      - uses: actions/checkout@v2
+      - name: Setup JDK 11 for x64
+        uses: actions/setup-java@v1
+        with:
           java-version: 11
           architecture: x64
-    - name: Build Docs
-      run: mvn clean site site:stage --file spe-ed-solver/pom.xml
-    - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@3.7.1
-      with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        BRANCH: gh-pages
-        FOLDER: spe-ed-solver/target/staging
-        CLEAN: true
+      - name: Build JavaDocs
+        run: mvn clean site site:stage --file spe-ed-solver/pom.xml
+      - name: Deploy JavaDocs
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: spe-ed-solver/target/staging
+          CLEAN: true

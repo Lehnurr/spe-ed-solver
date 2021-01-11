@@ -1,9 +1,9 @@
-name: Windowsx64 Compile & Test
+name: Windows Build & Test
 
 # At the end of every day
 on:
   schedule:
-    - cron: '0 3 * * *'
+    - cron: "0 3 * * *"
 
 jobs:
   build:
