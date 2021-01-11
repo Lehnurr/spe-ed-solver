@@ -18,7 +18,7 @@ public class SimulationPlayer extends MovablePlayer {
     private int speed;
 
     /**
-     * Creates a new {@SimulationPlayer Simulated Player} starting at round 1.
+     * Creates a new {@link SimulationPlayer Simulated Player} starting at round 1.
      * 
      * @param playerId         the Id of the Player
      * @param initialPosition  the Player's start position
@@ -30,7 +30,7 @@ public class SimulationPlayer extends MovablePlayer {
     }
 
     /**
-     * Creates a new {@SimulationPlayer Simulated Player}.
+     * Creates a new {@link SimulationPlayer Simulated Player}.
      * 
      * @param playerId         the Id of the Player
      * @param initialPosition  the Player's start position
