@@ -1,0 +1,5 @@
+solver
+solver.analysis
+solver.analysis.slowdown
+solver.reachablepoints
+solver.reachablepoints.graph.board

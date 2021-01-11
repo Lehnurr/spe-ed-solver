@@ -13,8 +13,8 @@
 <a class="jxr_linenumber" name="3" href="#3">3</a>   <strong class="jxr_keyword">import</strong> java.util.ArrayList;
 <a class="jxr_linenumber" name="4" href="#4">4</a>   <strong class="jxr_keyword">import</strong> java.util.List;
 <a class="jxr_linenumber" name="5" href="#5">5</a>   
-<a class="jxr_linenumber" name="6" href="#6">6</a>   <strong class="jxr_keyword">import</strong> player.ISpeedSolverPlayer;
-<a class="jxr_linenumber" name="7" href="#7">7</a>   <strong class="jxr_keyword">import</strong> player.PlayerType;
+<a class="jxr_linenumber" name="6" href="#6">6</a>   <strong class="jxr_keyword">import</strong> solver.ISpeedSolverPlayer;
+<a class="jxr_linenumber" name="7" href="#7">7</a>   <strong class="jxr_keyword">import</strong> solver.PlayerType;
 <a class="jxr_linenumber" name="8" href="#8">8</a>   <strong class="jxr_keyword">import</strong> utility.game.player.PlayerAction;
 <a class="jxr_linenumber" name="9" href="#9">9</a>   <strong class="jxr_keyword">import</strong> utility.game.step.GameStep;
 <a class="jxr_linenumber" name="10" href="#10">10</a>  <strong class="jxr_keyword">import</strong> utility.geometry.ContextualFloatMatrix;
@@ -28,7 +28,7 @@
 <a class="jxr_linenumber" name="18" href="#18">18</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="19" href="#19">19</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../core/controller/PlayerController.html">PlayerController</a> {
 <a class="jxr_linenumber" name="20" href="#20">20</a>  
-<a class="jxr_linenumber" name="21" href="#21">21</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../player/ISpeedSolverPlayer.html">ISpeedSolverPlayer</a> player;
+<a class="jxr_linenumber" name="21" href="#21">21</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../solver/ISpeedSolverPlayer.html">ISpeedSolverPlayer</a> player;
 <a class="jxr_linenumber" name="22" href="#22">22</a>  
 <a class="jxr_linenumber" name="23" href="#23">23</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../visualisation/IViewer.html">IViewer</a> viewer;
 <a class="jxr_linenumber" name="24" href="#24">24</a>  
@@ -38,7 +38,7 @@
 <a class="jxr_linenumber" name="28" href="#28">28</a>  <em class="jxr_javadoccomment">	 * @param viewerEnabled true if the viewer should be enabled for the players</em>
 <a class="jxr_linenumber" name="29" href="#29">29</a>  <em class="jxr_javadoccomment">	 * @param playerType    the type of the controlled {@link ISpeedSolverPlayer}</em>
 <a class="jxr_linenumber" name="30" href="#30">30</a>  <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="31" href="#31">31</a>  	<strong class="jxr_keyword">public</strong> <a href="../../core/controller/PlayerController.html">PlayerController</a>(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> viewerEnabled, <strong class="jxr_keyword">final</strong> <a href="../../player/PlayerType.html">PlayerType</a> playerType) {
+<a class="jxr_linenumber" name="31" href="#31">31</a>  	<strong class="jxr_keyword">public</strong> <a href="../../core/controller/PlayerController.html">PlayerController</a>(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> viewerEnabled, <strong class="jxr_keyword">final</strong> <a href="../../solver/PlayerType.html">PlayerType</a> playerType) {
 <a class="jxr_linenumber" name="32" href="#32">32</a>  		<strong class="jxr_keyword">this</strong>.player = playerType.newInstance();
 <a class="jxr_linenumber" name="33" href="#33">33</a>  
 <a class="jxr_linenumber" name="34" href="#34">34</a>  		<strong class="jxr_keyword">if</strong> (viewerEnabled) {
