@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"webcommunication"},{"l":"webcommunication.time"},{"l":"webcommunication.time.parser"},{"l":"webcommunication.webservice"},{"l":"webcommunication.webservice.parser"},{"l":"webcommunication.webservice.parser.jsonobject"}]

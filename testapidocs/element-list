@@ -1,0 +1,10 @@
+player
+player.analysis
+player.analysis.slowdown
+player.solver.reachablepoints
+player.solver.reachablepoints.graph.board
+simulation
+utility.extensions
+utility.game.board
+utility.game.player
+utility.geometry
