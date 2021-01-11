@@ -1,6 +1,6 @@
 # updating the documentation
 
-name: Java CI with Maven
+name: Update Docs
 
 on:
   push:
