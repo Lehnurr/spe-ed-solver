@@ -3,6 +3,7 @@ package player.solver.reachablepoints;
 import java.util.function.Consumer;
 
 import player.ISpeedSolverPlayer;
+import player.PlayerType;
 import player.analysis.ActionsRating;
 import player.analysis.enemyprobability.EnemyProbabilityCalculator;
 import utility.game.player.PlayerAction;

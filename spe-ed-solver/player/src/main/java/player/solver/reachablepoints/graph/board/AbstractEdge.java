@@ -14,7 +14,7 @@ public final class AbstractEdge implements IEdge {
 	}
 
 	/**
-	 * Calculates the {@link IConcreteEdge} from the given parameters.
+	 * Calculates the {@link ConcreteEdge} from the given parameters.
 	 * 
 	 * @param graph     The {@link Graph} with all {@link Node Nodes}
 	 * @param startNode The {@link Node} where the player must be to use this edge

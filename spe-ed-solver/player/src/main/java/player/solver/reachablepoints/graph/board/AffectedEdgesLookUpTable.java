@@ -348,7 +348,7 @@ public final class AffectedEdgesLookUpTable {
 	 * A static, unmodifiable Look-Up-Table that provides for all Nodes (relative to
 	 * a center-Node) the Edge-Array-Indices that passes the center-Node
 	 * 
-	 * @return A unmodifiable {@link java.util.Set#Set Set} with a
+	 * @return A unmodifiable {@link java.util.Set Set} with a
 	 *         {@link utility.geometry.Vector2i#Vector2i difference-Vector} to
 	 *         determine the Nodes that have {@link IEdge Edges} to a {@link Node
 	 *         Node}. The {@link java.util.Set Set} Contains the indices of the

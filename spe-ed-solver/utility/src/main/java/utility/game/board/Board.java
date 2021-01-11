@@ -23,7 +23,7 @@ public class Board<CellType extends IBoardCell<?>> {
 	/**
 	 * Returns the {@link IBoardCell Cell} at a given position on the Board
 	 * 
-	 * @param position the {@link Poin2i} of the position
+	 * @param position the {@link Point2i} of the position
 	 * @return The Cell or null if the position is not on the Board
 	 */
 	public CellType getBoardCellAt(Point2i position) {

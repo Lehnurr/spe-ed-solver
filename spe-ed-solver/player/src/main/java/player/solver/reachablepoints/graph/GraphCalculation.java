@@ -107,8 +107,6 @@ public class GraphCalculation {
 	/**
 	 * Calculates the valid Children for the next execition step and adds them to
 	 * the queue
-	 * 
-	 * @throws NoSuchElementException if no next element is available
 	 */
 	public void executeStep() {
 		final RatedPredictiveGraphPlayer parent = queue.poll();
