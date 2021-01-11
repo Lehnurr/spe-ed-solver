@@ -14,7 +14,7 @@ import visualisation.InactiveViewer;
 import visualisation.Viewer;
 
 /**
- * PlayerController
+ * {@link PlayerController} to control one {@link ISpeedSolverPlayer}
  */
 public class PlayerController {
 
@@ -22,6 +22,12 @@ public class PlayerController {
 
 	private final IViewer viewer;
 
+	/**
+	 * A Controller to control one {@link ISpeedSolverPlayer}.
+	 * 
+	 * @param viewerEnabled true if the viewer should be enabled for the players
+	 * @param playerTypes   the type of the controlled {@link ISpeedSolverPlayer}
+	 */
 	public PlayerController(final boolean viewerEnabled, final PlayerType playerType) {
 		this.player = playerType.newInstance();
 

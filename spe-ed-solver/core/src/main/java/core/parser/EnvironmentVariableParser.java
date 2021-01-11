@@ -76,8 +76,7 @@ public class EnvironmentVariableParser {
 	 *                                           valid format
 	 */
 	public String getApiKey() throws EnvrionmentVariableParseException {
-		final String stringValue = getEnvironmentVariableAsString(API_KEY_ENV_NAME);
-		return stringValue;
+		return getEnvironmentVariableAsString(API_KEY_ENV_NAME);
 	}
 
 	/**
