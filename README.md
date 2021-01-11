@@ -1,5 +1,5 @@
 ![build](https://github.com/Lehnurr/spe-ed-solver/workflows/Build/badge.svg)
-![tests](https://github.com/Lehnurr/spe-ed-solver/workflows/Test/badge.svg)
+![tests](https://github.com/Lehnurr/spe-ed-solver/workflows/Tests/badge.svg)
 ![java docs](https://github.com/Lehnurr/spe-ed-solver/workflows/Update%20Html%20JavaDocs/badge.svg?event=push)
 ![release](https://github.com/Lehnurr/spe-ed-solver/workflows/Publish%20DockerImage%20on%20GitHub/badge.svg?event=release)
 
