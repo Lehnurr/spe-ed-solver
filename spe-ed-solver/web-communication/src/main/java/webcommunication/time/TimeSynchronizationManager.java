@@ -15,6 +15,7 @@ public class TimeSynchronizationManager {
 	private static final long BUFFER_NANOSECONDS = 500_000_000;
 
 	private final Duration serverTimeOffset;
+	private final Duration bufferDuration;
 
 	/**
 	 * Creates a new {@link TimeSynchronizationManager} which initially synchronizes
@@ -38,8 +39,14 @@ public class TimeSynchronizationManager {
 					.logWarning("The time API couldn't be reached. Running without synchronization from now on!");
 			serverTimeOffset = Duration.ZERO;
 		}
-		ApplicationLogger.logInformation(String.format("Server time offset: %d ms", serverTimeOffset.toMillis()));
+
+		final Duration requestDuration = Duration.between(clientTime, ZonedDateTime.now());
+		this.bufferDuration = requestDuration.plusNanos(BUFFER_NANOSECONDS);
 		this.serverTimeOffset = serverTimeOffset;
+
+		ApplicationLogger.logInformation(String.format("Server response time: %d ms", requestDuration.toMillis()));
+		ApplicationLogger.logInformation(String.format("Server time offset: %d ms", serverTimeOffset.toMillis()));
+		ApplicationLogger.logInformation(String.format("Server time buffer: %d ms", bufferDuration.toMillis()));
 	}
 
 	/**
@@ -49,6 +56,9 @@ public class TimeSynchronizationManager {
 	 */
 	public TimeSynchronizationManager() {
 		this.serverTimeOffset = Duration.ZERO;
+		this.bufferDuration = Duration.ofNanos(BUFFER_NANOSECONDS);
+
+		ApplicationLogger.logWarning("Running the client without synchronizing to the server time API!");
 	}
 
 	/**
@@ -61,7 +71,7 @@ public class TimeSynchronizationManager {
 
 		return new IDeadline() {
 
-			final ZonedDateTime targetTime = deadlineTime.minus(serverTimeOffset).minusNanos(BUFFER_NANOSECONDS);
+			final ZonedDateTime targetTime = deadlineTime.minus(serverTimeOffset).minus(bufferDuration);
 
 			@Override
 			public long getRemainingMilliseconds() {
