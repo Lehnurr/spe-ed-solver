@@ -59,7 +59,7 @@
 <a class="jxr_linenumber" name="49" href="#49">49</a>  		<strong class="jxr_keyword">this</strong>.probabilities = probabilities;
 <a class="jxr_linenumber" name="50" href="#50">50</a>  		<strong class="jxr_keyword">this</strong>.minSteps = minSteps;
 <a class="jxr_linenumber" name="51" href="#51">51</a>  
-<a class="jxr_linenumber" name="52" href="#52">52</a>  		<strong class="jxr_keyword">this</strong>.queue = <strong class="jxr_keyword">new</strong> LimitedQueue&lt;RatedPredictivePlayer&gt;(RatedPredictivePlayer.<strong class="jxr_keyword">class</strong>, QUEUE_SIZE);
+<a class="jxr_linenumber" name="52" href="#52">52</a>  		<strong class="jxr_keyword">this</strong>.queue = <strong class="jxr_keyword">new</strong> LimitedQueue&lt;&gt;(RatedPredictivePlayer.<strong class="jxr_keyword">class</strong>, QUEUE_SIZE);
 <a class="jxr_linenumber" name="53" href="#53">53</a>  
 <a class="jxr_linenumber" name="54" href="#54">54</a>  		<strong class="jxr_keyword">this</strong>.successMatrixResult = <strong class="jxr_keyword">new</strong> FloatMatrix(board.getWidth(), board.getHeight(), 0);
 <a class="jxr_linenumber" name="55" href="#55">55</a>  		<strong class="jxr_keyword">this</strong>.cutOffMatrixResult = <strong class="jxr_keyword">new</strong> FloatMatrix(board.getWidth(), board.getHeight(), 0);
@@ -101,7 +101,7 @@
 <a class="jxr_linenumber" name="91" href="#91">91</a>  <em class="jxr_javadoccomment">	 * @return true if nothing can be calculated anymore</em>
 <a class="jxr_linenumber" name="92" href="#92">92</a>  <em class="jxr_javadoccomment">	 */</em>
 <a class="jxr_linenumber" name="93" href="#93">93</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isFinished() {
-<a class="jxr_linenumber" name="94" href="#94">94</a>  		<strong class="jxr_keyword">return</strong> queue.isEmpty();
+<a class="jxr_linenumber" name="94" href="#94">94</a>  		<strong class="jxr_keyword">return</strong> !queue.hasNext();
 <a class="jxr_linenumber" name="95" href="#95">95</a>  	}
 <a class="jxr_linenumber" name="96" href="#96">96</a>  
 <a class="jxr_linenumber" name="97" href="#97">97</a>  	<em class="jxr_javadoccomment">/**</em>

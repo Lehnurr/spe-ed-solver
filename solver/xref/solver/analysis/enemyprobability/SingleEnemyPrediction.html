@@ -22,7 +22,7 @@
 <a class="jxr_linenumber" name="12" href="#12">12</a>  <strong class="jxr_keyword">import</strong> utility.geometry.Point2i;
 <a class="jxr_linenumber" name="13" href="#13">13</a>  
 <a class="jxr_linenumber" name="14" href="#14">14</a>  <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="15" href="#15">15</a>  <em class="jxr_javadoccomment"> * Does the enemy forward prediction for a single {@link IPlayer}.</em>
+<a class="jxr_linenumber" name="15" href="#15">15</a>  <em class="jxr_javadoccomment"> * Calculates the enemy forward prediction for a single {@link IPlayer}.</em>
 <a class="jxr_linenumber" name="16" href="#16">16</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="17" href="#17">17</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../solver/analysis/enemyprobability/SingleEnemyPrediction.html">SingleEnemyPrediction</a> {
 <a class="jxr_linenumber" name="18" href="#18">18</a>  
@@ -37,8 +37,8 @@
 <a class="jxr_linenumber" name="27" href="#27">27</a>  <em class="jxr_javadoccomment">	 * Creates a new {@link SingleEnemyPrediction} calculation object for the given</em>
 <a class="jxr_linenumber" name="28" href="#28">28</a>  <em class="jxr_javadoccomment">	 * {@link IPlayer}.</em>
 <a class="jxr_linenumber" name="29" href="#29">29</a>  <em class="jxr_javadoccomment">	 * </em>
-<a class="jxr_linenumber" name="30" href="#30">30</a>  <em class="jxr_javadoccomment">	 * @param board  {@link Board} the player moves on</em>
-<a class="jxr_linenumber" name="31" href="#31">31</a>  <em class="jxr_javadoccomment">	 * @param player {@link IPlayer} the calculation is for</em>
+<a class="jxr_linenumber" name="30" href="#30">30</a>  <em class="jxr_javadoccomment">	 * @param board  the {@link Board board} the {@link IPlayer player} moves on</em>
+<a class="jxr_linenumber" name="31" href="#31">31</a>  <em class="jxr_javadoccomment">	 * @param player the {@link IPlayer} the calculation is for</em>
 <a class="jxr_linenumber" name="32" href="#32">32</a>  <em class="jxr_javadoccomment">	 */</em>
 <a class="jxr_linenumber" name="33" href="#33">33</a>  	<strong class="jxr_keyword">public</strong> <a href="../../../solver/analysis/enemyprobability/SingleEnemyPrediction.html">SingleEnemyPrediction</a>(<strong class="jxr_keyword">final</strong> Board&lt;Cell&gt; board, <strong class="jxr_keyword">final</strong> IPlayer player) {
 <a class="jxr_linenumber" name="34" href="#34">34</a>  		<strong class="jxr_keyword">this</strong>.board = board;
@@ -63,7 +63,7 @@
 <a class="jxr_linenumber" name="53" href="#53">53</a>  <em class="jxr_javadoccomment">	 * </em>
 <a class="jxr_linenumber" name="54" href="#54">54</a>  <em class="jxr_javadoccomment">	 * @param maxStepsValue value to initialize the minSteps matrix with</em>
 <a class="jxr_linenumber" name="55" href="#55">55</a>  <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="56" href="#56">56</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> clearResults(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> maxStepsValue) {
+<a class="jxr_linenumber" name="56" href="#56">56</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> clearResults(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> maxStepsValue) {
 <a class="jxr_linenumber" name="57" href="#57">57</a>  		<strong class="jxr_keyword">this</strong>.probabilities = <strong class="jxr_keyword">new</strong> FloatMatrix(board.getWidth(), board.getHeight(), 0);
 <a class="jxr_linenumber" name="58" href="#58">58</a>  		<strong class="jxr_keyword">this</strong>.minSteps = <strong class="jxr_keyword">new</strong> FloatMatrix(board.getWidth(), board.getHeight(), maxStepsValue);
 <a class="jxr_linenumber" name="59" href="#59">59</a>  	}
