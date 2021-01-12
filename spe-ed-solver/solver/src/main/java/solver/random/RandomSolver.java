@@ -16,7 +16,8 @@ import utility.game.step.GameStep;
 import utility.geometry.ContextualFloatMatrix;
 
 /**
- * A Player that sends a random Action that doesn't cause suicide
+ * A {@link ISpeedSolver solver} that sends a random {@link PlayerAction action}
+ * that doesn't cause instant suicide
  */
 public final class RandomSolver implements ISpeedSolver {
 

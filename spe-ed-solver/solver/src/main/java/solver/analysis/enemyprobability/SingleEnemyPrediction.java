@@ -12,7 +12,7 @@ import utility.geometry.FloatMatrix;
 import utility.geometry.Point2i;
 
 /**
- * Does the enemy forward prediction for a single {@link IPlayer}.
+ * Calculates the enemy forward prediction for a single {@link IPlayer}.
  */
 public class SingleEnemyPrediction {
 
@@ -27,8 +27,8 @@ public class SingleEnemyPrediction {
 	 * Creates a new {@link SingleEnemyPrediction} calculation object for the given
 	 * {@link IPlayer}.
 	 * 
-	 * @param board  {@link Board} the player moves on
-	 * @param player {@link IPlayer} the calculation is for
+	 * @param board  the {@link Board board} the {@link IPlayer player} moves on
+	 * @param player the {@link IPlayer} the calculation is for
 	 */
 	public SingleEnemyPrediction(final Board<Cell> board, final IPlayer player) {
 		this.board = board;
@@ -53,7 +53,7 @@ public class SingleEnemyPrediction {
 	 * 
 	 * @param maxStepsValue value to initialize the minSteps matrix with
 	 */
-	private void clearResults(final float maxStepsValue) {
+	private void clearResults(final int maxStepsValue) {
 		this.probabilities = new FloatMatrix(board.getWidth(), board.getHeight(), 0);
 		this.minSteps = new FloatMatrix(board.getWidth(), board.getHeight(), maxStepsValue);
 	}

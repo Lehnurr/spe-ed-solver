@@ -5,8 +5,8 @@ import solver.reachablepoints.ReachablePointsSolver;
 import solver.reachablepoints.ReachablePointsType;
 
 /**
- * {@link SolverType} enum representing multiple types of spe_ed solver players.
- * Each type can generate a {@link ISpeedSolver} instance.
+ * {@link SolverType} enum representing multiple types of spe_ed solvers. Each
+ * type can generate a {@link ISpeedSolver} instance.
  */
 public enum SolverType {
 

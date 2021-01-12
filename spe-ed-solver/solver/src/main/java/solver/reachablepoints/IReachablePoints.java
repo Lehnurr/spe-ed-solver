@@ -8,6 +8,7 @@ import utility.game.player.PlayerAction;
 import utility.game.step.GameStep;
 import utility.geometry.ContextualFloatMatrix;
 import utility.geometry.FloatMatrix;
+import utility.logging.LoggingLevel;
 
 /**
  * Interface for reachable points calculations. The instances are responsible
@@ -32,16 +33,17 @@ public interface IReachablePoints {
 	/**
 	 * Combines the last calculated {@link ActionsRating}.
 	 * 
-	 * @param aggressiveWeight Weight for the {@link ActionsRating}, which
-	 *                         stimulates aggresive actions
-	 * @param defensiveWeight  Weight for the {@link ActionsRating}, which
-	 *                         stimulates defensive actions
-	 * @return The combined ratings
+	 * @param aggressiveWeight weight for the {@link ActionsRating}, which
+	 *                         stimulates aggresive decisions
+	 * @param defensiveWeight  weight for the {@link ActionsRating}, which
+	 *                         stimulates defensive decisions
+	 * @return the combined ratings
 	 */
 	public ActionsRating combineActionsRating(float aggressiveWeight, float defensiveWeight);
 
 	/**
-	 * Logs the last calculated Ratings and the combined rating as GameInformation
+	 * Logs the last calculated Ratings and the combined rating as
+	 * {@link LoggingLevel#GAME_INFO}.
 	 * 
 	 * @param combinedActionsRating the combined Rating to log
 	 */
@@ -49,12 +51,13 @@ public interface IReachablePoints {
 
 	/**
 	 * Creates for all last calculated Matrix-Results a
-	 * {@link ContextualFloatMatrix}
+	 * {@link ContextualFloatMatrix}.
 	 * 
-	 * @param action for Matrix-Results grouped by Collection the Matrix for the
-	 *               given action will be used
+	 * @param action for {@link ContextualFloatMatrix matrix results} grouped by
+	 *               Collection the {@link ContextualFloatMatrix matrix} for the
+	 *               given {@link PlayerAction action} will be used
 	 * 
-	 * @return A {@link Collection} of {@link ContextualFloatMatrix
+	 * @return a {@link Collection} of {@link ContextualFloatMatrix
 	 *         ContextualFloatMatrices}
 	 */
 	public Collection<ContextualFloatMatrix> getContextualFloatMatrices(PlayerAction action);

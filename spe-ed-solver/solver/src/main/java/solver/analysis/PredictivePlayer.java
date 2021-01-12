@@ -105,8 +105,7 @@ public class PredictivePlayer implements IPlayer {
 	private Point2i calculateChildPosition(final Point2i parentPosition, final PlayerDirection childDirection,
 			final int childSpeed) {
 		final Vector2i childMovementVector = childDirection.getDirectionVector().multiply(childSpeed);
-		final Point2i childPosition = parentPosition.translate(childMovementVector);
-		return childPosition;
+		return parentPosition.translate(childMovementVector);
 	}
 
 	/**
@@ -169,15 +168,17 @@ public class PredictivePlayer implements IPlayer {
 		for (final Point2i point : shortTail) {
 			if (longTail.contains(point))
 				return true;
-			if (board.isOnBoard(point)) {
-				if (!board.getBoardCellAt(point).isEmpty())
-					return true;
-			}
+			if (board.isOnBoard(point) && !board.getBoardCellAt(point).isEmpty())
+				return true;
 		}
 		return false;
+
 	}
 
 	/**
+	 * The {@link Point2i points} that the {@link PredictivePlayer player} passed in
+	 * the last round.
+	 * 
 	 * @return the shortTail
 	 */
 	public List<Point2i> getShortTail() {
@@ -185,6 +186,9 @@ public class PredictivePlayer implements IPlayer {
 	}
 
 	/**
+	 * All {@link Point2i points} that the {@link PredictivePlayer player} passed in
+	 * the whole game.
+	 * 
 	 * @return the longTail
 	 */
 	public Set<Point2i> getLongTail() {

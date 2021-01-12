@@ -1,6 +1,8 @@
 package solver.analysis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -27,7 +29,7 @@ public class PredictivePlayerTest {
 
 		PredictivePlayer nextPlayer = new PredictivePlayer(startPlayer, PlayerAction.TURN_LEFT, board);
 
-		assertEquals(false, nextPlayer.isActive());
+		assertFalse(nextPlayer.isActive());
 	}
 
 	@Test
@@ -43,7 +45,7 @@ public class PredictivePlayerTest {
 		PredictivePlayer nextPlayer3 = new PredictivePlayer(nextPlayer2, PlayerAction.TURN_LEFT, board);
 		PredictivePlayer nextPlayer4 = new PredictivePlayer(nextPlayer3, PlayerAction.TURN_LEFT, board);
 
-		assertEquals(false, nextPlayer4.isActive());
+		assertFalse(nextPlayer4.isActive());
 	}
 
 	@Test
@@ -55,7 +57,7 @@ public class PredictivePlayerTest {
 
 		PredictivePlayer nextPlayer = new PredictivePlayer(startPlayer, PlayerAction.SLOW_DOWN, board);
 
-		assertEquals(false, nextPlayer.isActive());
+		assertFalse(nextPlayer.isActive());
 	}
 
 	@Test
@@ -66,7 +68,7 @@ public class PredictivePlayerTest {
 
 		PredictivePlayer nextPlayer = new PredictivePlayer(startPlayer, PlayerAction.SLOW_DOWN, board);
 
-		assertEquals(true, nextPlayer.isActive());
+		assertTrue(nextPlayer.isActive());
 		assertEquals(1, nextPlayer.getSpeed());
 	}
 

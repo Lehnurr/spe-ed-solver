@@ -6,17 +6,20 @@ import java.util.Map;
 import java.util.Set;
 
 import utility.game.player.PlayerDirection;
+import utility.geometry.Point2i;
 import utility.geometry.Vector2i;
 
 /**
- * provides a Look-Up-Table to determine all Edges that Use a specific Node.
- * This singleton does nothing except initilizing the Look-Up-Table
+ * provides a Look-Up-Table to determine all {@link ConcreteEdge edges} that use
+ * a specific {@link Node node}. This singleton does nothing except initilizing
+ * the Look-Up-Table
  */
 public final class AffectedEdgesLookUpTable {
 
 	/**
-	 * Determines for a node with changed x or y position the edges that pass
-	 * through the affected (0, 0) node
+	 * Determines for a {@link Node node} with changed x or y {@link Point2i
+	 * position} the {@link ConcreteEdge edges} that pass through the affected (0,
+	 * 0) {@link Node node}
 	 */
 	private static final Set<Map.Entry<Vector2i, int[]>> abstractEdgeDescriptions;
 
@@ -345,14 +348,15 @@ public final class AffectedEdgesLookUpTable {
 	}
 
 	/**
-	 * A static, unmodifiable Look-Up-Table that provides for all Nodes (relative to
-	 * a center-Node) the Edge-Array-Indices that passes the center-Node
+	 * A static, unmodifiable Look-Up-Table that provides for all {@link Node nodes}
+	 * (relative to a {@link Node center node}) the
+	 * {@link ConcreteEdge}-Array-Indices that passes the {@link Node center node}
 	 * 
 	 * @return A unmodifiable {@link java.util.Set Set} with a
 	 *         {@link utility.geometry.Vector2i#Vector2i difference-Vector} to
-	 *         determine the Nodes that have {@link IEdge Edges} to a {@link Node
-	 *         Node}. The {@link java.util.Set Set} Contains the indices of the
-	 *         Edges that passes the {@link Node#Node Node}
+	 *         determine the {@link Node nodes} that have {@link IEdge Edges} to a
+	 *         {@link Node node}. The {@link java.util.Set Set} contains the indices
+	 *         of the {@link ConcreteEdge edges} that passes the {@link Node node}
 	 */
 	public static final Set<Map.Entry<Vector2i, int[]>> getAbstractPassingEdges() {
 		return abstractEdgeDescriptions;

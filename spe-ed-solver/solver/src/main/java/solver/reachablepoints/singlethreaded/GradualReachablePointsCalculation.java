@@ -49,7 +49,7 @@ public class GradualReachablePointsCalculation {
 		this.probabilities = probabilities;
 		this.minSteps = minSteps;
 
-		this.queue = new LimitedQueue<RatedPredictivePlayer>(RatedPredictivePlayer.class, QUEUE_SIZE);
+		this.queue = new LimitedQueue<>(RatedPredictivePlayer.class, QUEUE_SIZE);
 
 		this.successMatrixResult = new FloatMatrix(board.getWidth(), board.getHeight(), 0);
 		this.cutOffMatrixResult = new FloatMatrix(board.getWidth(), board.getHeight(), 0);
@@ -91,7 +91,7 @@ public class GradualReachablePointsCalculation {
 	 * @return true if nothing can be calculated anymore
 	 */
 	public boolean isFinished() {
-		return queue.isEmpty();
+		return !queue.hasNext();
 	}
 
 	/**

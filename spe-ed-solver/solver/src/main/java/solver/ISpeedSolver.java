@@ -6,10 +6,15 @@ import utility.game.player.PlayerAction;
 import utility.game.step.GameStep;
 import utility.geometry.ContextualFloatMatrix;
 
+/**
+ * Interface for a solver that gets {@link GameStep game information} and
+ * returns a {@link PlayerAction}
+ */
 public interface ISpeedSolver {
 
 	/**
-	 * Starts the Player to calculate a Action for the given GameStep
+	 * Starts the {@link ISpeedSolver solver} to calculate a Action for the given
+	 * GameStep
 	 * 
 	 * @param gameStep            The new gameStep
 	 * @param boardRatingConsumer {@link Consumer} which consumes

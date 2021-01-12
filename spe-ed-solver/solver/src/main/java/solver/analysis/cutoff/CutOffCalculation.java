@@ -9,14 +9,14 @@ import utility.geometry.FloatMatrix;
 import utility.geometry.Point2i;
 
 /**
- * Calculation Class to combine different cut off calculations
+ * Calculation Class to combine different cut off calculations.
  */
 public class CutOffCalculation {
 	private Map<PlayerAction, FloatMatrix> matrixResult;
 	private ActionsRating ratingsResult;
 
 	/**
-	 * Initializes a new calculator
+	 * Initializes a new {@link CutOffCalculation}.
 	 * 
 	 * @param width  the width of the board and the resulting {@link FloatMatrix}
 	 * @param height the height of the board and the resulting {@link FloatMatrix}
@@ -31,18 +31,19 @@ public class CutOffCalculation {
 	}
 
 	/**
-	 * Adds a new rating to the result
+	 * Adds a new rating to the result.
 	 * 
-	 * @param action       The initial action the rating is valid for
-	 * @param position     The position the rating is valid for
-	 * @param cutOffRating The new calculated cut-off-rating
+	 * @param action       the {@link PlayerAction initial action} the rating is
+	 *                     valid for
+	 * @param position     the {@link Point2i position} the rating is valid for
+	 * @param cutOffRating the new calculated cut-off-rating
 	 */
 	public void add(PlayerAction action, Point2i position, float cutOffRating) {
 		matrixResult.get(action).max(position, cutOffRating);
 	}
 
 	/**
-	 * Combines the calculations of two {@link CutOffCalculation}
+	 * Combines the calculations of two {@link CutOffCalculation}.
 	 * 
 	 * @param other a {@link CutOffCalculation} whose results should be added to
 	 *              this results
@@ -60,7 +61,7 @@ public class CutOffCalculation {
 	}
 
 	/**
-	 * Returns the calculated ActsionRating
+	 * Returns the calculated ActsionRating.
 	 * 
 	 * @return the {@link ActionsRating}
 	 */
@@ -69,9 +70,11 @@ public class CutOffCalculation {
 	}
 
 	/**
-	 * Returns the {@link FloatMatrix ResultMatrix} for a specific initial action
+	 * Returns the {@link FloatMatrix ResultMatrix} for a specific
+	 * {@link PlayerAction initial action}.
 	 * 
-	 * @param action The initial action the matrix is needed for
+	 * @param action the {@link PlayerAction initial action} the {@link FloatMatrix
+	 *               matrix} is needed for
 	 * @return the {@link FloatMatrix ResultMatrix}
 	 */
 	public FloatMatrix getMatrixResult(PlayerAction action) {

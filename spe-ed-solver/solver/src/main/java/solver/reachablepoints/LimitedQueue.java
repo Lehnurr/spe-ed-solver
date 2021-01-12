@@ -27,7 +27,7 @@ public class LimitedQueue<Element> {
 	 * Creates a new {@link LimitedQueue} of the given Class of a specific given
 	 * size.
 	 * 
-	 * @param elementClass Class of the represented elements
+	 * @param elementClass class of the represented elements
 	 * @param bufferSize   size of the underlying buffer
 	 */
 	@SuppressWarnings("unchecked")
@@ -55,7 +55,8 @@ public class LimitedQueue<Element> {
 	}
 
 	/**
-	 * Returns the next element without checking if the access is allowed.
+	 * Returns and removes the next element without checking if the access is
+	 * allowed.
 	 * 
 	 * @return the removed object
 	 */
@@ -68,7 +69,7 @@ public class LimitedQueue<Element> {
 	}
 
 	/**
-	 * Returns the next value of the {@link LimitedQueue}.
+	 * Returns and removes the next value of the {@link LimitedQueue}.
 	 * 
 	 * @return the next value
 	 */
@@ -103,15 +104,6 @@ public class LimitedQueue<Element> {
 	 */
 	public boolean isFull() {
 		return size == buffer.length;
-	}
-
-	/**
-	 * Determines if the {@link LimitedQueue} is empty.
-	 * 
-	 * @return true if no element is contained
-	 */
-	public boolean isEmpty() {
-		return size == 0;
 	}
 
 }

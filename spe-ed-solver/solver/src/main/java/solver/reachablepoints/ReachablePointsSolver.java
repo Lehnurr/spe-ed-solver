@@ -29,7 +29,8 @@ public class ReachablePointsSolver implements ISpeedSolver {
 	 * Creates a new {@link ReachablePointsSolver} with the given configuration
 	 * values.
 	 * 
-	 * @param enemySearchDepth recursive search depth to search for enemy actions
+	 * @param enemySearchDepth recursive search depth to search for enemy
+	 *                         {@link PlayerAction actions}
 	 * @param aggressiveWeight relative weight for aggressive {@link ActionsRating}
 	 * @param defensiveWeight  relative weight for the defensive
 	 *                         {@link ActionsRating}
