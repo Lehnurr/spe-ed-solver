@@ -26,7 +26,9 @@ public class PlayLiveCommand implements Runnable {
 
 	private boolean viewerEnabled = false;
 
-	private SolverType solverType = SolverType.REACHABLE_POINTS;
+	private SolverType solverType = SolverType.getDefault();
+
+	private int maxThreadCount = 1;
 
 	@Option(names = { "-v", "--viewer" }, description = "If specified the viewer will be enabled.")
 	public void setViewerEnabled(final boolean viewerEnabled) {
@@ -74,9 +76,21 @@ public class PlayLiveCommand implements Runnable {
 		ApplicationLogger.setDebugMode(debugEnabled);
 	}
 
+	@Option(names = { "-m",
+			"--max-thread-count" }, description = "Specifies the maximum number of concurrent threads for the solver.", defaultValue = "1")
+	public void setMaxThreadCount(final int maxThreadCount) {
+		final int availableThreads = Runtime.getRuntime().availableProcessors();
+		if (maxThreadCount < 1 || maxThreadCount > availableThreads)
+			throw new ParameterException(spec.commandLine(),
+					"The  maximum number of concurrent threads must be between 1 and " + availableThreads
+							+ " (given by your system specifications)!");
+
+		this.maxThreadCount = maxThreadCount;
+	}
+
 	@Override
 	public void run() {
-		new LiveMode(viewerEnabled, solverType).run();
+		new LiveMode(viewerEnabled, solverType, maxThreadCount).run();
 	}
 
 }

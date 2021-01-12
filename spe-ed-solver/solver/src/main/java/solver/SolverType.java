@@ -10,39 +10,45 @@ import solver.reachablepoints.ReachablePointsType;
  */
 public enum SolverType {
 
-	REACHABLE_POINTS {
+	CLASSIC_AGGRESSIVE {
 		@Override
-		public ISpeedSolver newInstance() {
-			return new ReachablePointsSolver(6, 0.4f, 0.05f, ReachablePointsType.MULTI_THREADED);
+		public ISpeedSolver newInstance(final int maxThreadCount) {
+			return new ReachablePointsSolver(6, 0.5f, 0.01f, ReachablePointsType.CLASSIC, maxThreadCount);
 		}
 	},
-	REACHABLE_POINTS_SINGLE_THREADED {
+	CLASSIC_BALANCED {
 		@Override
-		public ISpeedSolver newInstance() {
-			return new ReachablePointsSolver(6, 0.4f, 0.05f, ReachablePointsType.SINGLE_THREADED);
+		public ISpeedSolver newInstance(final int maxThreadCount) {
+			return new ReachablePointsSolver(6, 0.4f, 0.05f, ReachablePointsType.CLASSIC, maxThreadCount);
+		}
+	},
+	CLASSIC_DEFENSIVE {
+		@Override
+		public ISpeedSolver newInstance(final int maxThreadCount) {
+			return new ReachablePointsSolver(6, 0.1f, 0.35f, ReachablePointsType.CLASSIC, maxThreadCount);
 		}
 	},
 	GRAPH_AGGRESSIVE {
 		@Override
-		public ISpeedSolver newInstance() {
-			return new ReachablePointsSolver(6, 0.5f, 0.01f, ReachablePointsType.GRAPH);
+		public ISpeedSolver newInstance(final int maxThreadCount) {
+			return new ReachablePointsSolver(6, 0.5f, 0.01f, ReachablePointsType.GRAPH, maxThreadCount);
 		}
 	},
 	GRAPH_BALANCED {
 		@Override
-		public ISpeedSolver newInstance() {
-			return new ReachablePointsSolver(6, 0.35f, 0.03f, ReachablePointsType.GRAPH);
+		public ISpeedSolver newInstance(final int maxThreadCount) {
+			return new ReachablePointsSolver(6, 0.35f, 0.03f, ReachablePointsType.GRAPH, maxThreadCount);
 		}
 	},
 	GRAPH_DEFENSIVE {
 		@Override
-		public ISpeedSolver newInstance() {
-			return new ReachablePointsSolver(6, 0.1f, 0.35f, ReachablePointsType.GRAPH);
+		public ISpeedSolver newInstance(final int maxThreadCount) {
+			return new ReachablePointsSolver(6, 0.1f, 0.35f, ReachablePointsType.GRAPH, maxThreadCount);
 		}
 	},
 	RANDOM {
 		@Override
-		public ISpeedSolver newInstance() {
+		public ISpeedSolver newInstance(final int maxThreadCount) {
 			return new RandomSolver();
 		}
 	};
@@ -51,9 +57,12 @@ public enum SolverType {
 	 * Returns a new instance of the {@link ISpeedSolver} representing the
 	 * {@link SolverType}.
 	 * 
+	 * @param maxThreadCount specifies the maximum number of concurrent threads to
+	 *                       use
+	 * 
 	 * @return {@link ISpeedSolver} representing the {@link SolverType}.
 	 */
-	public abstract ISpeedSolver newInstance();
+	public abstract ISpeedSolver newInstance(final int maxThreadCount);
 
 	/**
 	 * Returns the default {@link SolverType}, representing the {@link SolverType}

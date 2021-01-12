@@ -31,6 +31,8 @@ public class PlaySimulationCommand implements Runnable {
 	private int boardWidth;
 	private int boardHeight;
 
+	private int maxThreadCount;
+
 	private List<SolverType> solverTypes = Arrays.asList(SolverType.getDefault(), SolverType.getDefault());
 
 	@Option(names = { "-v", "--viewer" }, description = "If specified the viewer will be enabled.")
@@ -135,9 +137,21 @@ public class PlaySimulationCommand implements Runnable {
 		SimulationDeadline.setUpperTimeLimit(deadlineUpperLimit);
 	}
 
+	@Option(names = { "-m",
+			"--max-thread-count" }, description = "Specifies the maximum number of concurrent threads for the solver.", defaultValue = "1")
+	public void setMaxThreadCount(final int maxThreadCount) {
+		final int availableThreads = Runtime.getRuntime().availableProcessors();
+		if (maxThreadCount < 1 || maxThreadCount > availableThreads)
+			throw new ParameterException(spec.commandLine(),
+					"The  maximum number of concurrent threads must be between 1 and " + availableThreads
+							+ " (given by your system specifications)!");
+
+		this.maxThreadCount = maxThreadCount;
+	}
+
 	@Override
 	public void run() {
-		new SimulationMode(boardHeight, boardWidth, solverTypes, viewerEnabled).run();
+		new SimulationMode(boardHeight, boardWidth, solverTypes, viewerEnabled, maxThreadCount).run();
 	}
 
 }

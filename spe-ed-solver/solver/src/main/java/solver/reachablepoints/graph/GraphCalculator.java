@@ -25,7 +25,7 @@ import utility.logging.GameLogger;
  * {@link ActionsRating} objects and storing the last calculated results.
  */
 public class GraphCalculator implements IReachablePoints {
-	private static final int MAX_THREAD_COUNT = 1;
+	private final int maxThreadCount;
 
 	private FloatMatrix enemyProbabilitiesMatrix;
 	private FloatMatrix enemyMinStepsMatrix;
@@ -36,6 +36,16 @@ public class GraphCalculator implements IReachablePoints {
 	private SuccessCalculation successCalculation;
 	private CutOffCalculation cutOffCalculation;
 	private EdgeImportance importanceCalculation;
+
+	/**
+	 * Creates a new Instance of the {@link GraphCalculator graph solver }.
+	 * 
+	 * @param maxThreadCount specifies the maximum number of concurrent threads to
+	 *                       use
+	 */
+	public GraphCalculator(final int maxThreadCount) {
+		this.maxThreadCount = maxThreadCount;
+	}
 
 	public void performCalculation(final GameStep gameStep, final FloatMatrix probabilities,
 			final FloatMatrix minSteps) {
@@ -95,7 +105,7 @@ public class GraphCalculator implements IReachablePoints {
 		cutOffCalculation = new CutOffCalculation(width, height);
 		importanceCalculation = new EdgeImportance(width, height, startPlayers);
 
-		int threadCount = Math.min(MAX_THREAD_COUNT, (int) (deadline.getRemainingMilliseconds() / 500));
+		int threadCount = Math.min(maxThreadCount, (int) (deadline.getRemainingMilliseconds() / 500));
 
 		// Create a Calculation for each thread
 		List<GraphCalculation> calculations = new ArrayList<>();

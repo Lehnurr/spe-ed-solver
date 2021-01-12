@@ -34,12 +34,14 @@ public class ReachablePointsSolver implements ISpeedSolver {
 	 * @param aggressiveWeight relative weight for aggressive {@link ActionsRating}
 	 * @param defensiveWeight  relative weight for the defensive
 	 *                         {@link ActionsRating}
+	 * @param maxThreadCount   specifies the maximum number of concurrent threads to
+	 *                         use
 	 * @param type             the {@link ReachablePointsType} of the calculation
 	 */
 	public ReachablePointsSolver(final int enemySearchDepth, float aggressiveWeight, float defensiveWeight,
-			final ReachablePointsType type) {
+			final ReachablePointsType type, final int maxThreadCount) {
 		this.enemyProbabilityCalculator = new EnemyProbabilityCalculator(enemySearchDepth);
-		this.reachablePointsCalculator = type.newInstance();
+		this.reachablePointsCalculator = type.newInstance(maxThreadCount);
 		this.aggressiveWeight = aggressiveWeight;
 		this.defensiveWeight = defensiveWeight;
 	}

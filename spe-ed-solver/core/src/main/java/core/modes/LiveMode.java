@@ -26,17 +26,22 @@ public class LiveMode implements Runnable {
 
 	private final SolverType solverType;
 
+	private final int maxThreadCount;
+
 	/**
 	 * Creates a new {@link Runnable} for the live play mode to play spe_ed on an
 	 * online webservice. The constructor is used to set starting parameters.
 	 * 
-	 * @param viewerEnabled true if a viewer window should be shown to the user
-	 * @param solverType    {@link SolverType} of the player participating in the
-	 *                      spe_ed game
+	 * @param viewerEnabled  true if a viewer window should be shown to the user
+	 * @param solverType     {@link SolverType} of the player participating in the
+	 *                       spe_ed game
+	 * @param maxThreadCount specifies the maximum number of concurrent threads to
+	 *                       use
 	 */
-	public LiveMode(final boolean viewerEnabled, final SolverType solverType) {
+	public LiveMode(final boolean viewerEnabled, final SolverType solverType, final int maxThreadCount) {
 		this.viewerEnabled = viewerEnabled;
 		this.solverType = solverType;
+		this.maxThreadCount = maxThreadCount;
 	}
 
 	@Override
@@ -53,7 +58,7 @@ public class LiveMode implements Runnable {
 					timeApiURI);
 
 			final List<SolverType> solverTypes = new ArrayList<>(Arrays.asList(solverType));
-			final GameController gameController = new GameController(viewerEnabled, solverTypes);
+			final GameController gameController = new GameController(viewerEnabled, solverTypes, maxThreadCount);
 
 			connectionManager.play(gameController::handleGameStep);
 

@@ -21,18 +21,23 @@ public class GameController {
 
 	private final boolean viewerEnabled;
 
+	private final int maxThreadCount;
+
 	/**
 	 * A Controller to Control multiple {@link SolverController}.
 	 * 
-	 * @param viewerEnabled true if the viewer should be enabled for the
-	 *                      {@link SolverController solvers}
-	 * @param solverTypes   {@link List} of {@link SolverType} of the
-	 *                      {@link SolverController solvers} participating
+	 * @param viewerEnabled  true if the viewer should be enabled for the
+	 *                       {@link SolverController solvers}
+	 * @param solverTypes    {@link List} of {@link SolverType} of the
+	 *                       {@link SolverController solvers} participating
+	 * @param maxThreadCount specifies the maximum number of concurrent threads to
+	 *                       use
 	 */
-	public GameController(final boolean viewerEnabled, final List<SolverType> solverTypes) {
+	public GameController(final boolean viewerEnabled, final List<SolverType> solverTypes, final int maxThreadCount) {
 		this.solverTypes = solverTypes;
 		this.solverController = new HashMap<>();
 		this.viewerEnabled = viewerEnabled;
+		this.maxThreadCount = maxThreadCount;
 	}
 
 	/**
@@ -49,7 +54,7 @@ public class GameController {
 			final SolverType solverType = solverTypes.remove(0);
 			ApplicationLogger
 					.logInformation(String.format("Registered solver of type %s and id %d.", solverType.name(), key));
-			return new SolverController(viewerEnabled, solverType);
+			return new SolverController(viewerEnabled, solverType, maxThreadCount);
 		});
 
 		return this.solverController.get(playerId).calculateAction(gameStep);
