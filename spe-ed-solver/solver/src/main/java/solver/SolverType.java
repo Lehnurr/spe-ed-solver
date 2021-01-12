@@ -13,31 +13,31 @@ public enum SolverType {
 	REACHABLE_POINTS {
 		@Override
 		public ISpeedSolver newInstance() {
-			return new ReachablePointsSolver(7, 0.4f, 0.05f, ReachablePointsType.MULTI_THREADED);
+			return new ReachablePointsSolver(6, 0.4f, 0.05f, ReachablePointsType.MULTI_THREADED);
 		}
 	},
 	REACHABLE_POINTS_SINGLE_THREADED {
 		@Override
 		public ISpeedSolver newInstance() {
-			return new ReachablePointsSolver(7, 0.4f, 0.05f, ReachablePointsType.SINGLE_THREADED);
+			return new ReachablePointsSolver(6, 0.4f, 0.05f, ReachablePointsType.SINGLE_THREADED);
 		}
 	},
 	GRAPH_AGGRESSIVE {
 		@Override
 		public ISpeedSolver newInstance() {
-			return new ReachablePointsSolver(7, 0.4f, 0.01f, ReachablePointsType.GRAPH);
+			return new ReachablePointsSolver(6, 0.5f, 0.01f, ReachablePointsType.GRAPH);
+		}
+	},
+	GRAPH_BALANCED {
+		@Override
+		public ISpeedSolver newInstance() {
+			return new ReachablePointsSolver(6, 0.35f, 0.03f, ReachablePointsType.GRAPH);
 		}
 	},
 	GRAPH_DEFENSIVE {
 		@Override
 		public ISpeedSolver newInstance() {
-			return new ReachablePointsSolver(7, 0.1f, 0.35f, ReachablePointsType.GRAPH);
-		}
-	},
-	GRAPH_DYNAMIC {
-		@Override
-		public ISpeedSolver newInstance() {
-			return new ReachablePointsSolver(7, -1f, -1f, ReachablePointsType.GRAPH);
+			return new ReachablePointsSolver(6, 0.1f, 0.35f, ReachablePointsType.GRAPH);
 		}
 	},
 	RANDOM {
@@ -62,7 +62,7 @@ public enum SolverType {
 	 * @return default {@link SolverType}
 	 */
 	public static SolverType getDefault() {
-		return REACHABLE_POINTS;
+		return GRAPH_BALANCED;
 	}
 
 }
