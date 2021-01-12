@@ -12,7 +12,7 @@ import utility.geometry.Vector2i;
 /**
  * A {@link IBoardCell cell} of a {@link Board board} that holds information
  * about all possible paths starting here. A path is represented as an
- * {@link ConcreteEdge edge}. All {@link ConcreteEdges edges} are hold in an
+ * {@link ConcreteEdge edge}. All {@link ConcreteEdge edges} are hold in an
  * array and the index of the edge indicates the speed, direction and
  * round-number you need to travel by this {@link ConcreteEdge edge}
  */
