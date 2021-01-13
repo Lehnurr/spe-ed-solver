@@ -83,9 +83,12 @@ public class PlaySimulationCommand implements Runnable {
 	}
 
 	@Option(names = { "-l",
-			"--logFileDirecotry" }, description = "If specified, a log file with all possible outputs will be created in the specified directory.")
+			"--logFileDirecotry" }, description = "Changes the directory where all possible outputs will be saved. '/' will disable the file logging", defaultValue = "log")
 	public void setLogFilePath(final String logDirectory) {
-		ApplicationLogger.setLogFilePath(logDirectory);
+		if ("/".equals(logDirectory))
+			ApplicationLogger.setLogFilePath(null);
+		else
+			ApplicationLogger.setLogFilePath(logDirectory);
 	}
 
 	@Option(names = { "-c",

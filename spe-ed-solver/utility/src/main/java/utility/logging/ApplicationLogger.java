@@ -195,6 +195,7 @@ public final class ApplicationLogger {
 				logFile.append(String.format("%s%n", fileLog));
 			} catch (IOException ex) {
 				System.err.println("Error while Writing in LOG-File");
+				ApplicationLogger.logFilePath = null;
 				if (consoleLoggingLevel.getLevel() < logFileLevel.getLevel()) {
 					// Output the message to console if this has not already happened
 					System.err.println(fileLog);

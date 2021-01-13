@@ -41,9 +41,12 @@ public class PlayLiveCommand implements Runnable {
 	}
 
 	@Option(names = { "-l",
-			"--logFileDirecotry" }, description = "Specifies the directory in which a log file containing all possible output is created.", defaultValue = "log")
+			"--logFileDirecotry" }, description = "Changes the directory where all possible outputs will be saved. '/' will disable the file logging", defaultValue = "log")
 	public void setLogFilePath(final String logDirectory) {
-		ApplicationLogger.setLogFilePath(logDirectory);
+		if ("/".equals(logDirectory))
+			ApplicationLogger.setLogFilePath(null);
+		else
+			ApplicationLogger.setLogFilePath(logDirectory);
 	}
 
 	@Option(names = { "-c",
