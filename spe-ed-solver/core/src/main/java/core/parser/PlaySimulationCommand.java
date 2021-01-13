@@ -28,8 +28,8 @@ public class PlaySimulationCommand implements Runnable {
 
 	private boolean viewerEnabled = false;
 
-	private int boardWidth;
-	private int boardHeight;
+	private int boardWidth = 10;
+	private int boardHeight = 10;
 
 	private int maxThreadCount;
 	private String logDirectory = "log";
@@ -41,7 +41,7 @@ public class PlaySimulationCommand implements Runnable {
 		this.viewerEnabled = viewerEnabled;
 	}
 
-	@Option(names = { "-w", "--width" }, description = "The width of the game board.")
+	@Option(names = { "-w", "--width" }, description = "The width of the game board.", defaultValue = "10")
 	public void setBoardWidth(final int boardWidth) {
 		if (boardWidth <= 0) {
 			throw new ParameterException(spec.commandLine(), "The board width must be > 0!");
@@ -49,7 +49,7 @@ public class PlaySimulationCommand implements Runnable {
 		this.boardWidth = boardWidth;
 	}
 
-	@Option(names = { "-h", "--height" }, description = "The height of the game board.")
+	@Option(names = { "-h", "--height" }, description = "The height of the game board.", defaultValue = "10")
 	public void setBoardHeight(final int boardHeight) {
 		if (boardHeight <= 0) {
 			throw new ParameterException(spec.commandLine(), "The board height must be > 0!");
