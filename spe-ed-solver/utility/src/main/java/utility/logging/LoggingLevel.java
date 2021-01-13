@@ -1,25 +1,30 @@
 package utility.logging;
 
 /**
- * Specifies a Level for Log-Messages to put their importance in relation
+ * Specifies a Level for Log-Messages to put their importance in relation.
  */
 public enum LoggingLevel {
     /**
-     * An error that prevents further execution
+     * An error that prevents further execution.
      */
     ERROR(0),
     /**
-     * Information regarding the game spe_ed
+     * Information regarding the game spe_ed.
      */
-    GAME_INFO(1),
+    WARNING(1),
     /**
-     * Information about the status of the application
+     * Information about the status of the application.
      */
-    INFO(2),
+    GAME_INFO(2),
     /**
-     * An error which does not prevent further execution
+     * An error which does not prevent further execution.
      */
-    WARNING(3);
+    INFO(3),
+    /**
+     * Information about the status of the application that will never show up on
+     * the console.
+     */
+    FILE_INFO(4);
 
     private int level;
 
@@ -29,9 +34,9 @@ public enum LoggingLevel {
 
     /**
      * The integer Value of the {@link LoggingLevel}. Must not equals the ordinal
-     * value of the enum
+     * value of the enum.
      * 
-     * @return The integer-{@link LoggingLevel level} Value
+     * @return the integer-{@link LoggingLevel level} Value
      */
     public int getLevel() {
         return this.level;

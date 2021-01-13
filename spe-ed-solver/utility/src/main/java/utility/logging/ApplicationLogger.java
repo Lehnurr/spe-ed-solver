@@ -18,9 +18,7 @@ import java.time.format.DateTimeFormatter;
  */
 public final class ApplicationLogger {
 	private static LoggingLevel consoleLoggingLevel = LoggingLevel.INFO;
-	private static String logFilePath = Paths
-			.get("log", DateTimeFormatter.ofPattern("'lehnurr_speed_'yyyyMMddHHmm'.log'").format(ZonedDateTime.now()))
-			.toAbsolutePath().toString();
+	private static String logFilePath;
 	private static boolean debugModeEnabled;
 
 	private ApplicationLogger() {
@@ -158,6 +156,16 @@ public final class ApplicationLogger {
 	 */
 	public static void logException(Throwable exception, LoggingLevel exceptionAndMessageLoglevel) {
 		logException(exception, exceptionAndMessageLoglevel, exceptionAndMessageLoglevel);
+	}
+
+	/**
+	 * Logs a simple Information-String with the {@link LoggingLevel#FILE_INFO
+	 * FILE-INFO-Tag} and a Time-Stamp
+	 * 
+	 * @param fileInformationMessage the Message to log
+	 */
+	public static void logFileInformation(String fileInformationMessage) {
+		logMessage(LoggingLevel.FILE_INFO, fileInformationMessage, LoggingLevel.FILE_INFO, fileInformationMessage);
 	}
 
 	/**

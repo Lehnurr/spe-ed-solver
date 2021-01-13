@@ -30,6 +30,8 @@ public class PlayLiveCommand implements Runnable {
 
 	private int maxThreadCount = 1;
 
+	private String logDirectory = "log";
+
 	@Option(names = { "-v", "--viewer" }, description = "If specified the viewer will be enabled.")
 	public void setViewerEnabled(final boolean viewerEnabled) {
 		this.viewerEnabled = viewerEnabled;
@@ -43,20 +45,17 @@ public class PlayLiveCommand implements Runnable {
 	@Option(names = { "-l",
 			"--logFileDirecotry" }, description = "Changes the directory where all possible outputs will be saved. '/' will disable the file logging", defaultValue = "log")
 	public void setLogFilePath(final String logDirectory) {
-		if ("/".equals(logDirectory))
-			ApplicationLogger.setLogFilePath(null);
-		else
-			ApplicationLogger.setLogFilePath(logDirectory);
+		this.logDirectory = "/".equals(logDirectory) ? null : logDirectory;
 	}
 
 	@Option(names = { "-c",
 			"--consoleLoggingLevel" }, description = "Limits the outputs in the console, a higher level includes all lower levels.\r\n"
-					+ "GAME_INFO = 1\r\n" + "INFO = 2\r\n" + "WARNING = 3\r\n", defaultValue = "2")
+					+ "ERROR = 0\r\n" + "WARNING = 1\r\n" + "GAME_INFO = 2\r\n" + "INFO = 3\r\n", defaultValue = "3")
 	public void setConsoleOutputMethod(final String loggingLevel) {
 		try {
 			// Try parsing to an integer
 			int ordinalLevel = Integer.parseInt(loggingLevel);
-			if (ordinalLevel > LoggingLevel.ERROR.getLevel() && ordinalLevel <= LoggingLevel.WARNING.getLevel()) {
+			if (ordinalLevel > LoggingLevel.ERROR.getLevel() && ordinalLevel < LoggingLevel.FILE_INFO.getLevel()) {
 				ApplicationLogger.setConsoleLoggingLevel(LoggingLevel.fromInteger(ordinalLevel));
 				return;
 			}
@@ -93,6 +92,7 @@ public class PlayLiveCommand implements Runnable {
 
 	@Override
 	public void run() {
+		ApplicationLogger.setLogFilePath(logDirectory);
 		new LiveMode(viewerEnabled, solverType, maxThreadCount).run();
 	}
 

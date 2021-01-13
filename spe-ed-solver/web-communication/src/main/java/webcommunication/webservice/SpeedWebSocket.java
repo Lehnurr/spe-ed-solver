@@ -64,7 +64,7 @@ public class SpeedWebSocket {
 	public void onMessage(final Session session, final String message) throws MessageSendingException {
 
 		ApplicationLogger.logInformation("request(" + roundCounter + ") received from the server");
-		ApplicationLogger.logInformation("received message from the server: " + message);
+		ApplicationLogger.logFileInformation("received message from the server: " + message);
 
 		final GameStep gameStep = gameStepParser.parseGameStep(message, roundCounter);
 		final PlayerAction responseAction = handleStepFunction.apply(gameStep);
