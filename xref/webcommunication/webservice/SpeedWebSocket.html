@@ -74,7 +74,7 @@
 <a class="jxr_linenumber" name="64" href="#64">64</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> onMessage(<strong class="jxr_keyword">final</strong> Session session, <strong class="jxr_keyword">final</strong> String message) <strong class="jxr_keyword">throws</strong> MessageSendingException {
 <a class="jxr_linenumber" name="65" href="#65">65</a>  
 <a class="jxr_linenumber" name="66" href="#66">66</a>  		ApplicationLogger.logInformation(<span class="jxr_string">"request("</span> + roundCounter + <span class="jxr_string">") received from the server"</span>);
-<a class="jxr_linenumber" name="67" href="#67">67</a>  		ApplicationLogger.logInformation(<span class="jxr_string">"received message from the server: "</span> + message);
+<a class="jxr_linenumber" name="67" href="#67">67</a>  		ApplicationLogger.logFileInformation(<span class="jxr_string">"received message from the server: "</span> + message);
 <a class="jxr_linenumber" name="68" href="#68">68</a>  
 <a class="jxr_linenumber" name="69" href="#69">69</a>  		<strong class="jxr_keyword">final</strong> <a href="../../utility/game/step/GameStep.html">GameStep</a> gameStep = gameStepParser.parseGameStep(message, roundCounter);
 <a class="jxr_linenumber" name="70" href="#70">70</a>  		<strong class="jxr_keyword">final</strong> <a href="../../utility/game/player/PlayerAction.html">PlayerAction</a> responseAction = handleStepFunction.apply(gameStep);
