@@ -69,7 +69,7 @@
 <a class="jxr_linenumber" name="59" href="#59">59</a>  <em class="jxr_javadoccomment">     * @throws IllegalArgumentException if no {@link LoggingLevel} was found</em>
 <a class="jxr_linenumber" name="60" href="#60">60</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="61" href="#61">61</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <a href="../../utility/logging/LoggingLevel.html">LoggingLevel</a> fromInteger(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> intValue) {
-<a class="jxr_linenumber" name="62" href="#62">62</a>          <strong class="jxr_keyword">if</strong> (intValue &lt; ERROR.getLevel() || intValue &gt; WARNING.getLevel()) {
+<a class="jxr_linenumber" name="62" href="#62">62</a>          <strong class="jxr_keyword">if</strong> (intValue &lt; ERROR.getLevel() || intValue &gt; FILE_INFO.getLevel()) {
 <a class="jxr_linenumber" name="63" href="#63">63</a>              <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"Logging level "</span> + intValue + <span class="jxr_string">" does not exist!"</span>);
 <a class="jxr_linenumber" name="64" href="#64">64</a>          }
 <a class="jxr_linenumber" name="65" href="#65">65</a>  

@@ -106,7 +106,7 @@
 <a class="jxr_linenumber" name="96" href="#96">96</a>  		<strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="97" href="#97">97</a>  			<em class="jxr_comment">// Try parsing to an integer</em>
 <a class="jxr_linenumber" name="98" href="#98">98</a>  			<strong class="jxr_keyword">int</strong> ordinalLevel = Integer.parseInt(loggingLevel);
-<a class="jxr_linenumber" name="99" href="#99">99</a>  			<strong class="jxr_keyword">if</strong> (ordinalLevel &gt;= LoggingLevel.ERROR.getLevel() &amp;&amp; ordinalLevel &lt;= LoggingLevel.WARNING.getLevel()) {
+<a class="jxr_linenumber" name="99" href="#99">99</a>  			<strong class="jxr_keyword">if</strong> (ordinalLevel &gt;= LoggingLevel.ERROR.getLevel() &amp;&amp; ordinalLevel &lt;= LoggingLevel.INFO.getLevel()) {
 <a class="jxr_linenumber" name="100" href="#100">100</a> 				ApplicationLogger.setConsoleLoggingLevel(LoggingLevel.fromInteger(ordinalLevel));
 <a class="jxr_linenumber" name="101" href="#101">101</a> 				<strong class="jxr_keyword">return</strong>;
 <a class="jxr_linenumber" name="102" href="#102">102</a> 			}
