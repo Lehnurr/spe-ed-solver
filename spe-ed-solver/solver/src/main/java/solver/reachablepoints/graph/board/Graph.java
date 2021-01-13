@@ -5,12 +5,24 @@ import java.util.Arrays;
 import utility.game.board.Board;
 import utility.game.board.Cell;
 import utility.game.board.CellValue;
+import utility.game.board.IBoardCell;
 import utility.game.player.IPlayer;
 import utility.geometry.Point2i;
 import utility.geometry.Vector2i;
 
+/**
+ * A {@link Board board} that interprets the game as a graph. the
+ * {@link IBoardCell cells} are {@link Node nodes} and an {@link ConcreteEdge
+ * edge} is a possible path that a player can travel.
+ */
 public class Graph extends Board<Node> {
 
+    /**
+     * Initilizes a {@link Graph graph board}.
+     * 
+     * @param emptyNodes a 2D-Array of empty {@link Node nodes} to fill with the
+     *                   actual {@link Node nodes}
+     */
     public Graph(Node[][] emptyNodes) {
         super(emptyNodes);
 
@@ -31,11 +43,13 @@ public class Graph extends Board<Node> {
     }
 
     /**
-     * Removes all unavailable edges from the graph
+     * Removes all unavailable {@link ConcreteEdge edges} from the {@link Graph
+     * graph}.
      * 
-     * @param board   the new Gameboard with the updated cells
-     * @param self    the current Player
-     * @param enemies the enemies
+     * @param board   the new {@link Board game board} with the updated {@link Cell
+     *                cells}
+     * @param self    the current {@link IPlayer player}
+     * @param enemies the enemies of current
      */
     public void updateGraph(final Board<Cell> board, final IPlayer self, final Iterable<IPlayer> enemies) {
 

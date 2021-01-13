@@ -42,13 +42,13 @@ public class GraphCalculation {
 	/**
 	 * Creates a new {@link GraphCalculation} object.
 	 * 
-	 * @param graph         The Graph board to find the edges
+	 * @param graph         the Graph board to find the edges
 	 * @param probabilities {@link FloatMatrix} with probabilities
 	 * @param minSteps      {@link FloatMatrix} with minimum steps
-	 * @param initialEdges  All possible Edges the player can do for the current
+	 * @param initialEdges  all possible Edges the player can do for the current
 	 *                      round
 	 * @param deadline      {@link IDeadline} to limit execution time
-	 * @param queueSize     The maximum Size of elements in the queue
+	 * @param queueSize     the maximum Size of elements in the queue
 	 */
 	public GraphCalculation(final Board<Node> graph, final FloatMatrix probabilities, final FloatMatrix minSteps,
 			final Map<PlayerAction, ConcreteEdge> initialEdges, final IDeadline deadline, int queueSize) {
@@ -68,12 +68,12 @@ public class GraphCalculation {
 
 	/**
 	 * Creates a new {@link GraphCalculation} object and sets the size of the queue
-	 * to {@link GraphCalculation#DEFAULT_QUEUE_SIZE}
+	 * to {@link GraphCalculation#DEFAULT_QUEUE_SIZE}.
 	 * 
-	 * @param graph         The Graph board to find the edges
+	 * @param graph         the Graph board to find the edges
 	 * @param probabilities {@link FloatMatrix} with probabilities
 	 * @param minSteps      {@link FloatMatrix} with minimum steps * @param
-	 * @param initialEdges  All possible Edges the player can do for the current
+	 * @param initialEdges  all possible Edges the player can do for the current
 	 *                      round
 	 * @param deadline      {@link IDeadline} to limit execution time
 	 */
@@ -82,6 +82,12 @@ public class GraphCalculation {
 		this(graph, probabilities, minSteps, initialEdges, deadline, DEFAULT_QUEUE_SIZE);
 	}
 
+	/**
+	 * Adds a {@link RatedPredictiveGraphPlayer player} to the
+	 * {@link GraphCalculation#queue}
+	 * 
+	 * @param startPlayer The {@link RatedPredictiveGraphPlayer player} to add
+	 */
 	public void addPlayerToQueue(RatedPredictiveGraphPlayer startPlayer) {
 		final PlayerAction action = startPlayer.getInitialAction();
 		final Point2i position = startPlayer.getPosition();
@@ -147,23 +153,28 @@ public class GraphCalculation {
 	}
 
 	/**
-	 * Returns the {@link FloatMatrix} of the success rating calculation.
+	 * Returns the {@link SuccessCalculation} of the success rating calculation.
 	 * 
-	 * @return success {@link FloatMatrix} result
+	 * @return success result
 	 */
 	public SuccessCalculation getSuccessCalculation() {
 		return successCalculation;
 	}
 
 	/**
-	 * Returns the {@link FloatMatrix} of the cut off rating calculation.
+	 * Returns the {@link CutOffCalculation} of the cut off rating calculation.
 	 * 
-	 * @return cut off {@link FloatMatrix} result
+	 * @return cut off result
 	 */
 	public CutOffCalculation getCutOffCalculation() {
 		return cutOffCalculation;
 	}
 
+	/**
+	 * Returns the {@link EdgeImportance} of the edge importance calculation.
+	 * 
+	 * @return edge importance result
+	 */
 	public EdgeImportance getEdgeImportance() {
 		return this.edgeImportance;
 	}

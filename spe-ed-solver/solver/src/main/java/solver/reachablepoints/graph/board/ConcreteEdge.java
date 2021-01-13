@@ -3,6 +3,8 @@ package solver.reachablepoints.graph.board;
 import java.util.Arrays;
 import java.util.Objects;
 
+import utility.game.board.IBoardCell;
+import utility.game.player.PlayerDirection;
 import utility.geometry.LineSegment2i;
 
 /**
@@ -17,6 +19,18 @@ public final class ConcreteEdge extends LineSegment2i implements IEdge {
 	private final Node startNode;
 	private ConcreteEdge invertedEdge;
 
+	/**
+	 * Creates a new {@link ConcreteEdge edge} with a
+	 * {@link ConcreteEdge#getStartNode() start node} and a specific
+	 * {@link ConcreteEdge#getPath() path}.
+	 * 
+	 * @param startNode the {@link Node node} where this {@link ConcreteEdge edge}
+	 *                  starts. This {@link Node node} is not part of the
+	 *                  {@link ConcreteEdge#getPath() path}, because it is the
+	 *                  {@link Node start node}
+	 * @param path      an array of passed {@link Node nodes} (excluding jumped over
+	 *                  cells)
+	 */
 	public ConcreteEdge(final Node startNode, final Node[] path) {
 		super(path[0].getPosition(), path[path.length - 1].getPosition());
 		this.stepCount = path.length;
@@ -25,37 +39,72 @@ public final class ConcreteEdge extends LineSegment2i implements IEdge {
 	}
 
 	/**
+	 * Returns the passed Nodes by travelling this {@link ConcreteEdge edge}.
 	 * 
-	 * @return All passed Nodes (not the jumped over nodes)
+	 * @return all passed Nodes (not the jumped over nodes)
 	 */
 	public Node[] getPath() {
 		return this.path;
 	}
 
+	/**
+	 * The {@link ConcreteEdge edge} that uses the same
+	 * {@link ConcreteEdge#getPath() path}.
+	 * 
+	 * @return the inverted {@link ConcreteEdge edge}
+	 */
 	public ConcreteEdge getInvertedEdge() {
 		return invertedEdge;
 	}
 
+	/**
+	 * Sets the {@link ConcreteEdge edge} that have the same
+	 * {@link ConcreteEdge#getPath() path}, but inverted.
+	 * 
+	 * @param invertedEdge an {@link ConcreteEdge edge} with inverted
+	 *                     {@link PlayerDirection direction}, same speed. The
+	 *                     {@link ConcreteEdge#getStartNode() start node } is not
+	 *                     the {@link ConcreteEdge#getEndNode() end node}, because
+	 *                     the {@link ConcreteEdge#getPath() path} is the same!
+	 */
 	public void setInvertedEdge(ConcreteEdge invertedEdge) {
 		this.invertedEdge = invertedEdge;
 	}
 
+	/**
+	 * The number of passed {@link IBoardCell cells} (excluding jumped over cells).
+	 * 
+	 * @return the amount of travelles steps
+	 */
 	public int getStepCount() {
 		return stepCount;
 	}
 
+	/**
+	 * The {@link Node node} where the {@link ConcreteEdge edge} starts. This
+	 * {@link Node node} is not part of the {@link ConcreteEdge#getPath() path},
+	 * because it is the {@link Node start node}.
+	 * 
+	 * @return the {@link Node node} where the player have to be to use this
+	 *         {@link ConcreteEdge edge}
+	 */
 	public Node getStartNode() {
 		return startNode;
 	}
 
+	/**
+	 * The {@link Node node} where the {@link ConcreteEdge edge} ends.
+	 * 
+	 * @return the last {@link Node node} in the {@link ConcreteEdge#getPath() path}
+	 */
 	public Node getEndNode() {
 		return path[path.length - 1];
 	}
 
 	/**
-	 * checks whether two edges intersect
+	 * Checks whether two {@link ConcreteEdge edges} intersect.
 	 * 
-	 * @param other the other {@link ConcreteEdge} to check for intersections
+	 * @param other the other {@link ConcreteEdge} to check for intersection
 	 * @return true if the {@link ConcreteEdge edges} intersect
 	 */
 	public boolean intersect(final ConcreteEdge other) {

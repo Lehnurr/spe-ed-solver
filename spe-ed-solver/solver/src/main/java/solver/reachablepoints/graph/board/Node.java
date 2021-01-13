@@ -32,8 +32,7 @@ public class Node implements IBoardCell<CellValue> {
 	 * @param graph    the {@link Graph} with all {@link Node nodes}
 	 * @param position the {@link Point2i position} where the {@link Node} is
 	 *                 located on the {@link Board}
-	 * @param edges    all {@link IEdge edges} that start at this {@link Node
-	 *                 nodes}.
+	 * @param edges    all {@link IEdge edges} that start at this {@link Node nodes}
 	 */
 	public Node(final Graph graph, final Point2i position, final IEdge[] edges) {
 		this.graph = graph;

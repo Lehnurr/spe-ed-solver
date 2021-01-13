@@ -15,8 +15,8 @@ import utility.game.player.PlayerAction;
 import utility.geometry.FloatMatrix;
 
 /**
- * Calculation Class to calculated and combine the importance for
- * {@link ConcreteEdge ConcreteEdges}
+ * Calculation Class to calculate and combine the importance for
+ * {@link ConcreteEdge ConcreteEdges}.
  */
 public class EdgeImportance {
 
@@ -27,6 +27,12 @@ public class EdgeImportance {
 	private final int width;
 	private final int height;
 
+	/**
+	 * Initializes a new calculator.
+	 * 
+	 * @param width  the width of the board and the resulting {@link FloatMatrix}
+	 * @param height the height of the board and the resulting {@link FloatMatrix}
+	 */
 	private EdgeImportance(int height, int width) {
 		initialEdgeImportance = new HashMap<>();
 		initialEdges = new EnumMap<>(PlayerAction.class);
@@ -37,7 +43,7 @@ public class EdgeImportance {
 	}
 
 	/**
-	 * Initializes a new calculator
+	 * Initializes a new calculator.
 	 * 
 	 * @param width          the width of the board and the resulting
 	 *                       {@link FloatMatrix}
@@ -56,7 +62,7 @@ public class EdgeImportance {
 	}
 
 	/**
-	 * Initializes a new calculator
+	 * Initializes a new calculator.
 	 * 
 	 * @param width        the width of the board and the resulting
 	 *                     {@link FloatMatrix}
@@ -73,7 +79,8 @@ public class EdgeImportance {
 	}
 
 	/**
-	 * Returns an array of the edges that can be passed in one round
+	 * Returns an Array of the {@link ConcreteEdge edges} that can be passed in one
+	 * round.
 	 * 
 	 * @return {@link ConcreteEdge}-Array
 	 */
@@ -82,9 +89,10 @@ public class EdgeImportance {
 	}
 
 	/**
-	 * increments the importance of the initial edges
+	 * increments the importance of the initial {@link ConcreteEdge edges}.
 	 * 
-	 * @param initialEdgeIncrements a Map to link an increment to an edge
+	 * @param initialEdgeIncrements a {@link Map} to link an increment to an
+	 *                              {@link ConcreteEdge edge}
 	 */
 	public void add(final Map<ConcreteEdge, Integer> initialEdgeIncrements) {
 		for (final Entry<ConcreteEdge, Integer> entry : initialEdgeIncrements.entrySet()) {
@@ -96,10 +104,11 @@ public class EdgeImportance {
 	}
 
 	/**
-	 * increments the importance of the initial edges
+	 * increments the importance of the initial {@link ConcreteEdge edges}.
 	 * 
-	 * @param other a {@link EdgeImportance} whose edge-increments should be added
-	 *              to the edge increments of this instance
+	 * @param other a {@link EdgeImportance} whose {@link ConcreteEdge
+	 *              edge}-increments should be added to the {@link ConcreteEdge
+	 *              edge} increments of this instance
 	 */
 	public void add(final EdgeImportance other) {
 		for (final ConcreteEdge edge : other.initialEdgeImportance.keySet()) {
@@ -111,10 +120,10 @@ public class EdgeImportance {
 	}
 
 	/**
-	 * Returns the inverted, normalized Actionsrating. It will be calculated if it
-	 * has not already been.
+	 * Returns the inverted, normalized {@link ActionsRating}. It will be calculated
+	 * if it has not already been.
 	 * 
-	 * @return Normalized inverted Importance Actionsrating
+	 * @return normalized inverted Importance {@link ActionsRating}
 	 */
 	public ActionsRating getInvertedRatingResult() {
 		if (invertedRatingResult == null) {
@@ -141,10 +150,10 @@ public class EdgeImportance {
 	}
 
 	/**
-	 * Returns the inverted, normalized Actionsrating. It will be calculated if it
-	 * has not already been.
+	 * Returns the inverted, normalized {@link ActionsRating}. It will be calculated
+	 * if it has not already been.
 	 * 
-	 * @return Normalized inverted Importance Actionsrating
+	 * @return normalized inverted Importance {@link ActionsRating}
 	 */
 	public FloatMatrix getInvertedMatrixResult() {
 		if (invertedMatrixResult == null) {
@@ -173,8 +182,8 @@ public class EdgeImportance {
 	}
 
 	/**
-	 * Returns a map which links the initial {@link PlayerAction} to the resulting
-	 * initial {@link ConcreteEdge}
+	 * Returns a {@link Map} which links the initial {@link PlayerAction} to the
+	 * resulting initial {@link ConcreteEdge}
 	 * 
 	 * @return {@link Map} mapping a {@link PlayerAction} to its {@link ConcreteEdge
 	 *         ConcreteEdges}
@@ -182,5 +191,4 @@ public class EdgeImportance {
 	public Map<PlayerAction, ConcreteEdge> getInitialEdges() {
 		return initialEdges;
 	}
-
 }

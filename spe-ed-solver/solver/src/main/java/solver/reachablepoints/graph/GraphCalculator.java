@@ -8,7 +8,9 @@ import solver.analysis.ActionsRating;
 import solver.analysis.cutoff.CutOffCalculation;
 import solver.analysis.success.SuccessCalculation;
 import solver.reachablepoints.IReachablePoints;
+import solver.reachablepoints.graph.board.ConcreteEdge;
 import solver.reachablepoints.graph.board.Graph;
+import solver.reachablepoints.graph.board.IEdge;
 import solver.reachablepoints.graph.board.Node;
 import solver.reachablepoints.graph.importance.EdgeImportance;
 import utility.game.board.Board;
@@ -47,6 +49,7 @@ public class GraphCalculator implements IReachablePoints {
 		this.maxThreadCount = maxThreadCount;
 	}
 
+	@Override
 	public void performCalculation(final GameStep gameStep, final FloatMatrix probabilities,
 			final FloatMatrix minSteps) {
 		this.enemyProbabilitiesMatrix = probabilities;
@@ -63,6 +66,12 @@ public class GraphCalculator implements IReachablePoints {
 		addResults(calculations);
 	}
 
+	/**
+	 * Updates the available {@link IEdge edges} from the
+	 * {@link GraphCalculator#graph graph}.
+	 * 
+	 * @param gameStep the new {@link GameStep game step} to apply on the graph
+	 */
 	private void updateGraph(GameStep gameStep) {
 		if (this.graph == null) {
 			// Initialize the graph with an empty Node-Array
@@ -87,14 +96,15 @@ public class GraphCalculator implements IReachablePoints {
 	}
 
 	/**
-	 * Generates {@link GraphCalculation} for different Threads with a base of
-	 * startPlayers
+	 * Generates {@link GraphCalculation GraphCalculations} for different Threads
+	 * with a base of {@link RatedPredictiveGraphPlayer start players}.
 	 * 
 	 * @param startPlayers {@link RatedPredictiveGraphPlayer players} to start the
-	 *                     calculations with
+	 *                     {@link GraphCalculation calculations} with
 	 * @param deadline     {@link IDeadline} which must not be exceeded
-	 * @param graph        The Graph board to find the edges
-	 * @return {@link GraphCalculation} objects
+	 * @param graph        the {@link Graph graph board} to find the
+	 *                     {@link ConcreteEdge edges}
+	 * @return the created {@link GraphCalculation calculation objects}
 	 */
 	private List<GraphCalculation> getCalculations(final List<RatedPredictiveGraphPlayer> startPlayers,
 			final IDeadline deadline, final Board<Node> graph) {
@@ -146,11 +156,11 @@ public class GraphCalculator implements IReachablePoints {
 	}
 
 	/**
-	 * Calculates the first given calculation in this Thread and all other
-	 * calculation in seperate Threads
+	 * Calculates the first given {@link GraphCalculation} in this Thread and all
+	 * other {@link GraphCalculation calculations} in seperate Threads.
 	 * 
-	 * @param calculations {@link GraphCalculation} objects to execute the
-	 *                     calculation for
+	 * @param calculations {@link GraphCalculation calculations} that must be
+	 *                     calculated
 	 */
 	private static void calculate(final List<GraphCalculation> calculations) {
 		if (calculations.isEmpty())
@@ -172,11 +182,11 @@ public class GraphCalculator implements IReachablePoints {
 	}
 
 	/**
-	 * Updates all the locally stored results by collecting all result of the
-	 * {@link GraphCalculation} objects.
+	 * Updates all the locally stored results by collecting all result of the given
+	 * {@link GraphCalculation calculations}.
 	 * 
-	 * @param calculations {@link GraphCalculation} objects mapped to the taken
-	 *                     {@link PlayerAction}
+	 * @param calculations {@link GraphCalculation calculations} to add to the
+	 *                     result
 	 */
 	private void addResults(final List<GraphCalculation> calculations) {
 		calculations.stream().forEach(this::addResults);
@@ -185,6 +195,12 @@ public class GraphCalculator implements IReachablePoints {
 		calculatedPaths = 0;
 	}
 
+	/**
+	 * Updates all the locally stored results by collecting all result of the given
+	 * {@link GraphCalculation calculation}.
+	 * 
+	 * @param calculation {@link GraphCalculation calculation} to add to the result
+	 */
 	private void addResults(GraphCalculation calculation) {
 		this.successCalculation.add(calculation.getSuccessCalculation());
 		this.cutOffCalculation.add(calculation.getCutOffCalculation());
