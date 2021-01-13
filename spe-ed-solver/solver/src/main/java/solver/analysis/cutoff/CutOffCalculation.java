@@ -50,13 +50,12 @@ public class CutOffCalculation {
 	 */
 	public void add(CutOffCalculation other) {
 		for (final PlayerAction action : PlayerAction.values()) {
-			final FloatMatrix selfMatrix = this.matrixResult.get(action);
 			final FloatMatrix otherMatrix = other.matrixResult.get(action);
 
 			matrixResult.computeIfPresent(action, (k, v) -> v.max(otherMatrix));
 
-			final float maxRating = Math.max(selfMatrix.max(), otherMatrix.max());
-			ratingsResult.setRating(action, maxRating);
+			final FloatMatrix selfMatrix = this.matrixResult.get(action);
+			ratingsResult.setRating(action, selfMatrix.max());
 		}
 	}
 

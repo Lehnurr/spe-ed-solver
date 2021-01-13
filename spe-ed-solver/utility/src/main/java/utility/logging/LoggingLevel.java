@@ -59,7 +59,7 @@ public enum LoggingLevel {
      * @throws IllegalArgumentException if no {@link LoggingLevel} was found
      */
     public static LoggingLevel fromInteger(final int intValue) {
-        if (intValue < ERROR.getLevel() || intValue > WARNING.getLevel()) {
+        if (intValue < ERROR.getLevel() || intValue > FILE_INFO.getLevel()) {
             throw new IllegalArgumentException("Logging level " + intValue + " does not exist!");
         }
 

@@ -96,7 +96,7 @@ public class PlaySimulationCommand implements Runnable {
 		try {
 			// Try parsing to an integer
 			int ordinalLevel = Integer.parseInt(loggingLevel);
-			if (ordinalLevel >= LoggingLevel.ERROR.getLevel() && ordinalLevel <= LoggingLevel.WARNING.getLevel()) {
+			if (ordinalLevel >= LoggingLevel.ERROR.getLevel() && ordinalLevel <= LoggingLevel.INFO.getLevel()) {
 				ApplicationLogger.setConsoleLoggingLevel(LoggingLevel.fromInteger(ordinalLevel));
 				return;
 			}

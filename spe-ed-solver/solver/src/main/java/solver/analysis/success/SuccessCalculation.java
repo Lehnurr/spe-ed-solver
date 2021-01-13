@@ -50,13 +50,12 @@ public class SuccessCalculation {
      */
     public void add(SuccessCalculation other) {
         for (final PlayerAction action : PlayerAction.values()) {
-            final FloatMatrix selfMatrix = this.matrixResult.get(action);
             final FloatMatrix otherMatrix = other.matrixResult.get(action);
 
             matrixResult.computeIfPresent(action, (k, v) -> v.max(otherMatrix));
 
-            final float maxRating = Math.max(selfMatrix.sum(), otherMatrix.sum());
-            ratingsResult.setRating(action, maxRating);
+            final FloatMatrix selfMatrix = this.matrixResult.get(action);
+            ratingsResult.setRating(action, selfMatrix.sum());
         }
     }
 
