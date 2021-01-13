@@ -42,7 +42,7 @@ public final class ApplicationLogger {
 	 *                     the console
 	 */
 	public static void setDebugMode(boolean debugEnabled) {
-		setConsoleLoggingLevel(LoggingLevel.WARNING);
+		setConsoleLoggingLevel(LoggingLevel.INFO);
 		ApplicationLogger.debugModeEnabled = debugEnabled;
 	}
 
