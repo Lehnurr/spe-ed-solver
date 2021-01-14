@@ -88,7 +88,7 @@ public class RatedPredictivePlayer extends PredictivePlayer {
 			if (relativeRound >= minSteps.getValue(point))
 				successFactor = Math.max(successFactor, probabilities.getValue(point));
 		}
-		return (double) (parentSuccessRating * Math.pow(1 - successFactor, SUCCESS_BOOST));
+		return (double) (parentSuccessRating * (1 - Math.pow(successFactor, SUCCESS_BOOST)));
 	}
 
 	/**

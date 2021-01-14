@@ -174,7 +174,7 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 			if (relativeRound >= minSteps.getValue(node.getPosition()))
 				successFactor = Math.max(successFactor, probabilities.getValue(node.getPosition()));
 		}
-		return (double) (parentSuccessRating * Math.pow(1 - successFactor, SUCCESS_BOOST));
+		return (double) (parentSuccessRating * (1 - Math.pow(successFactor, SUCCESS_BOOST)));
 	}
 
 	/**
