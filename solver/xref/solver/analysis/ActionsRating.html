@@ -17,11 +17,11 @@
 <a class="jxr_linenumber" name="7" href="#7">7</a>   
 <a class="jxr_linenumber" name="8" href="#8">8</a>   <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="9" href="#9">9</a>   <em class="jxr_javadoccomment"> * Class representing a rating for all possible {@link PlayerAction} values.</em>
-<a class="jxr_linenumber" name="10" href="#10">10</a>  <em class="jxr_javadoccomment"> * Each rating is represented as float value.</em>
+<a class="jxr_linenumber" name="10" href="#10">10</a>  <em class="jxr_javadoccomment"> * Each rating is represented as double value.</em>
 <a class="jxr_linenumber" name="11" href="#11">11</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="12" href="#12">12</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../solver/analysis/ActionsRating.html">ActionsRating</a> {
 <a class="jxr_linenumber" name="13" href="#13">13</a>  
-<a class="jxr_linenumber" name="14" href="#14">14</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Map&lt;PlayerAction, Float&gt; ratingMap;
+<a class="jxr_linenumber" name="14" href="#14">14</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Map&lt;PlayerAction, Double&gt; ratingMap;
 <a class="jxr_linenumber" name="15" href="#15">15</a>  
 <a class="jxr_linenumber" name="16" href="#16">16</a>  	<em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="17" href="#17">17</a>  <em class="jxr_javadoccomment">	 * Creates an empty {@link ActionsRating} with a value of 0 for all</em>
@@ -30,7 +30,7 @@
 <a class="jxr_linenumber" name="20" href="#20">20</a>  	<strong class="jxr_keyword">public</strong> <a href="../../solver/analysis/ActionsRating.html">ActionsRating</a>() {
 <a class="jxr_linenumber" name="21" href="#21">21</a>  		<strong class="jxr_keyword">this</strong>.ratingMap = <strong class="jxr_keyword">new</strong> EnumMap&lt;&gt;(PlayerAction.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="22" href="#22">22</a>  		<strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> PlayerAction action : PlayerAction.values()) {
-<a class="jxr_linenumber" name="23" href="#23">23</a>  			ratingMap.put(action, 0f);
+<a class="jxr_linenumber" name="23" href="#23">23</a>  			ratingMap.put(action, 0.);
 <a class="jxr_linenumber" name="24" href="#24">24</a>  		}
 <a class="jxr_linenumber" name="25" href="#25">25</a>  	}
 <a class="jxr_linenumber" name="26" href="#26">26</a>  
@@ -40,7 +40,7 @@
 <a class="jxr_linenumber" name="30" href="#30">30</a>  <em class="jxr_javadoccomment">	 * @param playerAction {@link PlayerAction} to change the value for</em>
 <a class="jxr_linenumber" name="31" href="#31">31</a>  <em class="jxr_javadoccomment">	 * @param ratingValue  new value to set</em>
 <a class="jxr_linenumber" name="32" href="#32">32</a>  <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="33" href="#33">33</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setRating(<strong class="jxr_keyword">final</strong> PlayerAction playerAction, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> ratingValue) {
+<a class="jxr_linenumber" name="33" href="#33">33</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setRating(<strong class="jxr_keyword">final</strong> PlayerAction playerAction, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> ratingValue) {
 <a class="jxr_linenumber" name="34" href="#34">34</a>  		ratingMap.put(playerAction, ratingValue);
 <a class="jxr_linenumber" name="35" href="#35">35</a>  	}
 <a class="jxr_linenumber" name="36" href="#36">36</a>  
@@ -50,7 +50,7 @@
 <a class="jxr_linenumber" name="40" href="#40">40</a>  <em class="jxr_javadoccomment">	 * @param playerAction {@link PlayerAction} to get the rating value for</em>
 <a class="jxr_linenumber" name="41" href="#41">41</a>  <em class="jxr_javadoccomment">	 * @return rating value</em>
 <a class="jxr_linenumber" name="42" href="#42">42</a>  <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="43" href="#43">43</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">float</strong> getRating(<strong class="jxr_keyword">final</strong> PlayerAction playerAction) {
+<a class="jxr_linenumber" name="43" href="#43">43</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong> getRating(<strong class="jxr_keyword">final</strong> PlayerAction playerAction) {
 <a class="jxr_linenumber" name="44" href="#44">44</a>  		<strong class="jxr_keyword">return</strong> ratingMap.get(playerAction);
 <a class="jxr_linenumber" name="45" href="#45">45</a>  	}
 <a class="jxr_linenumber" name="46" href="#46">46</a>  
@@ -63,9 +63,9 @@
 <a class="jxr_linenumber" name="53" href="#53">53</a>  <em class="jxr_javadoccomment">	 */</em>
 <a class="jxr_linenumber" name="54" href="#54">54</a>  	<strong class="jxr_keyword">public</strong> PlayerAction maxAction() {
 <a class="jxr_linenumber" name="55" href="#55">55</a>  		PlayerAction maxAction = PlayerAction.CHANGE_NOTHING;
-<a class="jxr_linenumber" name="56" href="#56">56</a>  		<strong class="jxr_keyword">float</strong> maxValue = Float.MIN_VALUE;
+<a class="jxr_linenumber" name="56" href="#56">56</a>  		<strong class="jxr_keyword">double</strong> maxValue = Float.MIN_VALUE;
 <a class="jxr_linenumber" name="57" href="#57">57</a>  		<strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> PlayerAction action : PlayerAction.values()) {
-<a class="jxr_linenumber" name="58" href="#58">58</a>  			<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> newValue = ratingMap.get(action);
+<a class="jxr_linenumber" name="58" href="#58">58</a>  			<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> newValue = ratingMap.get(action);
 <a class="jxr_linenumber" name="59" href="#59">59</a>  			<strong class="jxr_keyword">if</strong> (maxValue &lt; newValue) {
 <a class="jxr_linenumber" name="60" href="#60">60</a>  				maxValue = newValue;
 <a class="jxr_linenumber" name="61" href="#61">61</a>  				maxAction = action;
@@ -80,7 +80,7 @@
 <a class="jxr_linenumber" name="70" href="#70">70</a>  <em class="jxr_javadoccomment">	 * </em>
 <a class="jxr_linenumber" name="71" href="#71">71</a>  <em class="jxr_javadoccomment">	 * @return maximum rating value</em>
 <a class="jxr_linenumber" name="72" href="#72">72</a>  <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="73" href="#73">73</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">float</strong> maxRating() {
+<a class="jxr_linenumber" name="73" href="#73">73</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong> maxRating() {
 <a class="jxr_linenumber" name="74" href="#74">74</a>  		<strong class="jxr_keyword">return</strong> ratingMap.get(maxAction());
 <a class="jxr_linenumber" name="75" href="#75">75</a>  	}
 <a class="jxr_linenumber" name="76" href="#76">76</a>  
@@ -89,13 +89,13 @@
 <a class="jxr_linenumber" name="79" href="#79">79</a>  <em class="jxr_javadoccomment">	 * maximum value of all rating values.</em>
 <a class="jxr_linenumber" name="80" href="#80">80</a>  <em class="jxr_javadoccomment">	 */</em>
 <a class="jxr_linenumber" name="81" href="#81">81</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> normalize() {
-<a class="jxr_linenumber" name="82" href="#82">82</a>  		<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> maxValue = maxRating();
+<a class="jxr_linenumber" name="82" href="#82">82</a>  		<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> maxValue = maxRating();
 <a class="jxr_linenumber" name="83" href="#83">83</a>  
-<a class="jxr_linenumber" name="84" href="#84">84</a>  		<strong class="jxr_keyword">if</strong> (Float.isNaN(0 / maxValue))
+<a class="jxr_linenumber" name="84" href="#84">84</a>  		<strong class="jxr_keyword">if</strong> (Double.isNaN(0 / maxValue))
 <a class="jxr_linenumber" name="85" href="#85">85</a>  			<strong class="jxr_keyword">return</strong>;
 <a class="jxr_linenumber" name="86" href="#86">86</a>  
 <a class="jxr_linenumber" name="87" href="#87">87</a>  		<strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> PlayerAction action : PlayerAction.values()) {
-<a class="jxr_linenumber" name="88" href="#88">88</a>  			<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> oldValue = getRating(action);
+<a class="jxr_linenumber" name="88" href="#88">88</a>  			<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> oldValue = getRating(action);
 <a class="jxr_linenumber" name="89" href="#89">89</a>  			setRating(action, oldValue / maxValue);
 <a class="jxr_linenumber" name="90" href="#90">90</a>  		}
 <a class="jxr_linenumber" name="91" href="#91">91</a>  	}
@@ -108,11 +108,11 @@
 <a class="jxr_linenumber" name="98" href="#98">98</a>  <em class="jxr_javadoccomment">	 * @param otherWeight weight for the other object</em>
 <a class="jxr_linenumber" name="99" href="#99">99</a>  <em class="jxr_javadoccomment">	 * @return combined {@link ActionsRating}</em>
 <a class="jxr_linenumber" name="100" href="#100">100</a> <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="101" href="#101">101</a> 	<strong class="jxr_keyword">public</strong> <a href="../../solver/analysis/ActionsRating.html">ActionsRating</a> combine(<strong class="jxr_keyword">final</strong> <a href="../../solver/analysis/ActionsRating.html">ActionsRating</a> other, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> otherWeight) {
+<a class="jxr_linenumber" name="101" href="#101">101</a> 	<strong class="jxr_keyword">public</strong> <a href="../../solver/analysis/ActionsRating.html">ActionsRating</a> combine(<strong class="jxr_keyword">final</strong> <a href="../../solver/analysis/ActionsRating.html">ActionsRating</a> other, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> otherWeight) {
 <a class="jxr_linenumber" name="102" href="#102">102</a> 		<strong class="jxr_keyword">final</strong> <a href="../../solver/analysis/ActionsRating.html">ActionsRating</a> returnValue = <strong class="jxr_keyword">new</strong> <a href="../../solver/analysis/ActionsRating.html">ActionsRating</a>();
 <a class="jxr_linenumber" name="103" href="#103">103</a> 		<strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> PlayerAction action : PlayerAction.values()) {
-<a class="jxr_linenumber" name="104" href="#104">104</a> 			<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> otherWeightedValue = other.getRating(action) * otherWeight;
-<a class="jxr_linenumber" name="105" href="#105">105</a> 			<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> combinedValue = <strong class="jxr_keyword">this</strong>.getRating(action) + otherWeightedValue;
+<a class="jxr_linenumber" name="104" href="#104">104</a> 			<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> otherWeightedValue = other.getRating(action) * otherWeight;
+<a class="jxr_linenumber" name="105" href="#105">105</a> 			<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> combinedValue = <strong class="jxr_keyword">this</strong>.getRating(action) + otherWeightedValue;
 <a class="jxr_linenumber" name="106" href="#106">106</a> 			returnValue.setRating(action, combinedValue);
 <a class="jxr_linenumber" name="107" href="#107">107</a> 		}
 <a class="jxr_linenumber" name="108" href="#108">108</a> 		<strong class="jxr_keyword">return</strong> returnValue;

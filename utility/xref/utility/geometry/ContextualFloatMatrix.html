@@ -19,8 +19,8 @@
 <a class="jxr_linenumber" name="9" href="#9">9</a>   
 <a class="jxr_linenumber" name="10" href="#10">10</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../utility/geometry/FloatMatrix.html">FloatMatrix</a> matrix;
 <a class="jxr_linenumber" name="11" href="#11">11</a>  
-<a class="jxr_linenumber" name="12" href="#12">12</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> rangeMin;
-<a class="jxr_linenumber" name="13" href="#13">13</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> rangeMax;
+<a class="jxr_linenumber" name="12" href="#12">12</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> rangeMin;
+<a class="jxr_linenumber" name="13" href="#13">13</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> rangeMax;
 <a class="jxr_linenumber" name="14" href="#14">14</a>  
 <a class="jxr_linenumber" name="15" href="#15">15</a>  	<em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="16" href="#16">16</a>  <em class="jxr_javadoccomment">	 * Generates a {@link ContextualFloatMatrix} only with its name. Range values</em>
@@ -41,8 +41,8 @@
 <a class="jxr_linenumber" name="31" href="#31">31</a>  <em class="jxr_javadoccomment">	 * @param rangeMin the minimum meaningful value</em>
 <a class="jxr_linenumber" name="32" href="#32">32</a>  <em class="jxr_javadoccomment">	 * @param rangeMax the maximum meaningful value</em>
 <a class="jxr_linenumber" name="33" href="#33">33</a>  <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="34" href="#34">34</a>  	<strong class="jxr_keyword">public</strong> <a href="../../utility/geometry/ContextualFloatMatrix.html">ContextualFloatMatrix</a>(<strong class="jxr_keyword">final</strong> String name, <strong class="jxr_keyword">final</strong> <a href="../../utility/geometry/FloatMatrix.html">FloatMatrix</a> matrix, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> rangeMin,
-<a class="jxr_linenumber" name="35" href="#35">35</a>  			<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> rangeMax) {
+<a class="jxr_linenumber" name="34" href="#34">34</a>  	<strong class="jxr_keyword">public</strong> <a href="../../utility/geometry/ContextualFloatMatrix.html">ContextualFloatMatrix</a>(<strong class="jxr_keyword">final</strong> String name, <strong class="jxr_keyword">final</strong> <a href="../../utility/geometry/FloatMatrix.html">FloatMatrix</a> matrix, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> rangeMin,
+<a class="jxr_linenumber" name="35" href="#35">35</a>  			<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> rangeMax) {
 <a class="jxr_linenumber" name="36" href="#36">36</a>  		<strong class="jxr_keyword">this</strong>.name = name;
 <a class="jxr_linenumber" name="37" href="#37">37</a>  		<strong class="jxr_keyword">this</strong>.matrix = <strong class="jxr_keyword">new</strong> <a href="../../utility/geometry/FloatMatrix.html">FloatMatrix</a>(matrix);
 <a class="jxr_linenumber" name="38" href="#38">38</a>  		<strong class="jxr_keyword">this</strong>.rangeMin = rangeMin;
@@ -62,9 +62,9 @@
 <a class="jxr_linenumber" name="52" href="#52">52</a>  <em class="jxr_javadoccomment">	 * Returns the value of the underlying matrix at the given position.</em>
 <a class="jxr_linenumber" name="53" href="#53">53</a>  <em class="jxr_javadoccomment">	 * </em>
 <a class="jxr_linenumber" name="54" href="#54">54</a>  <em class="jxr_javadoccomment">	 * @param point the {@link Point2i position} to get the value from</em>
-<a class="jxr_linenumber" name="55" href="#55">55</a>  <em class="jxr_javadoccomment">	 * @return float value at the given coordinates</em>
+<a class="jxr_linenumber" name="55" href="#55">55</a>  <em class="jxr_javadoccomment">	 * @return double value at the given coordinates</em>
 <a class="jxr_linenumber" name="56" href="#56">56</a>  <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="57" href="#57">57</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">float</strong> getValue(<a href="../../utility/geometry/Point2i.html">Point2i</a> point) {
+<a class="jxr_linenumber" name="57" href="#57">57</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong> getValue(<a href="../../utility/geometry/Point2i.html">Point2i</a> point) {
 <a class="jxr_linenumber" name="58" href="#58">58</a>  		<strong class="jxr_keyword">return</strong> matrix.getValue(point);
 <a class="jxr_linenumber" name="59" href="#59">59</a>  	}
 <a class="jxr_linenumber" name="60" href="#60">60</a>  
@@ -73,9 +73,9 @@
 <a class="jxr_linenumber" name="63" href="#63">63</a>  <em class="jxr_javadoccomment">	 * </em>
 <a class="jxr_linenumber" name="64" href="#64">64</a>  <em class="jxr_javadoccomment">	 * @param x the x coordinate</em>
 <a class="jxr_linenumber" name="65" href="#65">65</a>  <em class="jxr_javadoccomment">	 * @param y the y coordinate</em>
-<a class="jxr_linenumber" name="66" href="#66">66</a>  <em class="jxr_javadoccomment">	 * @return float value at the given coordinates</em>
+<a class="jxr_linenumber" name="66" href="#66">66</a>  <em class="jxr_javadoccomment">	 * @return double value at the given coordinates</em>
 <a class="jxr_linenumber" name="67" href="#67">67</a>  <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="68" href="#68">68</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">float</strong> getValue(<strong class="jxr_keyword">int</strong> x, <strong class="jxr_keyword">int</strong> y) {
+<a class="jxr_linenumber" name="68" href="#68">68</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong> getValue(<strong class="jxr_keyword">int</strong> x, <strong class="jxr_keyword">int</strong> y) {
 <a class="jxr_linenumber" name="69" href="#69">69</a>  		<strong class="jxr_keyword">return</strong> matrix.getValue(x, y);
 <a class="jxr_linenumber" name="70" href="#70">70</a>  	}
 <a class="jxr_linenumber" name="71" href="#71">71</a>  
@@ -102,7 +102,7 @@
 <a class="jxr_linenumber" name="92" href="#92">92</a>  <em class="jxr_javadoccomment">	 * </em>
 <a class="jxr_linenumber" name="93" href="#93">93</a>  <em class="jxr_javadoccomment">	 * @return max valid value for the matrix</em>
 <a class="jxr_linenumber" name="94" href="#94">94</a>  <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="95" href="#95">95</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">float</strong> getRangeMax() {
+<a class="jxr_linenumber" name="95" href="#95">95</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong> getRangeMax() {
 <a class="jxr_linenumber" name="96" href="#96">96</a>  		<strong class="jxr_keyword">return</strong> rangeMax;
 <a class="jxr_linenumber" name="97" href="#97">97</a>  	}
 <a class="jxr_linenumber" name="98" href="#98">98</a>  
@@ -111,7 +111,7 @@
 <a class="jxr_linenumber" name="101" href="#101">101</a> <em class="jxr_javadoccomment">	 * </em>
 <a class="jxr_linenumber" name="102" href="#102">102</a> <em class="jxr_javadoccomment">	 * @return min valid value for the matrix</em>
 <a class="jxr_linenumber" name="103" href="#103">103</a> <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="104" href="#104">104</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">float</strong> getRangeMin() {
+<a class="jxr_linenumber" name="104" href="#104">104</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong> getRangeMin() {
 <a class="jxr_linenumber" name="105" href="#105">105</a> 		<strong class="jxr_keyword">return</strong> rangeMin;
 <a class="jxr_linenumber" name="106" href="#106">106</a> 	}
 <a class="jxr_linenumber" name="107" href="#107">107</a> 

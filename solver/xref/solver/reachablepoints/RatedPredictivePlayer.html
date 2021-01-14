@@ -30,8 +30,8 @@
 <a class="jxr_linenumber" name="20" href="#20">20</a>  
 <a class="jxr_linenumber" name="21" href="#21">21</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">double</strong> SUCCESS_BOOST = 0.2;
 <a class="jxr_linenumber" name="22" href="#22">22</a>  
-<a class="jxr_linenumber" name="23" href="#23">23</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> successRating;
-<a class="jxr_linenumber" name="24" href="#24">24</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> cutOffRating;
+<a class="jxr_linenumber" name="23" href="#23">23</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> successRating;
+<a class="jxr_linenumber" name="24" href="#24">24</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> cutOffRating;
 <a class="jxr_linenumber" name="25" href="#25">25</a>  
 <a class="jxr_linenumber" name="26" href="#26">26</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> relativeRound;
 <a class="jxr_linenumber" name="27" href="#27">27</a>  
@@ -91,14 +91,14 @@
 <a class="jxr_linenumber" name="81" href="#81">81</a>  <em class="jxr_javadoccomment">	 * @param relativeRound       amount of round which are predictive</em>
 <a class="jxr_linenumber" name="82" href="#82">82</a>  <em class="jxr_javadoccomment">	 * @return new success rating for the child</em>
 <a class="jxr_linenumber" name="83" href="#83">83</a>  <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="84" href="#84">84</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">float</strong> calculateSuccessRating(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> parentSuccessRating, <strong class="jxr_keyword">final</strong> FloatMatrix probabilities,
+<a class="jxr_linenumber" name="84" href="#84">84</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">double</strong> calculateSuccessRating(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> parentSuccessRating, <strong class="jxr_keyword">final</strong> FloatMatrix probabilities,
 <a class="jxr_linenumber" name="85" href="#85">85</a>  			<strong class="jxr_keyword">final</strong> FloatMatrix minSteps, <strong class="jxr_keyword">final</strong> Collection&lt;Point2i&gt; shortTail, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> relativeRound) {
-<a class="jxr_linenumber" name="86" href="#86">86</a>  		<strong class="jxr_keyword">float</strong> successFactor = 1;
+<a class="jxr_linenumber" name="86" href="#86">86</a>  		<strong class="jxr_keyword">double</strong> successFactor = 0;
 <a class="jxr_linenumber" name="87" href="#87">87</a>  		<strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> Point2i point : shortTail) {
 <a class="jxr_linenumber" name="88" href="#88">88</a>  			<strong class="jxr_keyword">if</strong> (relativeRound &gt;= minSteps.getValue(point))
 <a class="jxr_linenumber" name="89" href="#89">89</a>  				successFactor = Math.max(successFactor, probabilities.getValue(point));
 <a class="jxr_linenumber" name="90" href="#90">90</a>  		}
-<a class="jxr_linenumber" name="91" href="#91">91</a>  		<strong class="jxr_keyword">return</strong> (<strong class="jxr_keyword">float</strong>) (parentSuccessRating * (1 - Math.pow(successFactor, SUCCESS_BOOST)));
+<a class="jxr_linenumber" name="91" href="#91">91</a>  		<strong class="jxr_keyword">return</strong> (<strong class="jxr_keyword">double</strong>) (parentSuccessRating * (1 - Math.pow(successFactor, SUCCESS_BOOST)));
 <a class="jxr_linenumber" name="92" href="#92">92</a>  	}
 <a class="jxr_linenumber" name="93" href="#93">93</a>  
 <a class="jxr_linenumber" name="94" href="#94">94</a>  	<em class="jxr_javadoccomment">/**</em>
@@ -113,10 +113,10 @@
 <a class="jxr_linenumber" name="103" href="#103">103</a> <em class="jxr_javadoccomment">	 * @param successRating the probability to reach the given state</em>
 <a class="jxr_linenumber" name="104" href="#104">104</a> <em class="jxr_javadoccomment">	 * @return new cut off rating for the child</em>
 <a class="jxr_linenumber" name="105" href="#105">105</a> <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="106" href="#106">106</a> 	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">float</strong> calculateCutOffRating(<strong class="jxr_keyword">final</strong> FloatMatrix probabilities, <strong class="jxr_keyword">final</strong> FloatMatrix minSteps,
-<a class="jxr_linenumber" name="107" href="#107">107</a> 			<strong class="jxr_keyword">final</strong> Collection&lt;Point2i&gt; shortTail, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> relativeRound, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> successRating) {
+<a class="jxr_linenumber" name="106" href="#106">106</a> 	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">double</strong> calculateCutOffRating(<strong class="jxr_keyword">final</strong> FloatMatrix probabilities, <strong class="jxr_keyword">final</strong> FloatMatrix minSteps,
+<a class="jxr_linenumber" name="107" href="#107">107</a> 			<strong class="jxr_keyword">final</strong> Collection&lt;Point2i&gt; shortTail, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> relativeRound, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> successRating) {
 <a class="jxr_linenumber" name="108" href="#108">108</a> 
-<a class="jxr_linenumber" name="109" href="#109">109</a> 		<strong class="jxr_keyword">float</strong> cutOff = 0;
+<a class="jxr_linenumber" name="109" href="#109">109</a> 		<strong class="jxr_keyword">double</strong> cutOff = 0;
 <a class="jxr_linenumber" name="110" href="#110">110</a> 		<strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> Point2i point : shortTail) {
 <a class="jxr_linenumber" name="111" href="#111">111</a> 			<strong class="jxr_keyword">if</strong> (relativeRound &lt; minSteps.getValue(point)) {
 <a class="jxr_linenumber" name="112" href="#112">112</a> 				cutOff = Math.max(cutOff, probabilities.getValue(point));
@@ -152,7 +152,7 @@
 <a class="jxr_linenumber" name="142" href="#142">142</a> <em class="jxr_javadoccomment">	 * </em>
 <a class="jxr_linenumber" name="143" href="#143">143</a> <em class="jxr_javadoccomment">	 * @return success rating</em>
 <a class="jxr_linenumber" name="144" href="#144">144</a> <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="145" href="#145">145</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">float</strong> getSuccessRating() {
+<a class="jxr_linenumber" name="145" href="#145">145</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong> getSuccessRating() {
 <a class="jxr_linenumber" name="146" href="#146">146</a> 		<strong class="jxr_keyword">return</strong> successRating;
 <a class="jxr_linenumber" name="147" href="#147">147</a> 	}
 <a class="jxr_linenumber" name="148" href="#148">148</a> 
@@ -161,7 +161,7 @@
 <a class="jxr_linenumber" name="151" href="#151">151</a> <em class="jxr_javadoccomment">	 * </em>
 <a class="jxr_linenumber" name="152" href="#152">152</a> <em class="jxr_javadoccomment">	 * @return cut off rating</em>
 <a class="jxr_linenumber" name="153" href="#153">153</a> <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="154" href="#154">154</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">float</strong> getCutOffRating() {
+<a class="jxr_linenumber" name="154" href="#154">154</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">double</strong> getCutOffRating() {
 <a class="jxr_linenumber" name="155" href="#155">155</a> 		<strong class="jxr_keyword">return</strong> cutOffRating;
 <a class="jxr_linenumber" name="156" href="#156">156</a> 	}
 <a class="jxr_linenumber" name="157" href="#157">157</a> 

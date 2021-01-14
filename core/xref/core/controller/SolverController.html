@@ -64,14 +64,14 @@
 <a class="jxr_linenumber" name="54" href="#54">54</a>  		GameLogger.logGameStep(gameStep);
 <a class="jxr_linenumber" name="55" href="#55">55</a>  
 <a class="jxr_linenumber" name="56" href="#56">56</a>  		<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> availableMilliseconds = gameStep.getDeadline().getRemainingMilliseconds();
-<a class="jxr_linenumber" name="57" href="#57">57</a>  		<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> availableSeconds = availableMilliseconds / 1000f;
+<a class="jxr_linenumber" name="57" href="#57">57</a>  		<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> availableSeconds = availableMilliseconds / 1000.;
 <a class="jxr_linenumber" name="58" href="#58">58</a>  
 <a class="jxr_linenumber" name="59" href="#59">59</a>  		<strong class="jxr_keyword">final</strong> List&lt;ContextualFloatMatrix&gt; boardRatings = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
 <a class="jxr_linenumber" name="60" href="#60">60</a>  
 <a class="jxr_linenumber" name="61" href="#61">61</a>  		<strong class="jxr_keyword">final</strong> PlayerAction action = solver.calculateAction(gameStep, boardRatings::add);
 <a class="jxr_linenumber" name="62" href="#62">62</a>  
 <a class="jxr_linenumber" name="63" href="#63">63</a>  		<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> requiredMilliseconds = availableMilliseconds - gameStep.getDeadline().getRemainingMilliseconds();
-<a class="jxr_linenumber" name="64" href="#64">64</a>  		<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> requiredSeconds = requiredMilliseconds / 1000f;
+<a class="jxr_linenumber" name="64" href="#64">64</a>  		<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> requiredSeconds = requiredMilliseconds / 1000.;
 <a class="jxr_linenumber" name="65" href="#65">65</a>  
 <a class="jxr_linenumber" name="66" href="#66">66</a>  		viewer.commitRound(gameStep.getSelf().getPlayerId(), availableSeconds, action, requiredSeconds,
 <a class="jxr_linenumber" name="67" href="#67">67</a>  				gameStep.getBoard(), boardRatings);

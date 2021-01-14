@@ -43,15 +43,15 @@
 <a class="jxr_linenumber" name="33" href="#33">33</a>  		<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> height = matrix.getHeight();
 <a class="jxr_linenumber" name="34" href="#34">34</a>  		<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> width = matrix.getWidth();
 <a class="jxr_linenumber" name="35" href="#35">35</a>  
-<a class="jxr_linenumber" name="36" href="#36">36</a>  		<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> rangeMax = matrix.getRangeMax();
-<a class="jxr_linenumber" name="37" href="#37">37</a>  		<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> rangeMin = matrix.getRangeMin();
-<a class="jxr_linenumber" name="38" href="#38">38</a>  		<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> stretchFactor = 1 / (rangeMax - rangeMin);
+<a class="jxr_linenumber" name="36" href="#36">36</a>  		<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> rangeMax = matrix.getRangeMax();
+<a class="jxr_linenumber" name="37" href="#37">37</a>  		<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> rangeMin = matrix.getRangeMin();
+<a class="jxr_linenumber" name="38" href="#38">38</a>  		<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> stretchFactor = 1 / (rangeMax - rangeMin);
 <a class="jxr_linenumber" name="39" href="#39">39</a>  
 <a class="jxr_linenumber" name="40" href="#40">40</a>  		<strong class="jxr_keyword">final</strong> BufferedImage bufferedImage = <strong class="jxr_keyword">new</strong> BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 <a class="jxr_linenumber" name="41" href="#41">41</a>  
 <a class="jxr_linenumber" name="42" href="#42">42</a>  		<strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> y = 0; y &lt; height; y++) {
 <a class="jxr_linenumber" name="43" href="#43">43</a>  			<strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> x = 0; x &lt; width; x++) {
-<a class="jxr_linenumber" name="44" href="#44">44</a>  				<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> value = (matrix.getValue(x, y) - rangeMin) * stretchFactor;
+<a class="jxr_linenumber" name="44" href="#44">44</a>  				<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> value = (matrix.getValue(x, y) - rangeMin) * stretchFactor;
 <a class="jxr_linenumber" name="45" href="#45">45</a>  				bufferedImage.setRGB(x, y, colorGradient.apply(value));
 <a class="jxr_linenumber" name="46" href="#46">46</a>  			}
 <a class="jxr_linenumber" name="47" href="#47">47</a>  		}

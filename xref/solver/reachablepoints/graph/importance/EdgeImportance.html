@@ -148,10 +148,10 @@
 <a class="jxr_linenumber" name="138" href="#138">138</a> 				<strong class="jxr_keyword">return</strong> invertedRatingResult;
 <a class="jxr_linenumber" name="139" href="#139">139</a> 
 <a class="jxr_linenumber" name="140" href="#140">140</a> 			<strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> Entry&lt;PlayerAction, ConcreteEdge&gt; entry : initialEdges.entrySet()) {
-<a class="jxr_linenumber" name="141" href="#141">141</a> 				<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> normalizedImportance = initialEdgeImportance.getOrDefault(entry.getValue(), 0)
-<a class="jxr_linenumber" name="142" href="#142">142</a> 						/ (<strong class="jxr_keyword">float</strong>) maxImportance;
+<a class="jxr_linenumber" name="141" href="#141">141</a> 				<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> normalizedImportance = initialEdgeImportance.getOrDefault(entry.getValue(), 0)
+<a class="jxr_linenumber" name="142" href="#142">142</a> 						/ (<strong class="jxr_keyword">double</strong>) maxImportance;
 <a class="jxr_linenumber" name="143" href="#143">143</a> 
-<a class="jxr_linenumber" name="144" href="#144">144</a> 				<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> invertedNormalizedImportance = 1 - normalizedImportance;
+<a class="jxr_linenumber" name="144" href="#144">144</a> 				<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> invertedNormalizedImportance = 1 - normalizedImportance;
 <a class="jxr_linenumber" name="145" href="#145">145</a> 				invertedRatingResult.setRating(entry.getKey(), invertedNormalizedImportance);
 <a class="jxr_linenumber" name="146" href="#146">146</a> 			}
 <a class="jxr_linenumber" name="147" href="#147">147</a> 		}
@@ -178,10 +178,10 @@
 <a class="jxr_linenumber" name="168" href="#168">168</a> 				<strong class="jxr_keyword">return</strong> invertedMatrixResult;
 <a class="jxr_linenumber" name="169" href="#169">169</a> 
 <a class="jxr_linenumber" name="170" href="#170">170</a> 			<strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> ConcreteEdge initialEdge : initialEdges.values()) {
-<a class="jxr_linenumber" name="171" href="#171">171</a> 				<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> normalizedImportance = initialEdgeImportance.getOrDefault(initialEdge, 0)
-<a class="jxr_linenumber" name="172" href="#172">172</a> 						/ (<strong class="jxr_keyword">float</strong>) maxImportance;
+<a class="jxr_linenumber" name="171" href="#171">171</a> 				<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> normalizedImportance = initialEdgeImportance.getOrDefault(initialEdge, 0)
+<a class="jxr_linenumber" name="172" href="#172">172</a> 						/ maxImportance;
 <a class="jxr_linenumber" name="173" href="#173">173</a> 
-<a class="jxr_linenumber" name="174" href="#174">174</a> 				<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> invertedNormalizedImportance = 1 - normalizedImportance;
+<a class="jxr_linenumber" name="174" href="#174">174</a> 				<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> invertedNormalizedImportance = 1 - normalizedImportance;
 <a class="jxr_linenumber" name="175" href="#175">175</a> 				<strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> Node cell : initialEdge.getPath()) {
 <a class="jxr_linenumber" name="176" href="#176">176</a> 					invertedMatrixResult.setValue(cell.getPosition(), invertedNormalizedImportance);
 <a class="jxr_linenumber" name="177" href="#177">177</a> 				}

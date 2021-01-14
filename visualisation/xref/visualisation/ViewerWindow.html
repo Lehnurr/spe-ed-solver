@@ -235,8 +235,8 @@
 <a class="jxr_linenumber" name="225" href="#225">225</a> 			boardPanel.setLayout(<strong class="jxr_keyword">new</strong> GridLayout(yGridElements, xGridElements));
 <a class="jxr_linenumber" name="226" href="#226">226</a> 
 <a class="jxr_linenumber" name="227" href="#227">227</a> 			<em class="jxr_comment">// calculates max size in each dimension for board rating</em>
-<a class="jxr_linenumber" name="228" href="#228">228</a> 			<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> maxElementWidth = boardPanel.getWidth() / xGridElements - BOARD_RATING_PADDING_HORIZONTAL;
-<a class="jxr_linenumber" name="229" href="#229">229</a> 			<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> maxElementHeight = boardPanel.getHeight() / yGridElements - BOARD_RATING_PADDING_VERTICAL;
+<a class="jxr_linenumber" name="228" href="#228">228</a> 			<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> maxElementWidth = boardPanel.getWidth() / xGridElements - BOARD_RATING_PADDING_HORIZONTAL;
+<a class="jxr_linenumber" name="229" href="#229">229</a> 			<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> maxElementHeight = boardPanel.getHeight() / yGridElements - BOARD_RATING_PADDING_VERTICAL;
 <a class="jxr_linenumber" name="230" href="#230">230</a> 
 <a class="jxr_linenumber" name="231" href="#231">231</a> 			<em class="jxr_comment">// update graphics</em>
 <a class="jxr_linenumber" name="232" href="#232">232</a> 			boardPanel.removeAll();
@@ -253,7 +253,7 @@
 <a class="jxr_linenumber" name="243" href="#243">243</a> 				BufferedImage image = namedImage.getImage();
 <a class="jxr_linenumber" name="244" href="#244">244</a> 
 <a class="jxr_linenumber" name="245" href="#245">245</a> 				<em class="jxr_comment">// scale and display image</em>
-<a class="jxr_linenumber" name="246" href="#246">246</a> 				<strong class="jxr_keyword">float</strong> scalingFactor = maxElementWidth / image.getWidth();
+<a class="jxr_linenumber" name="246" href="#246">246</a> 				<strong class="jxr_keyword">double</strong> scalingFactor = maxElementWidth / image.getWidth();
 <a class="jxr_linenumber" name="247" href="#247">247</a> 				<strong class="jxr_keyword">if</strong> (image.getHeight() * scalingFactor &gt; maxElementHeight)
 <a class="jxr_linenumber" name="248" href="#248">248</a> 					scalingFactor = maxElementHeight / image.getHeight();
 <a class="jxr_linenumber" name="249" href="#249">249</a> 				<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> newWidth = (<strong class="jxr_keyword">int</strong>) (image.getWidth() * scalingFactor);

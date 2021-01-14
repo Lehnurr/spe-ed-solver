@@ -13,7 +13,7 @@
 <a class="jxr_linenumber" name="3" href="#3">3</a>   <strong class="jxr_keyword">import</strong> java.awt.Color;
 <a class="jxr_linenumber" name="4" href="#4">4</a>   
 <a class="jxr_linenumber" name="5" href="#5">5</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="6" href="#6">6</a>   <em class="jxr_javadoccomment"> * Color Gradient for generating RGB values for float values between 0 and 1.</em>
+<a class="jxr_linenumber" name="6" href="#6">6</a>   <em class="jxr_javadoccomment"> * Color Gradient for generating RGB values for double values between 0 and 1.</em>
 <a class="jxr_linenumber" name="7" href="#7">7</a>   <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="8" href="#8">8</a>   <strong class="jxr_keyword">public</strong> enum <a href="../visualisation/ColorGradient.html">ColorGradient</a> {
 <a class="jxr_linenumber" name="9" href="#9">9</a>   
@@ -22,10 +22,10 @@
 <a class="jxr_linenumber" name="12" href="#12">12</a>  <em class="jxr_javadoccomment">	 */</em>
 <a class="jxr_linenumber" name="13" href="#13">13</a>  	FIRE {
 <a class="jxr_linenumber" name="14" href="#14">14</a>  		@Override
-<a class="jxr_linenumber" name="15" href="#15">15</a>  		<strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">int</strong> applyUnbounded(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> value) {
-<a class="jxr_linenumber" name="16" href="#16">16</a>  			<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> rValue = (<strong class="jxr_keyword">int</strong>) (0xFF * Math.max(0, Math.min(1 / 3f, value)) * 3);
-<a class="jxr_linenumber" name="17" href="#17">17</a>  			<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> gValue = (<strong class="jxr_keyword">int</strong>) (0xFF * Math.max(0, Math.min(1 / 3f, value - 0.33)) * 3);
-<a class="jxr_linenumber" name="18" href="#18">18</a>  			<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> bValue = (<strong class="jxr_keyword">int</strong>) (0xFF * Math.max(0, Math.min(1 / 3f, value - 0.66)) * 3);
+<a class="jxr_linenumber" name="15" href="#15">15</a>  		<strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">int</strong> applyUnbounded(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> value) {
+<a class="jxr_linenumber" name="16" href="#16">16</a>  			<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> rValue = (<strong class="jxr_keyword">int</strong>) (0xFF * Math.max(0, Math.min(1 / 3, value)) * 3);
+<a class="jxr_linenumber" name="17" href="#17">17</a>  			<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> gValue = (<strong class="jxr_keyword">int</strong>) (0xFF * Math.max(0, Math.min(1 / 3, value - 0.33)) * 3);
+<a class="jxr_linenumber" name="18" href="#18">18</a>  			<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> bValue = (<strong class="jxr_keyword">int</strong>) (0xFF * Math.max(0, Math.min(1 / 3, value - 0.66)) * 3);
 <a class="jxr_linenumber" name="19" href="#19">19</a>  			<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> rgbValue = (rValue &lt;&lt; 16) | (gValue &lt;&lt; 8) | bValue;
 <a class="jxr_linenumber" name="20" href="#20">20</a>  			<strong class="jxr_keyword">return</strong> rgbValue;
 <a class="jxr_linenumber" name="21" href="#21">21</a>  		}
@@ -35,8 +35,8 @@
 <a class="jxr_linenumber" name="25" href="#25">25</a>  <em class="jxr_javadoccomment">	 */</em>
 <a class="jxr_linenumber" name="26" href="#26">26</a>  	RAINBOW {
 <a class="jxr_linenumber" name="27" href="#27">27</a>  		@Override
-<a class="jxr_linenumber" name="28" href="#28">28</a>  		<strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">int</strong> applyUnbounded(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> value) {
-<a class="jxr_linenumber" name="29" href="#29">29</a>  			<strong class="jxr_keyword">return</strong> Color.HSBtoRGB(value, 1, 1);
+<a class="jxr_linenumber" name="28" href="#28">28</a>  		<strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">int</strong> applyUnbounded(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> value) {
+<a class="jxr_linenumber" name="29" href="#29">29</a>  			<strong class="jxr_keyword">return</strong> Color.HSBtoRGB((<strong class="jxr_keyword">float</strong>) value, 1, 1);
 <a class="jxr_linenumber" name="30" href="#30">30</a>  		}
 <a class="jxr_linenumber" name="31" href="#31">31</a>  	};
 <a class="jxr_linenumber" name="32" href="#32">32</a>  
@@ -47,17 +47,17 @@
 <a class="jxr_linenumber" name="37" href="#37">37</a>  <em class="jxr_javadoccomment">	 * @param value must be between 0 and 1</em>
 <a class="jxr_linenumber" name="38" href="#38">38</a>  <em class="jxr_javadoccomment">	 * @return RGB value as int (0 - 0xFFFFFF)</em>
 <a class="jxr_linenumber" name="39" href="#39">39</a>  <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="40" href="#40">40</a>  	<strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">abstract</strong> <strong class="jxr_keyword">int</strong> applyUnbounded(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> value);
+<a class="jxr_linenumber" name="40" href="#40">40</a>  	<strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">abstract</strong> <strong class="jxr_keyword">int</strong> applyUnbounded(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> value);
 <a class="jxr_linenumber" name="41" href="#41">41</a>  
 <a class="jxr_linenumber" name="42" href="#42">42</a>  	<em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="43" href="#43">43</a>  <em class="jxr_javadoccomment">	 * Clipping value to range between 0 and 1 and applying RGB gradient</em>
 <a class="jxr_linenumber" name="44" href="#44">44</a>  <em class="jxr_javadoccomment">	 * transformation.</em>
 <a class="jxr_linenumber" name="45" href="#45">45</a>  <em class="jxr_javadoccomment">	 * </em>
-<a class="jxr_linenumber" name="46" href="#46">46</a>  <em class="jxr_javadoccomment">	 * @param value the float value to get the RGB value for</em>
+<a class="jxr_linenumber" name="46" href="#46">46</a>  <em class="jxr_javadoccomment">	 * @param value the double value to get the RGB value for</em>
 <a class="jxr_linenumber" name="47" href="#47">47</a>  <em class="jxr_javadoccomment">	 * @return RGB value as int (0 - 0xFFFFFF)</em>
 <a class="jxr_linenumber" name="48" href="#48">48</a>  <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="49" href="#49">49</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> apply(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> value) {
-<a class="jxr_linenumber" name="50" href="#50">50</a>  		<strong class="jxr_keyword">float</strong> boundedValue = Math.max(0, Math.min(1, value));
+<a class="jxr_linenumber" name="49" href="#49">49</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> apply(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> value) {
+<a class="jxr_linenumber" name="50" href="#50">50</a>  		<strong class="jxr_keyword">double</strong> boundedValue = Math.max(0, Math.min(1, value));
 <a class="jxr_linenumber" name="51" href="#51">51</a>  		<strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.applyUnbounded(boundedValue);
 <a class="jxr_linenumber" name="52" href="#52">52</a>  	}
 <a class="jxr_linenumber" name="53" href="#53">53</a>  }

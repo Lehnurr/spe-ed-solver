@@ -32,8 +32,8 @@
 <a class="jxr_linenumber" name="22" href="#22">22</a>  
 <a class="jxr_linenumber" name="23" href="#23">23</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../solver/analysis/enemyprobability/EnemyProbabilityCalculator.html">EnemyProbabilityCalculator</a> enemyProbabilityCalculator;
 <a class="jxr_linenumber" name="24" href="#24">24</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../solver/reachablepoints/IReachablePoints.html">IReachablePoints</a> reachablePointsCalculator;
-<a class="jxr_linenumber" name="25" href="#25">25</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> aggressiveWeight;
-<a class="jxr_linenumber" name="26" href="#26">26</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> defensiveWeight;
+<a class="jxr_linenumber" name="25" href="#25">25</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> aggressiveWeight;
+<a class="jxr_linenumber" name="26" href="#26">26</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">double</strong> defensiveWeight;
 <a class="jxr_linenumber" name="27" href="#27">27</a>  
 <a class="jxr_linenumber" name="28" href="#28">28</a>  	<em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="29" href="#29">29</a>  <em class="jxr_javadoccomment">	 * Creates a new {@link ReachablePointsSolver} with the given configuration</em>
@@ -48,7 +48,7 @@
 <a class="jxr_linenumber" name="38" href="#38">38</a>  <em class="jxr_javadoccomment">	 *                         use</em>
 <a class="jxr_linenumber" name="39" href="#39">39</a>  <em class="jxr_javadoccomment">	 * @param type             the {@link ReachablePointsType} of the calculation</em>
 <a class="jxr_linenumber" name="40" href="#40">40</a>  <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="41" href="#41">41</a>  	<strong class="jxr_keyword">public</strong> <a href="../../solver/reachablepoints/ReachablePointsSolver.html">ReachablePointsSolver</a>(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> enemySearchDepth, <strong class="jxr_keyword">float</strong> aggressiveWeight, <strong class="jxr_keyword">float</strong> defensiveWeight,
+<a class="jxr_linenumber" name="41" href="#41">41</a>  	<strong class="jxr_keyword">public</strong> <a href="../../solver/reachablepoints/ReachablePointsSolver.html">ReachablePointsSolver</a>(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> enemySearchDepth, <strong class="jxr_keyword">double</strong> aggressiveWeight, <strong class="jxr_keyword">double</strong> defensiveWeight,
 <a class="jxr_linenumber" name="42" href="#42">42</a>  			<strong class="jxr_keyword">final</strong> <a href="../../solver/reachablepoints/ReachablePointsType.html">ReachablePointsType</a> type, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> maxThreadCount) {
 <a class="jxr_linenumber" name="43" href="#43">43</a>  		<strong class="jxr_keyword">this</strong>.enemyProbabilityCalculator = <strong class="jxr_keyword">new</strong> <a href="../../solver/analysis/enemyprobability/EnemyProbabilityCalculator.html">EnemyProbabilityCalculator</a>(enemySearchDepth);
 <a class="jxr_linenumber" name="44" href="#44">44</a>  		<strong class="jxr_keyword">this</strong>.reachablePointsCalculator = type.newInstance(maxThreadCount);
