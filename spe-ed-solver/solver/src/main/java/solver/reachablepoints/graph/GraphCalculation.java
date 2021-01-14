@@ -166,10 +166,10 @@ public class GraphCalculation {
 		do{
 			if(queues.get(action).hasNext()){
 				currentQueueAction = currentQueueAction.getNext();
-				return queues.get(action).poll()
+				return queues.get(action).poll();
 			}
 			action = action.getNext();
-		}while(!action.equals(currentQueueAction);
+		}while(!action.equals(currentQueueAction));
 		
 		
 		
