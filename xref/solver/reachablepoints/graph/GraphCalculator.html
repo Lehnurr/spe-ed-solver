@@ -125,126 +125,124 @@
 <a class="jxr_linenumber" name="115" href="#115">115</a> 		cutOffCalculation = <strong class="jxr_keyword">new</strong> <a href="../../../solver/analysis/cutoff/CutOffCalculation.html">CutOffCalculation</a>(width, height);
 <a class="jxr_linenumber" name="116" href="#116">116</a> 		importanceCalculation = <strong class="jxr_keyword">new</strong> <a href="../../../solver/reachablepoints/graph/importance/EdgeImportance.html">EdgeImportance</a>(width, height, startPlayers);
 <a class="jxr_linenumber" name="117" href="#117">117</a> 
-<a class="jxr_linenumber" name="118" href="#118">118</a> 		<strong class="jxr_keyword">int</strong> threadCount = Math.min(maxThreadCount, (<strong class="jxr_keyword">int</strong>) (deadline.getRemainingMilliseconds() / 500));
-<a class="jxr_linenumber" name="119" href="#119">119</a> 
-<a class="jxr_linenumber" name="120" href="#120">120</a> 		<em class="jxr_comment">// Create a Calculation for each thread</em>
-<a class="jxr_linenumber" name="121" href="#121">121</a> 		List&lt;GraphCalculation&gt; calculations = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
-<a class="jxr_linenumber" name="122" href="#122">122</a> 
-<a class="jxr_linenumber" name="123" href="#123">123</a> 		<strong class="jxr_keyword">if</strong> (threadCount &lt;= 1) {
-<a class="jxr_linenumber" name="124" href="#124">124</a> 			GraphCalculation calculation = <strong class="jxr_keyword">new</strong> <a href="../../../solver/reachablepoints/graph/GraphCalculation.html">GraphCalculation</a>(graph, <strong class="jxr_keyword">this</strong>.enemyProbabilitiesMatrix,
-<a class="jxr_linenumber" name="125" href="#125">125</a> 					<strong class="jxr_keyword">this</strong>.enemyMinStepsMatrix, importanceCalculation.getInitialEdges(), deadline);
-<a class="jxr_linenumber" name="126" href="#126">126</a> 			calculations.add(calculation);
-<a class="jxr_linenumber" name="127" href="#127">127</a> 			startPlayers.stream().forEach(calculation::addPlayerToQueue);
-<a class="jxr_linenumber" name="128" href="#128">128</a> 			<strong class="jxr_keyword">return</strong> calculations;
-<a class="jxr_linenumber" name="129" href="#129">129</a> 		}
-<a class="jxr_linenumber" name="130" href="#130">130</a> 
-<a class="jxr_linenumber" name="131" href="#131">131</a> 		<strong class="jxr_keyword">while</strong> (calculations.size() &lt; threadCount)
-<a class="jxr_linenumber" name="132" href="#132">132</a> 			calculations.add(<strong class="jxr_keyword">new</strong> <a href="../../../solver/reachablepoints/graph/GraphCalculation.html">GraphCalculation</a>(graph, <strong class="jxr_keyword">this</strong>.enemyProbabilitiesMatrix, <strong class="jxr_keyword">this</strong>.enemyMinStepsMatrix,
-<a class="jxr_linenumber" name="133" href="#133">133</a> 					importanceCalculation.getInitialEdges(), deadline));
-<a class="jxr_linenumber" name="134" href="#134">134</a> 
-<a class="jxr_linenumber" name="135" href="#135">135</a> 		<em class="jxr_comment">// Define the number of required start players</em>
-<a class="jxr_linenumber" name="136" href="#136">136</a> 		<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> threadBase = (graph.getHeight() + graph.getWidth()) * 10;
-<a class="jxr_linenumber" name="137" href="#137">137</a> 		<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> totalBase = threadBase * threadCount;
-<a class="jxr_linenumber" name="138" href="#138">138</a> 
-<a class="jxr_linenumber" name="139" href="#139">139</a> 		<em class="jxr_comment">// create a Base of Player states</em>
-<a class="jxr_linenumber" name="140" href="#140">140</a> 		GraphCalculation baseCalculation = <strong class="jxr_keyword">new</strong> <a href="../../../solver/reachablepoints/graph/GraphCalculation.html">GraphCalculation</a>(graph, <strong class="jxr_keyword">this</strong>.enemyProbabilitiesMatrix,
-<a class="jxr_linenumber" name="141" href="#141">141</a> 				<strong class="jxr_keyword">this</strong>.enemyMinStepsMatrix, importanceCalculation.getInitialEdges(), deadline, totalBase);
-<a class="jxr_linenumber" name="142" href="#142">142</a> 		startPlayers.stream().forEach(baseCalculation::addPlayerToQueue);
-<a class="jxr_linenumber" name="143" href="#143">143</a> 
-<a class="jxr_linenumber" name="144" href="#144">144</a> 		<strong class="jxr_keyword">while</strong> (baseCalculation.queuesHasNext() &amp;&amp; baseCalculation.queuesRemaining() &lt; totalBase) {
-<a class="jxr_linenumber" name="145" href="#145">145</a> 			baseCalculation.executeStep();
-<a class="jxr_linenumber" name="146" href="#146">146</a> 		}
-<a class="jxr_linenumber" name="147" href="#147">147</a> 		addResults(baseCalculation);
-<a class="jxr_linenumber" name="148" href="#148">148</a> 
-<a class="jxr_linenumber" name="149" href="#149">149</a> 		<strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> calculationIndex = 0; baseCalculation
-<a class="jxr_linenumber" name="150" href="#150">150</a> 				.queuesHasNext(); calculationIndex = (calculationIndex + 1) % threadCount) {
-<a class="jxr_linenumber" name="151" href="#151">151</a> 			<strong class="jxr_keyword">final</strong> <a href="../../../solver/reachablepoints/graph/RatedPredictiveGraphPlayer.html">RatedPredictiveGraphPlayer</a> startPlayer = baseCalculation.queuesPoll();
-<a class="jxr_linenumber" name="152" href="#152">152</a> 			calculations.get(calculationIndex).addPlayerToQueue(startPlayer);
-<a class="jxr_linenumber" name="153" href="#153">153</a> 		}
-<a class="jxr_linenumber" name="154" href="#154">154</a> 
-<a class="jxr_linenumber" name="155" href="#155">155</a> 		<strong class="jxr_keyword">return</strong> calculations;
-<a class="jxr_linenumber" name="156" href="#156">156</a> 	}
-<a class="jxr_linenumber" name="157" href="#157">157</a> 
-<a class="jxr_linenumber" name="158" href="#158">158</a> 	<em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="159" href="#159">159</a> <em class="jxr_javadoccomment">	 * Calculates the first given {@link GraphCalculation} in this Thread and all</em>
-<a class="jxr_linenumber" name="160" href="#160">160</a> <em class="jxr_javadoccomment">	 * other {@link GraphCalculation calculations} in seperate Threads.</em>
-<a class="jxr_linenumber" name="161" href="#161">161</a> <em class="jxr_javadoccomment">	 * </em>
-<a class="jxr_linenumber" name="162" href="#162">162</a> <em class="jxr_javadoccomment">	 * @param calculations {@link GraphCalculation calculations} that must be</em>
-<a class="jxr_linenumber" name="163" href="#163">163</a> <em class="jxr_javadoccomment">	 *                     calculated</em>
-<a class="jxr_linenumber" name="164" href="#164">164</a> <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="165" href="#165">165</a> 	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> calculate(<strong class="jxr_keyword">final</strong> List&lt;GraphCalculation&gt; calculations) {
-<a class="jxr_linenumber" name="166" href="#166">166</a> 		<strong class="jxr_keyword">if</strong> (calculations.isEmpty())
-<a class="jxr_linenumber" name="167" href="#167">167</a> 			<strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="118" href="#118">118</a> 		<em class="jxr_comment">// Create a Calculation for each thread</em>
+<a class="jxr_linenumber" name="119" href="#119">119</a> 		List&lt;GraphCalculation&gt; calculations = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="120" href="#120">120</a> 
+<a class="jxr_linenumber" name="121" href="#121">121</a> 		<strong class="jxr_keyword">if</strong> (maxThreadCount &lt;= 1) {
+<a class="jxr_linenumber" name="122" href="#122">122</a> 			GraphCalculation calculation = <strong class="jxr_keyword">new</strong> <a href="../../../solver/reachablepoints/graph/GraphCalculation.html">GraphCalculation</a>(graph, <strong class="jxr_keyword">this</strong>.enemyProbabilitiesMatrix,
+<a class="jxr_linenumber" name="123" href="#123">123</a> 					<strong class="jxr_keyword">this</strong>.enemyMinStepsMatrix, importanceCalculation.getInitialEdges(), deadline);
+<a class="jxr_linenumber" name="124" href="#124">124</a> 			calculations.add(calculation);
+<a class="jxr_linenumber" name="125" href="#125">125</a> 			startPlayers.stream().forEach(calculation::addPlayerToQueue);
+<a class="jxr_linenumber" name="126" href="#126">126</a> 			<strong class="jxr_keyword">return</strong> calculations;
+<a class="jxr_linenumber" name="127" href="#127">127</a> 		}
+<a class="jxr_linenumber" name="128" href="#128">128</a> 
+<a class="jxr_linenumber" name="129" href="#129">129</a> 		<strong class="jxr_keyword">while</strong> (calculations.size() &lt; maxThreadCount)
+<a class="jxr_linenumber" name="130" href="#130">130</a> 			calculations.add(<strong class="jxr_keyword">new</strong> <a href="../../../solver/reachablepoints/graph/GraphCalculation.html">GraphCalculation</a>(graph, <strong class="jxr_keyword">this</strong>.enemyProbabilitiesMatrix, <strong class="jxr_keyword">this</strong>.enemyMinStepsMatrix,
+<a class="jxr_linenumber" name="131" href="#131">131</a> 					importanceCalculation.getInitialEdges(), deadline));
+<a class="jxr_linenumber" name="132" href="#132">132</a> 
+<a class="jxr_linenumber" name="133" href="#133">133</a> 		<em class="jxr_comment">// Define the number of required start players</em>
+<a class="jxr_linenumber" name="134" href="#134">134</a> 		<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> threadBase = (graph.getHeight() + graph.getWidth()) * 10;
+<a class="jxr_linenumber" name="135" href="#135">135</a> 		<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> totalBase = threadBase * maxThreadCount;
+<a class="jxr_linenumber" name="136" href="#136">136</a> 
+<a class="jxr_linenumber" name="137" href="#137">137</a> 		<em class="jxr_comment">// create a Base of Player states</em>
+<a class="jxr_linenumber" name="138" href="#138">138</a> 		GraphCalculation baseCalculation = <strong class="jxr_keyword">new</strong> <a href="../../../solver/reachablepoints/graph/GraphCalculation.html">GraphCalculation</a>(graph, <strong class="jxr_keyword">this</strong>.enemyProbabilitiesMatrix,
+<a class="jxr_linenumber" name="139" href="#139">139</a> 				<strong class="jxr_keyword">this</strong>.enemyMinStepsMatrix, importanceCalculation.getInitialEdges(), deadline, totalBase);
+<a class="jxr_linenumber" name="140" href="#140">140</a> 		startPlayers.stream().forEach(baseCalculation::addPlayerToQueue);
+<a class="jxr_linenumber" name="141" href="#141">141</a> 
+<a class="jxr_linenumber" name="142" href="#142">142</a> 		<strong class="jxr_keyword">while</strong> (baseCalculation.queuesHasNext() &amp;&amp; baseCalculation.queuesRemaining() &lt; totalBase) {
+<a class="jxr_linenumber" name="143" href="#143">143</a> 			baseCalculation.executeStep();
+<a class="jxr_linenumber" name="144" href="#144">144</a> 		}
+<a class="jxr_linenumber" name="145" href="#145">145</a> 		addResults(baseCalculation);
+<a class="jxr_linenumber" name="146" href="#146">146</a> 
+<a class="jxr_linenumber" name="147" href="#147">147</a> 		<strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> calculationIndex = 0; baseCalculation
+<a class="jxr_linenumber" name="148" href="#148">148</a> 				.queuesHasNext(); calculationIndex = (calculationIndex + 1) % maxThreadCount) {
+<a class="jxr_linenumber" name="149" href="#149">149</a> 			<strong class="jxr_keyword">final</strong> <a href="../../../solver/reachablepoints/graph/RatedPredictiveGraphPlayer.html">RatedPredictiveGraphPlayer</a> startPlayer = baseCalculation.queuesPoll();
+<a class="jxr_linenumber" name="150" href="#150">150</a> 			calculations.get(calculationIndex).addPlayerToQueue(startPlayer);
+<a class="jxr_linenumber" name="151" href="#151">151</a> 		}
+<a class="jxr_linenumber" name="152" href="#152">152</a> 
+<a class="jxr_linenumber" name="153" href="#153">153</a> 		<strong class="jxr_keyword">return</strong> calculations;
+<a class="jxr_linenumber" name="154" href="#154">154</a> 	}
+<a class="jxr_linenumber" name="155" href="#155">155</a> 
+<a class="jxr_linenumber" name="156" href="#156">156</a> 	<em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="157" href="#157">157</a> <em class="jxr_javadoccomment">	 * Calculates the first given {@link GraphCalculation} in this Thread and all</em>
+<a class="jxr_linenumber" name="158" href="#158">158</a> <em class="jxr_javadoccomment">	 * other {@link GraphCalculation calculations} in seperate Threads.</em>
+<a class="jxr_linenumber" name="159" href="#159">159</a> <em class="jxr_javadoccomment">	 * </em>
+<a class="jxr_linenumber" name="160" href="#160">160</a> <em class="jxr_javadoccomment">	 * @param calculations {@link GraphCalculation calculations} that must be</em>
+<a class="jxr_linenumber" name="161" href="#161">161</a> <em class="jxr_javadoccomment">	 *                     calculated</em>
+<a class="jxr_linenumber" name="162" href="#162">162</a> <em class="jxr_javadoccomment">	 */</em>
+<a class="jxr_linenumber" name="163" href="#163">163</a> 	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> calculate(<strong class="jxr_keyword">final</strong> List&lt;GraphCalculation&gt; calculations) {
+<a class="jxr_linenumber" name="164" href="#164">164</a> 		<strong class="jxr_keyword">if</strong> (calculations.isEmpty())
+<a class="jxr_linenumber" name="165" href="#165">165</a> 			<strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="166" href="#166">166</a> 
+<a class="jxr_linenumber" name="167" href="#167">167</a> 		<strong class="jxr_keyword">final</strong> List&lt;Thread&gt; threads = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
 <a class="jxr_linenumber" name="168" href="#168">168</a> 
-<a class="jxr_linenumber" name="169" href="#169">169</a> 		<strong class="jxr_keyword">final</strong> List&lt;Thread&gt; threads = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
-<a class="jxr_linenumber" name="170" href="#170">170</a> 
-<a class="jxr_linenumber" name="171" href="#171">171</a> 		<strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 1; i &lt; calculations.size(); i++) {
-<a class="jxr_linenumber" name="172" href="#172">172</a> 			<strong class="jxr_keyword">final</strong> <a href="../../../solver/reachablepoints/graph/GraphCalculation.html">GraphCalculation</a> calculation = calculations.get(i);
-<a class="jxr_linenumber" name="173" href="#173">173</a> 			<strong class="jxr_keyword">final</strong> Thread thread = <strong class="jxr_keyword">new</strong> Thread(calculation::executeDeadline);
-<a class="jxr_linenumber" name="174" href="#174">174</a> 			threads.add(thread);
-<a class="jxr_linenumber" name="175" href="#175">175</a> 			thread.start();
-<a class="jxr_linenumber" name="176" href="#176">176</a> 		}
+<a class="jxr_linenumber" name="169" href="#169">169</a> 		<strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 1; i &lt; calculations.size(); i++) {
+<a class="jxr_linenumber" name="170" href="#170">170</a> 			<strong class="jxr_keyword">final</strong> <a href="../../../solver/reachablepoints/graph/GraphCalculation.html">GraphCalculation</a> calculation = calculations.get(i);
+<a class="jxr_linenumber" name="171" href="#171">171</a> 			<strong class="jxr_keyword">final</strong> Thread thread = <strong class="jxr_keyword">new</strong> Thread(calculation::executeDeadline);
+<a class="jxr_linenumber" name="172" href="#172">172</a> 			threads.add(thread);
+<a class="jxr_linenumber" name="173" href="#173">173</a> 			thread.start();
+<a class="jxr_linenumber" name="174" href="#174">174</a> 		}
+<a class="jxr_linenumber" name="175" href="#175">175</a> 
+<a class="jxr_linenumber" name="176" href="#176">176</a> 		calculations.get(0).executeDeadline();
 <a class="jxr_linenumber" name="177" href="#177">177</a> 
-<a class="jxr_linenumber" name="178" href="#178">178</a> 		calculations.get(0).executeDeadline();
-<a class="jxr_linenumber" name="179" href="#179">179</a> 
-<a class="jxr_linenumber" name="180" href="#180">180</a> 		<em class="jxr_comment">// To be on the safe side interrupt all other threads</em>
-<a class="jxr_linenumber" name="181" href="#181">181</a> 		threads.stream().forEach(Thread::interrupt);
-<a class="jxr_linenumber" name="182" href="#182">182</a> 	}
-<a class="jxr_linenumber" name="183" href="#183">183</a> 
-<a class="jxr_linenumber" name="184" href="#184">184</a> 	<em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="185" href="#185">185</a> <em class="jxr_javadoccomment">	 * Updates all the locally stored results by collecting all result of the given</em>
-<a class="jxr_linenumber" name="186" href="#186">186</a> <em class="jxr_javadoccomment">	 * {@link GraphCalculation calculations}.</em>
-<a class="jxr_linenumber" name="187" href="#187">187</a> <em class="jxr_javadoccomment">	 * </em>
-<a class="jxr_linenumber" name="188" href="#188">188</a> <em class="jxr_javadoccomment">	 * @param calculations {@link GraphCalculation calculations} to add to the</em>
-<a class="jxr_linenumber" name="189" href="#189">189</a> <em class="jxr_javadoccomment">	 *                     result</em>
-<a class="jxr_linenumber" name="190" href="#190">190</a> <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="191" href="#191">191</a> 	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> addResults(<strong class="jxr_keyword">final</strong> List&lt;GraphCalculation&gt; calculations) {
-<a class="jxr_linenumber" name="192" href="#192">192</a> 		calculations.stream().forEach(<strong class="jxr_keyword">this</strong>::addResults);
-<a class="jxr_linenumber" name="193" href="#193">193</a> 
-<a class="jxr_linenumber" name="194" href="#194">194</a> 		GameLogger.logGameInformation(String.format(<span class="jxr_string">"Calculated %d reachable points paths!"</span>, calculatedPaths));
-<a class="jxr_linenumber" name="195" href="#195">195</a> 		calculatedPaths = 0;
-<a class="jxr_linenumber" name="196" href="#196">196</a> 	}
-<a class="jxr_linenumber" name="197" href="#197">197</a> 
-<a class="jxr_linenumber" name="198" href="#198">198</a> 	<em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="199" href="#199">199</a> <em class="jxr_javadoccomment">	 * Updates all the locally stored results by collecting all result of the given</em>
-<a class="jxr_linenumber" name="200" href="#200">200</a> <em class="jxr_javadoccomment">	 * {@link GraphCalculation calculation}.</em>
-<a class="jxr_linenumber" name="201" href="#201">201</a> <em class="jxr_javadoccomment">	 * </em>
-<a class="jxr_linenumber" name="202" href="#202">202</a> <em class="jxr_javadoccomment">	 * @param calculation {@link GraphCalculation calculation} to add to the result</em>
-<a class="jxr_linenumber" name="203" href="#203">203</a> <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="204" href="#204">204</a> 	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> addResults(<a href="../../../solver/reachablepoints/graph/GraphCalculation.html">GraphCalculation</a> calculation) {
-<a class="jxr_linenumber" name="205" href="#205">205</a> 		<strong class="jxr_keyword">this</strong>.successCalculation.add(calculation.getSuccessCalculation());
-<a class="jxr_linenumber" name="206" href="#206">206</a> 		<strong class="jxr_keyword">this</strong>.cutOffCalculation.add(calculation.getCutOffCalculation());
-<a class="jxr_linenumber" name="207" href="#207">207</a> 		<strong class="jxr_keyword">this</strong>.importanceCalculation.add(calculation.getEdgeImportance());
-<a class="jxr_linenumber" name="208" href="#208">208</a> 		calculatedPaths += calculation.getCalculatedPathsCount();
-<a class="jxr_linenumber" name="209" href="#209">209</a> 	}
-<a class="jxr_linenumber" name="210" href="#210">210</a> 
-<a class="jxr_linenumber" name="211" href="#211">211</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> logGameInformation(<a href="../../../solver/analysis/ActionsRating.html">ActionsRating</a> combinedActionsRating) {
-<a class="jxr_linenumber" name="212" href="#212">212</a> 		GameLogger.logGameInformation(String.format(<span class="jxr_string">"success-rating:\t%s"</span>, successCalculation.getRatingResult()));
-<a class="jxr_linenumber" name="213" href="#213">213</a> 		GameLogger.logGameInformation(String.format(<span class="jxr_string">"cut-off-rating:\t%s"</span>, cutOffCalculation.getRatingResult()));
-<a class="jxr_linenumber" name="214" href="#214">214</a> 		GameLogger.logGameInformation(
-<a class="jxr_linenumber" name="215" href="#215">215</a> 				String.format(<span class="jxr_string">"importance-rating:\t%s"</span>, importanceCalculation.getInvertedRatingResult()));
-<a class="jxr_linenumber" name="216" href="#216">216</a> 		GameLogger.logGameInformation(String.format(<span class="jxr_string">"combined-rating:\t%s"</span>, combinedActionsRating));
-<a class="jxr_linenumber" name="217" href="#217">217</a> 	}
-<a class="jxr_linenumber" name="218" href="#218">218</a> 
-<a class="jxr_linenumber" name="219" href="#219">219</a> 	<strong class="jxr_keyword">public</strong> <a href="../../../solver/analysis/ActionsRating.html">ActionsRating</a> combineActionsRating(<strong class="jxr_keyword">float</strong> aggressiveWeight, <strong class="jxr_keyword">float</strong> defensiveWeight) {
-<a class="jxr_linenumber" name="220" href="#220">220</a> 		<strong class="jxr_keyword">return</strong> successCalculation.getRatingResult().combine(cutOffCalculation.getRatingResult(), aggressiveWeight)
-<a class="jxr_linenumber" name="221" href="#221">221</a> 				.combine(importanceCalculation.getInvertedRatingResult(), defensiveWeight);
-<a class="jxr_linenumber" name="222" href="#222">222</a> 	}
-<a class="jxr_linenumber" name="223" href="#223">223</a> 
-<a class="jxr_linenumber" name="224" href="#224">224</a> 	@Override
-<a class="jxr_linenumber" name="225" href="#225">225</a> 	<strong class="jxr_keyword">public</strong> Collection&lt;ContextualFloatMatrix&gt; getContextualFloatMatrices(<a href="../../../utility/game/player/PlayerAction.html">PlayerAction</a> action) {
-<a class="jxr_linenumber" name="226" href="#226">226</a> 		<strong class="jxr_keyword">final</strong> ArrayList&lt;ContextualFloatMatrix&gt; matrices = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
-<a class="jxr_linenumber" name="227" href="#227">227</a> 
-<a class="jxr_linenumber" name="228" href="#228">228</a> 		matrices.add(<strong class="jxr_keyword">new</strong> <a href="../../../utility/geometry/ContextualFloatMatrix.html">ContextualFloatMatrix</a>(<span class="jxr_string">"success"</span>, successCalculation.getMatrixResult(action), 0, 1));
-<a class="jxr_linenumber" name="229" href="#229">229</a> 		matrices.add(<strong class="jxr_keyword">new</strong> <a href="../../../utility/geometry/ContextualFloatMatrix.html">ContextualFloatMatrix</a>(<span class="jxr_string">"cut off"</span>, cutOffCalculation.getMatrixResult(action), 0, 1));
-<a class="jxr_linenumber" name="230" href="#230">230</a> 		matrices.add(<strong class="jxr_keyword">new</strong> <a href="../../../utility/geometry/ContextualFloatMatrix.html">ContextualFloatMatrix</a>(<span class="jxr_string">"inverted importance"</span>, importanceCalculation.getInvertedMatrixResult(),
-<a class="jxr_linenumber" name="231" href="#231">231</a> 				0, 1));
-<a class="jxr_linenumber" name="232" href="#232">232</a> 		matrices.add(<strong class="jxr_keyword">new</strong> <a href="../../../utility/geometry/ContextualFloatMatrix.html">ContextualFloatMatrix</a>(<span class="jxr_string">"probability"</span>, enemyProbabilitiesMatrix, 0, 1));
-<a class="jxr_linenumber" name="233" href="#233">233</a> 		matrices.add(<strong class="jxr_keyword">new</strong> <a href="../../../utility/geometry/ContextualFloatMatrix.html">ContextualFloatMatrix</a>(<span class="jxr_string">"min steps"</span>, enemyMinStepsMatrix));
-<a class="jxr_linenumber" name="234" href="#234">234</a> 
-<a class="jxr_linenumber" name="235" href="#235">235</a> 		<strong class="jxr_keyword">return</strong> matrices;
-<a class="jxr_linenumber" name="236" href="#236">236</a> 	}
-<a class="jxr_linenumber" name="237" href="#237">237</a> }
+<a class="jxr_linenumber" name="178" href="#178">178</a> 		<em class="jxr_comment">// To be on the safe side interrupt all other threads</em>
+<a class="jxr_linenumber" name="179" href="#179">179</a> 		threads.stream().forEach(Thread::interrupt);
+<a class="jxr_linenumber" name="180" href="#180">180</a> 	}
+<a class="jxr_linenumber" name="181" href="#181">181</a> 
+<a class="jxr_linenumber" name="182" href="#182">182</a> 	<em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="183" href="#183">183</a> <em class="jxr_javadoccomment">	 * Updates all the locally stored results by collecting all result of the given</em>
+<a class="jxr_linenumber" name="184" href="#184">184</a> <em class="jxr_javadoccomment">	 * {@link GraphCalculation calculations}.</em>
+<a class="jxr_linenumber" name="185" href="#185">185</a> <em class="jxr_javadoccomment">	 * </em>
+<a class="jxr_linenumber" name="186" href="#186">186</a> <em class="jxr_javadoccomment">	 * @param calculations {@link GraphCalculation calculations} to add to the</em>
+<a class="jxr_linenumber" name="187" href="#187">187</a> <em class="jxr_javadoccomment">	 *                     result</em>
+<a class="jxr_linenumber" name="188" href="#188">188</a> <em class="jxr_javadoccomment">	 */</em>
+<a class="jxr_linenumber" name="189" href="#189">189</a> 	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> addResults(<strong class="jxr_keyword">final</strong> List&lt;GraphCalculation&gt; calculations) {
+<a class="jxr_linenumber" name="190" href="#190">190</a> 		calculations.stream().forEach(<strong class="jxr_keyword">this</strong>::addResults);
+<a class="jxr_linenumber" name="191" href="#191">191</a> 
+<a class="jxr_linenumber" name="192" href="#192">192</a> 		GameLogger.logGameInformation(String.format(<span class="jxr_string">"Calculated %d reachable points paths!"</span>, calculatedPaths));
+<a class="jxr_linenumber" name="193" href="#193">193</a> 		calculatedPaths = 0;
+<a class="jxr_linenumber" name="194" href="#194">194</a> 	}
+<a class="jxr_linenumber" name="195" href="#195">195</a> 
+<a class="jxr_linenumber" name="196" href="#196">196</a> 	<em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="197" href="#197">197</a> <em class="jxr_javadoccomment">	 * Updates all the locally stored results by collecting all result of the given</em>
+<a class="jxr_linenumber" name="198" href="#198">198</a> <em class="jxr_javadoccomment">	 * {@link GraphCalculation calculation}.</em>
+<a class="jxr_linenumber" name="199" href="#199">199</a> <em class="jxr_javadoccomment">	 * </em>
+<a class="jxr_linenumber" name="200" href="#200">200</a> <em class="jxr_javadoccomment">	 * @param calculation {@link GraphCalculation calculation} to add to the result</em>
+<a class="jxr_linenumber" name="201" href="#201">201</a> <em class="jxr_javadoccomment">	 */</em>
+<a class="jxr_linenumber" name="202" href="#202">202</a> 	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> addResults(<a href="../../../solver/reachablepoints/graph/GraphCalculation.html">GraphCalculation</a> calculation) {
+<a class="jxr_linenumber" name="203" href="#203">203</a> 		<strong class="jxr_keyword">this</strong>.successCalculation.add(calculation.getSuccessCalculation());
+<a class="jxr_linenumber" name="204" href="#204">204</a> 		<strong class="jxr_keyword">this</strong>.cutOffCalculation.add(calculation.getCutOffCalculation());
+<a class="jxr_linenumber" name="205" href="#205">205</a> 		<strong class="jxr_keyword">this</strong>.importanceCalculation.add(calculation.getEdgeImportance());
+<a class="jxr_linenumber" name="206" href="#206">206</a> 		calculatedPaths += calculation.getCalculatedPathsCount();
+<a class="jxr_linenumber" name="207" href="#207">207</a> 	}
+<a class="jxr_linenumber" name="208" href="#208">208</a> 
+<a class="jxr_linenumber" name="209" href="#209">209</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> logGameInformation(<a href="../../../solver/analysis/ActionsRating.html">ActionsRating</a> combinedActionsRating) {
+<a class="jxr_linenumber" name="210" href="#210">210</a> 		GameLogger.logGameInformation(String.format(<span class="jxr_string">"success-rating:\t%s"</span>, successCalculation.getRatingResult()));
+<a class="jxr_linenumber" name="211" href="#211">211</a> 		GameLogger.logGameInformation(String.format(<span class="jxr_string">"cut-off-rating:\t%s"</span>, cutOffCalculation.getRatingResult()));
+<a class="jxr_linenumber" name="212" href="#212">212</a> 		GameLogger.logGameInformation(
+<a class="jxr_linenumber" name="213" href="#213">213</a> 				String.format(<span class="jxr_string">"importance-rating:\t%s"</span>, importanceCalculation.getInvertedRatingResult()));
+<a class="jxr_linenumber" name="214" href="#214">214</a> 		GameLogger.logGameInformation(String.format(<span class="jxr_string">"combined-rating:\t%s"</span>, combinedActionsRating));
+<a class="jxr_linenumber" name="215" href="#215">215</a> 	}
+<a class="jxr_linenumber" name="216" href="#216">216</a> 
+<a class="jxr_linenumber" name="217" href="#217">217</a> 	<strong class="jxr_keyword">public</strong> <a href="../../../solver/analysis/ActionsRating.html">ActionsRating</a> combineActionsRating(<strong class="jxr_keyword">float</strong> aggressiveWeight, <strong class="jxr_keyword">float</strong> defensiveWeight) {
+<a class="jxr_linenumber" name="218" href="#218">218</a> 		<strong class="jxr_keyword">return</strong> successCalculation.getRatingResult().combine(cutOffCalculation.getRatingResult(), aggressiveWeight)
+<a class="jxr_linenumber" name="219" href="#219">219</a> 				.combine(importanceCalculation.getInvertedRatingResult(), defensiveWeight);
+<a class="jxr_linenumber" name="220" href="#220">220</a> 	}
+<a class="jxr_linenumber" name="221" href="#221">221</a> 
+<a class="jxr_linenumber" name="222" href="#222">222</a> 	@Override
+<a class="jxr_linenumber" name="223" href="#223">223</a> 	<strong class="jxr_keyword">public</strong> Collection&lt;ContextualFloatMatrix&gt; getContextualFloatMatrices(<a href="../../../utility/game/player/PlayerAction.html">PlayerAction</a> action) {
+<a class="jxr_linenumber" name="224" href="#224">224</a> 		<strong class="jxr_keyword">final</strong> ArrayList&lt;ContextualFloatMatrix&gt; matrices = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a class="jxr_linenumber" name="225" href="#225">225</a> 
+<a class="jxr_linenumber" name="226" href="#226">226</a> 		matrices.add(<strong class="jxr_keyword">new</strong> <a href="../../../utility/geometry/ContextualFloatMatrix.html">ContextualFloatMatrix</a>(<span class="jxr_string">"success"</span>, successCalculation.getMatrixResult(action), 0, 1));
+<a class="jxr_linenumber" name="227" href="#227">227</a> 		matrices.add(<strong class="jxr_keyword">new</strong> <a href="../../../utility/geometry/ContextualFloatMatrix.html">ContextualFloatMatrix</a>(<span class="jxr_string">"cut off"</span>, cutOffCalculation.getMatrixResult(action), 0, 1));
+<a class="jxr_linenumber" name="228" href="#228">228</a> 		matrices.add(<strong class="jxr_keyword">new</strong> <a href="../../../utility/geometry/ContextualFloatMatrix.html">ContextualFloatMatrix</a>(<span class="jxr_string">"inverted importance"</span>, importanceCalculation.getInvertedMatrixResult(),
+<a class="jxr_linenumber" name="229" href="#229">229</a> 				0, 1));
+<a class="jxr_linenumber" name="230" href="#230">230</a> 		matrices.add(<strong class="jxr_keyword">new</strong> <a href="../../../utility/geometry/ContextualFloatMatrix.html">ContextualFloatMatrix</a>(<span class="jxr_string">"probability"</span>, enemyProbabilitiesMatrix, 0, 1));
+<a class="jxr_linenumber" name="231" href="#231">231</a> 		matrices.add(<strong class="jxr_keyword">new</strong> <a href="../../../utility/geometry/ContextualFloatMatrix.html">ContextualFloatMatrix</a>(<span class="jxr_string">"min steps"</span>, enemyMinStepsMatrix));
+<a class="jxr_linenumber" name="232" href="#232">232</a> 
+<a class="jxr_linenumber" name="233" href="#233">233</a> 		<strong class="jxr_keyword">return</strong> matrices;
+<a class="jxr_linenumber" name="234" href="#234">234</a> 	}
+<a class="jxr_linenumber" name="235" href="#235">235</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>
