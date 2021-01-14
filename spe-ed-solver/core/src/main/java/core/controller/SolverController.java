@@ -54,14 +54,14 @@ public class SolverController {
 		GameLogger.logGameStep(gameStep);
 
 		final long availableMilliseconds = gameStep.getDeadline().getRemainingMilliseconds();
-		final double availableSeconds = availableMilliseconds / 1000;
+		final double availableSeconds = availableMilliseconds / 1000.;
 
 		final List<ContextualFloatMatrix> boardRatings = new ArrayList<>();
 
 		final PlayerAction action = solver.calculateAction(gameStep, boardRatings::add);
 
 		final long requiredMilliseconds = availableMilliseconds - gameStep.getDeadline().getRemainingMilliseconds();
-		final double requiredSeconds = requiredMilliseconds / 1000;
+		final double requiredSeconds = requiredMilliseconds / 1000.;
 
 		viewer.commitRound(gameStep.getSelf().getPlayerId(), availableSeconds, action, requiredSeconds,
 				gameStep.getBoard(), boardRatings);
