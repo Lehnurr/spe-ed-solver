@@ -141,14 +141,14 @@ public class GraphCalculator implements IReachablePoints {
 				this.enemyMinStepsMatrix, importanceCalculation.getInitialEdges(), deadline, totalBase);
 		startPlayers.stream().forEach(baseCalculation::addPlayerToQueue);
 
-		while (baseCalculation.queueHasNext() && baseCalculation.queueRemaining() < totalBase) {
+		while (baseCalculation.queuesHasNext() && baseCalculation.queuesRemaining() < totalBase) {
 			baseCalculation.executeStep();
 		}
 		addResults(baseCalculation);
 
 		for (int calculationIndex = 0; baseCalculation
-				.queueHasNext(); calculationIndex = (calculationIndex + 1) % threadCount) {
-			final RatedPredictiveGraphPlayer startPlayer = baseCalculation.queuePoll();
+				.queuesHasNext(); calculationIndex = (calculationIndex + 1) % threadCount) {
+			final RatedPredictiveGraphPlayer startPlayer = baseCalculation.queuesPoll();
 			calculations.get(calculationIndex).addPlayerToQueue(startPlayer);
 		}
 

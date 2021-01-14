@@ -4,6 +4,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Random;
 
 import solver.analysis.cutoff.CutOffCalculation;
 import solver.analysis.success.SuccessCalculation;
@@ -27,9 +28,19 @@ public class GraphCalculation {
 
 	private static final int DEADLINE_MILLISECOND_BUFFER = 500;
 	private static final int DEFAULT_QUEUE_SIZE = 10000;
-	
+
+	/**
+	 * Maps for each possible {@link PlayerAction initial player action} a
+	 * {@link LimitedQueue}
+	 */
 	private final Map<PlayerAction, LimitedQueue<RatedPredictiveGraphPlayer>> queues;
-	private PlayerAction currentQueueAction = PlayerAction.TURN_LEFT;
+
+	/**
+	 * All {@link PlayerAction player actions} that are a key in
+	 * {@link GraphCalculation#queues}. Can be used for index-based access to the
+	 * available key values.
+	 */
+	private PlayerAction[] queuedActions;
 
 	private final FloatMatrix probabilities;
 	private final FloatMatrix minSteps;
@@ -52,7 +63,7 @@ public class GraphCalculation {
 	 * @param initialEdges  all possible Edges the player can do for the current
 	 *                      round
 	 * @param deadline      {@link IDeadline} to limit execution time
-	 * @param queueSize     the maximum Size of elements in the queue
+	 * @param queueSize     the maximum Size of elements for each of the 5 queues
 	 */
 	public GraphCalculation(final Board<Node> graph, final FloatMatrix probabilities, final FloatMatrix minSteps,
 			final Map<PlayerAction, ConcreteEdge> initialEdges, final IDeadline deadline, int queueSize) {
@@ -64,10 +75,10 @@ public class GraphCalculation {
 		this.graph = graph;
 
 		queues = new EnumMap<>(PlayerAction.class);
-		for(final PlayerAction action : PlayerAction.values()){
+		queuedActions = PlayerAction.values();
+		for (final PlayerAction action : PlayerAction.values()) {
 			queues.put(action, new LimitedQueue<>(RatedPredictiveGraphPlayer.class, queueSize));
 		}
-		
 
 		successCalculation = new SuccessCalculation(graph.getWidth(), graph.getHeight());
 		cutOffCalculation = new CutOffCalculation(graph.getWidth(), graph.getHeight());
@@ -113,7 +124,7 @@ public class GraphCalculation {
 	 * {@link GraphCalculation#DEADLINE_MILLISECOND_BUFFER}
 	 */
 	public void executeDeadline() {
-		while (queueHasNext() && deadline.getRemainingMilliseconds() > DEADLINE_MILLISECOND_BUFFER) {
+		while (queuesHasNext() && deadline.getRemainingMilliseconds() > DEADLINE_MILLISECOND_BUFFER) {
 			executeStep();
 		}
 	}
@@ -123,7 +134,7 @@ public class GraphCalculation {
 	 * the queue
 	 */
 	public void executeStep() {
-		final RatedPredictiveGraphPlayer parent = queuePoll();
+		final RatedPredictiveGraphPlayer parent = queuesPoll();
 		final List<RatedPredictiveGraphPlayer> children = parent.getValidChildren(graph, probabilities, minSteps);
 
 		for (final RatedPredictiveGraphPlayer child : children) {
@@ -138,44 +149,44 @@ public class GraphCalculation {
 	 * @return An integer equal or higher than 0 and less than
 	 *         {@link GraphCalculation#DEFAULT_QUEUE_SIZE QUEUE_SIZE} * 5
 	 */
-	public int queueRemaining() {
+	public int queuesRemaining() {
 		int remaining = 0;
-		for(final PlayerAction action : PlayerAction.values())
-			remaining += queues.get(action).remaining();
+
+		for (final LimitedQueue<?> queue : queues.values())
+			remaining += queue.remaining();
+
 		return remaining;
 	}
 
 	/**
-	 * Determines if the {@link GraphCalculation#queue} has a next value.
+	 * Determines if any of the {@link GraphCalculation#queues} has a next value.
 	 * 
-	 * @return true if the {@link GraphCalculation#queue} has a next value
+	 * @return true if any of the {@link GraphCalculation#queues} has a next value
 	 */
-	public boolean queueHasNext() {
-		for(final PlayerAction action : PlayerAction.values())
-			if(queues.get(action).hasNext())
-				return true;
-		return false;
+	public boolean queuesHasNext() {
+		return queues.values().stream().anyMatch(LimitedQueue::hasNext);
 	}
 
 	/**
-	 * Returns the next value of the {@link GraphCalculation#queue}.
+	 * Returns the next value for a random {@link GraphCalculation#queues queue}.
 	 * 
-	 * @return the next value
+	 * @return the next {@link RatedPredictiveGraphPlayer}
 	 */
-	public RatedPredictiveGraphPlayer queuePoll() {
-		
-		PlayerAction action = currentQueueAction;
-		do{
-			if(queues.get(action).hasNext()){
-				currentQueueAction = currentQueueAction.getNext();
-				return queues.get(action).poll();
-			}
-			action = action.getNext();
-		}while(!action.equals(currentQueueAction));
-		
-		
-		
-		throw new NoSuchElementException("Tried to poll from an empty list!");
+	public RatedPredictiveGraphPlayer queuesPoll() {
+
+		if (queues.isEmpty())
+			throw new NoSuchElementException("Tried to poll from an empty list!");
+
+		final int randomActionIndex = new Random().nextInt(queuedActions.length);
+		final PlayerAction randomAction = queuedActions[randomActionIndex];
+
+		if (queues.get(randomAction).hasNext())
+			return queues.get(randomAction).poll();
+		else {
+			queues.remove(randomAction);
+			queuedActions = queues.keySet().toArray(new PlayerAction[queues.size()]);
+			return queuesPoll();
+		}
 	}
 
 	/**
