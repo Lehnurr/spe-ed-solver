@@ -20,6 +20,8 @@ import utility.geometry.Point2i;
  * board}.
  */
 public final class RatedPredictiveGraphPlayer implements IPlayer {
+	
+	private final static double SUCCESS_BOOST = 0.2;
 
 	private final int playerId;
 	private final PlayerDirection direction;
@@ -170,9 +172,9 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 		float successFactor = 1;
 		for (final Node node : lastEdge.getPath()) {
 			if (relativeRound >= minSteps.getValue(node.getPosition()))
-				successFactor = Math.min(successFactor, 1 - probabilities.getValue(node.getPosition()));
+				successFactor = Math.max(successFactor, probabilities.getValue(node.getPosition()));
 		}
-		return parentSuccessRating * successFactor;
+		return (float) (parentSuccessRating * (1 - Math.pow(successFactor, SUCCESS_BOOST)));
 	}
 
 	/**

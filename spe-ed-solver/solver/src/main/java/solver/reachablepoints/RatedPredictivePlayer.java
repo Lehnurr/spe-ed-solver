@@ -18,6 +18,8 @@ import utility.geometry.Point2i;
  */
 public class RatedPredictivePlayer extends PredictivePlayer {
 
+	private final static double SUCCESS_BOOST = 0.2;
+
 	private final float successRating;
 	private final float cutOffRating;
 
@@ -84,9 +86,9 @@ public class RatedPredictivePlayer extends PredictivePlayer {
 		float successFactor = 1;
 		for (final Point2i point : shortTail) {
 			if (relativeRound >= minSteps.getValue(point))
-				successFactor = Math.min(successFactor, 1 - probabilities.getValue(point));
+				successFactor = Math.max(successFactor, probabilities.getValue(point));
 		}
-		return parentSuccessRating * successFactor;
+		return (float) (parentSuccessRating * (1 - Math.pow(successFactor, SUCCESS_BOOST)));
 	}
 
 	/**
