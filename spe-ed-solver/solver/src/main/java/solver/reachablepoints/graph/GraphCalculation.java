@@ -14,6 +14,7 @@ import utility.game.player.PlayerAction;
 import utility.game.step.IDeadline;
 import utility.geometry.FloatMatrix;
 import utility.geometry.Point2i;
+import java.util.NoSuchElementException;
 
 /**
  * Calculation object for calculating success and cut off ratings based on some
