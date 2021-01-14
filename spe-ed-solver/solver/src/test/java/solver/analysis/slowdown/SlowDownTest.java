@@ -24,11 +24,11 @@ public class SlowDownTest {
 
 		ActionsRating result = SlowDown.getActionsRating(player, board);
 
-		assertEquals(0f, result.getRating(PlayerAction.TURN_LEFT), 0.0001f);
-		assertEquals(0.5f, result.getRating(PlayerAction.CHANGE_NOTHING), 0.0001f);
-		assertEquals(1f, result.getRating(PlayerAction.SLOW_DOWN), 0.0001f);
-		assertEquals(0f, result.getRating(PlayerAction.SPEED_UP), 0.0001f);
-		assertEquals(0.5f, result.getRating(PlayerAction.TURN_RIGHT), 0.0001f);
+		assertEquals(0, result.getRating(PlayerAction.TURN_LEFT), 0.0001);
+		assertEquals(0.5, result.getRating(PlayerAction.CHANGE_NOTHING), 0.0001);
+		assertEquals(1, result.getRating(PlayerAction.SLOW_DOWN), 0.0001);
+		assertEquals(0, result.getRating(PlayerAction.SPEED_UP), 0.0001);
+		assertEquals(0.5, result.getRating(PlayerAction.TURN_RIGHT), 0.0001);
 	}
 
 	private Board<Cell> createEmptyTestBoard() {

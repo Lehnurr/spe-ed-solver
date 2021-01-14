@@ -78,6 +78,8 @@ public class SingleEnemyPrediction {
 			final int maxDepth) {
 
 		final List<PredictivePlayer> validChildren = getValidChildren(player);
+		if (validChildren.size() == 0)
+			return;
 		final double probabilityFactor = 1 / validChildren.size();
 		final double childProbability = startProbability * probabilityFactor;
 
