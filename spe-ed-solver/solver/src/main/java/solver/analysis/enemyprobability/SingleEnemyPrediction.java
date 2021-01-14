@@ -12,13 +12,18 @@ import utility.geometry.FloatMatrix;
 import utility.geometry.Point2i;
 
 /**
- * Calculates the enemy forward prediction for a single {@link IPlayer}.
+ * Calculates the enemy forward prediction for a single {@link IPlayer}. Done by
+ * calculating the probabilities of the enemy location based on his valid
+ * {@link PlayerAction actions} with a certain recursive search depth. Then
+ * flood filling is performed for the minimum steps.
  */
 public class SingleEnemyPrediction {
 
 	private final Board<Cell> board;
 
 	private final IPlayer player;
+
+	private final List<FloodFillPoint> floodFillPoints = new ArrayList<>();
 
 	private FloatMatrix probabilities;
 	private FloatMatrix minSteps;
@@ -37,25 +42,26 @@ public class SingleEnemyPrediction {
 
 	/**
 	 * Performs the enemy prediction by recursively searching forward until a
-	 * certain depth is reached.
+	 * certain depth is reached. Further minimum steps are set with flood fill.
 	 * 
 	 * @param maxDepth the depth to search with
 	 */
 	public void doCalculation(final int maxDepth) {
-		clearResults(maxDepth + 1);
+		clearResults(maxDepth);
 		final PredictivePlayer startPlayer = new PredictivePlayer(player);
 		doRecursiveStep(startPlayer, 1f, 1, maxDepth);
+		floodFill();
 	}
 
 	/**
-	 * Clears the result of the contained matrixes. The probabilities matrix is
-	 * initialized with 0s. The minSteps matrix is initialized with the given value.
+	 * Clears the result of the contained matrixes.
 	 * 
-	 * @param maxStepsValue value to initialize the minSteps matrix with
+	 * @param maxSteps the maximum amount of predicted rounds
 	 */
-	private void clearResults(final int maxStepsValue) {
-		this.probabilities = new FloatMatrix(board.getWidth(), board.getHeight(), 0);
-		this.minSteps = new FloatMatrix(board.getWidth(), board.getHeight(), maxStepsValue);
+	private void clearResults(final int maxSteps) {
+		this.probabilities = new FloatMatrix(board.getWidth(), board.getHeight(),
+				(float) (1 / Math.pow(PlayerAction.values().length, maxSteps)));
+		this.minSteps = new FloatMatrix(board.getWidth(), board.getHeight(), Integer.MAX_VALUE);
 	}
 
 	/**
@@ -84,6 +90,8 @@ public class SingleEnemyPrediction {
 
 			if (depth <= maxDepth)
 				doRecursiveStep(child, childProbability, depth + 1, maxDepth);
+			else
+				floodFillPoints.add(new FloodFillPoint(depth, child.getPosition(), child.getSpeed()));
 		}
 	}
 
@@ -101,6 +109,27 @@ public class SingleEnemyPrediction {
 				validChildren.add(child);
 		}
 		return validChildren;
+	}
+
+	/**
+	 * Executes flood fill for the remaining minimum steps.
+	 */
+	private void floodFill() {
+		while (!floodFillPoints.isEmpty()) {
+			final FloodFillPoint current = floodFillPoints.remove(floodFillPoints.size() - 1);
+
+			final List<Point2i> nextPoints = current.getPosition().vonNeumannNeighborhood();
+
+			for (final Point2i nextPoint : nextPoints) {
+				if (board.isOnBoard(nextPoint)) {
+					final FloodFillPoint next = current.next(nextPoint);
+					if (next.getRound() < minSteps.getValue(nextPoint)) {
+						minSteps.setValue(next.getPosition(), next.getRound());
+						floodFillPoints.add(next);
+					}
+				}
+			}
+		}
 	}
 
 	/**

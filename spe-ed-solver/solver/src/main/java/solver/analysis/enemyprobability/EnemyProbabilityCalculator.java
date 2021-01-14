@@ -70,6 +70,8 @@ public class EnemyProbabilityCalculator {
 					probabilities.setValue(position, 1);
 					minSteps.setValue(position, 0);
 				}
+				if (minSteps.getValue(position) == Integer.MAX_VALUE)
+					minSteps.setValue(position, searchDepth + 1);
 			}
 		}
 	}
