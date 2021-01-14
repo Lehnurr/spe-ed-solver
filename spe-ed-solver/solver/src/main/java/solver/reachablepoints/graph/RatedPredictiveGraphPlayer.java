@@ -21,7 +21,7 @@ import utility.geometry.Point2i;
  */
 public final class RatedPredictiveGraphPlayer implements IPlayer {
 	
-	private final static double SUCCESS_BOOST = 0.2;
+	private final static double SUCCESS_BOOST = 0.25;
 
 	private final int playerId;
 	private final PlayerDirection direction;

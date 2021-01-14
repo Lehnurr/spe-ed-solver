@@ -18,7 +18,7 @@ import utility.geometry.Point2i;
  */
 public class RatedPredictivePlayer extends PredictivePlayer {
 
-	private final static double SUCCESS_BOOST = 0.2;
+	private final static double SUCCESS_BOOST = 0.25;
 
 	private final double successRating;
 	private final double cutOffRating;
