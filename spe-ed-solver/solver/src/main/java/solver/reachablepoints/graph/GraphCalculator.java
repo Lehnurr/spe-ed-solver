@@ -115,12 +115,10 @@ public class GraphCalculator implements IReachablePoints {
 		cutOffCalculation = new CutOffCalculation(width, height);
 		importanceCalculation = new EdgeImportance(width, height, startPlayers);
 
-		int threadCount = Math.min(maxThreadCount, (int) (deadline.getRemainingMilliseconds() / 500));
-
 		// Create a Calculation for each thread
 		List<GraphCalculation> calculations = new ArrayList<>();
 
-		if (threadCount <= 1) {
+		if (maxThreadCount <= 1) {
 			GraphCalculation calculation = new GraphCalculation(graph, this.enemyProbabilitiesMatrix,
 					this.enemyMinStepsMatrix, importanceCalculation.getInitialEdges(), deadline);
 			calculations.add(calculation);
@@ -128,13 +126,13 @@ public class GraphCalculator implements IReachablePoints {
 			return calculations;
 		}
 
-		while (calculations.size() < threadCount)
+		while (calculations.size() < maxThreadCount)
 			calculations.add(new GraphCalculation(graph, this.enemyProbabilitiesMatrix, this.enemyMinStepsMatrix,
 					importanceCalculation.getInitialEdges(), deadline));
 
 		// Define the number of required start players
 		final int threadBase = (graph.getHeight() + graph.getWidth()) * 10;
-		final int totalBase = threadBase * threadCount;
+		final int totalBase = threadBase * maxThreadCount;
 
 		// create a Base of Player states
 		GraphCalculation baseCalculation = new GraphCalculation(graph, this.enemyProbabilitiesMatrix,
@@ -147,7 +145,7 @@ public class GraphCalculator implements IReachablePoints {
 		addResults(baseCalculation);
 
 		for (int calculationIndex = 0; baseCalculation
-				.queuesHasNext(); calculationIndex = (calculationIndex + 1) % threadCount) {
+				.queuesHasNext(); calculationIndex = (calculationIndex + 1) % maxThreadCount) {
 			final RatedPredictiveGraphPlayer startPlayer = baseCalculation.queuesPoll();
 			calculations.get(calculationIndex).addPlayerToQueue(startPlayer);
 		}

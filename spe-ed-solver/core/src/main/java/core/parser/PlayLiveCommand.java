@@ -28,7 +28,7 @@ public class PlayLiveCommand implements Runnable {
 
 	private SolverType solverType = SolverType.getDefault();
 
-	private int maxThreadCount = 1;
+	private int maxThreadCount = 4;
 
 	private String logDirectory = "log";
 
@@ -79,7 +79,7 @@ public class PlayLiveCommand implements Runnable {
 	}
 
 	@Option(names = { "-m",
-			"--max-thread-count" }, description = "Specifies the maximum number of concurrent threads for the solver.", defaultValue = "1")
+			"--max-thread-count" }, description = "Specifies the maximum number of concurrent threads for the solver.", defaultValue = "4")
 	public void setMaxThreadCount(final int maxThreadCount) {
 		final int availableThreads = Runtime.getRuntime().availableProcessors();
 		if (maxThreadCount < 1 || maxThreadCount > availableThreads)

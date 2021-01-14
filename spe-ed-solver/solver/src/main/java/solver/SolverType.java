@@ -37,7 +37,7 @@ public enum SolverType {
 	GRAPH_BALANCED {
 		@Override
 		public ISpeedSolver newInstance(final int maxThreadCount) {
-			return new ReachablePointsSolver(6, 0.35f, 0.03f, ReachablePointsType.GRAPH, maxThreadCount);
+			return new ReachablePointsSolver(6, 0.35f, 0.06f, ReachablePointsType.GRAPH, maxThreadCount);
 		}
 	},
 	GRAPH_DEFENSIVE {
