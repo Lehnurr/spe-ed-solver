@@ -94,7 +94,7 @@ public class GraphCalculation {
 	 * Adds a {@link RatedPredictiveGraphPlayer player} to the
 	 * {@link GraphCalculation#queue}
 	 * 
-	 * @param startPlayer The {@link RatedPredictiveGraphPlayer player} to add
+	 * @param player The {@link RatedPredictiveGraphPlayer player} to add
 	 */
 	public void addPlayerToQueue(RatedPredictiveGraphPlayer player) {
 		final PlayerAction action = player.getInitialAction();
