@@ -33,15 +33,15 @@ public final class ImageGeneration {
 		final int height = matrix.getHeight();
 		final int width = matrix.getWidth();
 
-		final float rangeMax = matrix.getRangeMax();
-		final float rangeMin = matrix.getRangeMin();
-		final float stretchFactor = 1 / (rangeMax - rangeMin);
+		final double rangeMax = matrix.getRangeMax();
+		final double rangeMin = matrix.getRangeMin();
+		final double stretchFactor = 1 / (rangeMax - rangeMin);
 
 		final BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				final float value = (matrix.getValue(x, y) - rangeMin) * stretchFactor;
+				final double value = (matrix.getValue(x, y) - rangeMin) * stretchFactor;
 				bufferedImage.setRGB(x, y, colorGradient.apply(value));
 			}
 		}

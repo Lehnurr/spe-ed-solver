@@ -39,7 +39,7 @@ public interface IReachablePoints {
 	 *                         stimulates defensive decisions
 	 * @return the combined ratings
 	 */
-	public ActionsRating combineActionsRating(float aggressiveWeight, float defensiveWeight);
+	public ActionsRating combineActionsRating(double aggressiveWeight, double defensiveWeight);
 
 	/**
 	 * Logs the last calculated Ratings and the combined rating as

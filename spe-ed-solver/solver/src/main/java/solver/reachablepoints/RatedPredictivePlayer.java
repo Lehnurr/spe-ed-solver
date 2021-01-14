@@ -20,8 +20,8 @@ public class RatedPredictivePlayer extends PredictivePlayer {
 
 	private final static double SUCCESS_BOOST = 0.2;
 
-	private final float successRating;
-	private final float cutOffRating;
+	private final double successRating;
+	private final double cutOffRating;
 
 	private final int relativeRound;
 
@@ -81,14 +81,14 @@ public class RatedPredictivePlayer extends PredictivePlayer {
 	 * @param relativeRound       amount of round which are predictive
 	 * @return new success rating for the child
 	 */
-	private float calculateSuccessRating(final float parentSuccessRating, final FloatMatrix probabilities,
+	private double calculateSuccessRating(final double parentSuccessRating, final FloatMatrix probabilities,
 			final FloatMatrix minSteps, final Collection<Point2i> shortTail, final int relativeRound) {
-		float successFactor = 1;
+		double successFactor = 0;
 		for (final Point2i point : shortTail) {
 			if (relativeRound >= minSteps.getValue(point))
 				successFactor = Math.max(successFactor, probabilities.getValue(point));
 		}
-		return (float) (parentSuccessRating * (1 - Math.pow(successFactor, SUCCESS_BOOST)));
+		return (double) (parentSuccessRating * Math.pow(1 - successFactor, SUCCESS_BOOST));
 	}
 
 	/**
@@ -103,10 +103,10 @@ public class RatedPredictivePlayer extends PredictivePlayer {
 	 * @param successRating the probability to reach the given state
 	 * @return new cut off rating for the child
 	 */
-	private float calculateCutOffRating(final FloatMatrix probabilities, final FloatMatrix minSteps,
-			final Collection<Point2i> shortTail, final int relativeRound, final float successRating) {
+	private double calculateCutOffRating(final FloatMatrix probabilities, final FloatMatrix minSteps,
+			final Collection<Point2i> shortTail, final int relativeRound, final double successRating) {
 
-		float cutOff = 0;
+		double cutOff = 0;
 		for (final Point2i point : shortTail) {
 			if (relativeRound < minSteps.getValue(point)) {
 				cutOff = Math.max(cutOff, probabilities.getValue(point));
@@ -142,7 +142,7 @@ public class RatedPredictivePlayer extends PredictivePlayer {
 	 * 
 	 * @return success rating
 	 */
-	public float getSuccessRating() {
+	public double getSuccessRating() {
 		return successRating;
 	}
 
@@ -151,7 +151,7 @@ public class RatedPredictivePlayer extends PredictivePlayer {
 	 * 
 	 * @return cut off rating
 	 */
-	public float getCutOffRating() {
+	public double getCutOffRating() {
 		return cutOffRating;
 	}
 

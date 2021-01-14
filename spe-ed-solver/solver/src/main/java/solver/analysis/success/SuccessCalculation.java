@@ -38,7 +38,7 @@ public class SuccessCalculation {
      * @param position      the {@link Point2i position} the rating is valid for
      * @param successRating the new calculated successrating
      */
-    public void add(PlayerAction action, Point2i position, float successRating) {
+    public void add(PlayerAction action, Point2i position, double successRating) {
         matrixResult.get(action).max(position, successRating);
     }
 

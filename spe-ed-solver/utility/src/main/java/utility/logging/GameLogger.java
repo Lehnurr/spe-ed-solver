@@ -77,8 +77,8 @@ public final class GameLogger {
 	 *                         {@link PlayerAction}
 	 * 
 	 */
-	public static void logPlayerAction(IPlayer player, PlayerAction action, float requiredSeconds,
-			float availableSeconds) {
+	public static void logPlayerAction(IPlayer player, PlayerAction action, double requiredSeconds,
+			double availableSeconds) {
 
 		String playerState = String.format("action {%s} by Player %d {%s, %s, %d} in Round %d (%.3f/%.3f sec)",
 				action.getName(), player.getPlayerId(), player.getDirection().name(), player.getPosition().toString(),

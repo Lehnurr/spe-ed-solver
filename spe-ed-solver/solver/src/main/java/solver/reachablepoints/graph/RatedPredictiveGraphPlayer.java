@@ -32,8 +32,8 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	private final int relativeRound;
 	private final PlayerAction initialAction;
 	private final List<ConcreteEdge> edgeTail;
-	private float successRating;
-	private float cutOffRating;
+	private double successRating;
+	private double cutOffRating;
 	private Map<ConcreteEdge, Integer> initialEdgeIncrements;
 
 	/**
@@ -99,7 +99,7 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 
 		PlayerAction initialAction = null;
 		int relativeRound = 0;
-		float parentSuccessRating = 1;
+		double parentSuccessRating = 1;
 		List<ConcreteEdge> parentEdgeTail = new ArrayList<>();
 		Map<ConcreteEdge, Integer> parentInitialEdgeIncrements = new HashMap<>();
 
@@ -167,14 +167,14 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	 *                            the {@link RatedPredictiveGraphPlayer child}
 	 * @return new success rating for the {@link RatedPredictiveGraphPlayer child}
 	 */
-	private float calculateSuccessRating(final float parentSuccessRating, final FloatMatrix probabilities,
+	private double calculateSuccessRating(final double parentSuccessRating, final FloatMatrix probabilities,
 			final FloatMatrix minSteps, final ConcreteEdge lastEdge) {
-		float successFactor = 1;
+		double successFactor = 0;
 		for (final Node node : lastEdge.getPath()) {
 			if (relativeRound >= minSteps.getValue(node.getPosition()))
 				successFactor = Math.max(successFactor, probabilities.getValue(node.getPosition()));
 		}
-		return (float) (parentSuccessRating * (1 - Math.pow(successFactor, SUCCESS_BOOST)));
+		return (double) (parentSuccessRating * Math.pow(1 - successFactor, SUCCESS_BOOST));
 	}
 
 	/**
@@ -189,10 +189,10 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	 * @param successRating the probability to reach the given state
 	 * @return new cut off rating for the {@link RatedPredictiveGraphPlayer child}
 	 */
-	private float calculateCutOffRating(final FloatMatrix probabilities, final FloatMatrix minSteps,
-			final ConcreteEdge lastEdge, final float successRating) {
+	private double calculateCutOffRating(final FloatMatrix probabilities, final FloatMatrix minSteps,
+			final ConcreteEdge lastEdge, final double successRating) {
 
-		float cutOff = 0;
+		double cutOff = 0;
 		for (final Node node : lastEdge.getPath()) {
 			if (relativeRound < minSteps.getValue(node.getPosition())) {
 				cutOff = Math.max(cutOff, probabilities.getValue(node.getPosition()));
@@ -264,7 +264,7 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	 * @param parentInitialEdgeIncrements the initial increments from the parent
 	 * @param newEdge                     the new passsed {@link ConcreteEdge edge}
 	 */
-	private void calculateRating(final float parentSuccessRating, final FloatMatrix probabilities,
+	private void calculateRating(final double parentSuccessRating, final FloatMatrix probabilities,
 			final FloatMatrix minSteps, final Map<ConcreteEdge, Integer> parentInitialEdgeIncrements,
 			final ConcreteEdge newEdge) {
 		if (isActive()) {
@@ -294,7 +294,7 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	 *         are updated. false if the {@link ConcreteEdge edge} has not been
 	 *         added and the results have not changed
 	 */
-	private boolean addEdgeAndCalculateRating(final float parentSuccessRating, final FloatMatrix probabilities,
+	private boolean addEdgeAndCalculateRating(final double parentSuccessRating, final FloatMatrix probabilities,
 			final FloatMatrix minSteps, final Map<ConcreteEdge, Integer> parentInitialEdgeIncrements,
 			final ConcreteEdge edge) {
 		if (addEdge(edge)) {
@@ -309,7 +309,7 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	 * 
 	 * @return success rating
 	 */
-	public float getSuccessRating() {
+	public double getSuccessRating() {
 		return successRating;
 	}
 
@@ -318,7 +318,7 @@ public final class RatedPredictiveGraphPlayer implements IPlayer {
 	 * 
 	 * @return cut off rating
 	 */
-	public float getCutOffRating() {
+	public double getCutOffRating() {
 		return cutOffRating;
 	}
 

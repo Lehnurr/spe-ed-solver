@@ -9,8 +9,8 @@ public class ContextualFloatMatrix {
 
 	private final FloatMatrix matrix;
 
-	private final float rangeMin;
-	private final float rangeMax;
+	private final double rangeMin;
+	private final double rangeMax;
 
 	/**
 	 * Generates a {@link ContextualFloatMatrix} only with its name. Range values
@@ -31,8 +31,8 @@ public class ContextualFloatMatrix {
 	 * @param rangeMin the minimum meaningful value
 	 * @param rangeMax the maximum meaningful value
 	 */
-	public ContextualFloatMatrix(final String name, final FloatMatrix matrix, final float rangeMin,
-			final float rangeMax) {
+	public ContextualFloatMatrix(final String name, final FloatMatrix matrix, final double rangeMin,
+			final double rangeMax) {
 		this.name = name;
 		this.matrix = new FloatMatrix(matrix);
 		this.rangeMin = rangeMin;
@@ -52,9 +52,9 @@ public class ContextualFloatMatrix {
 	 * Returns the value of the underlying matrix at the given position.
 	 * 
 	 * @param point the {@link Point2i position} to get the value from
-	 * @return float value at the given coordinates
+	 * @return double value at the given coordinates
 	 */
-	public float getValue(Point2i point) {
+	public double getValue(Point2i point) {
 		return matrix.getValue(point);
 	}
 
@@ -63,9 +63,9 @@ public class ContextualFloatMatrix {
 	 * 
 	 * @param x the x coordinate
 	 * @param y the y coordinate
-	 * @return float value at the given coordinates
+	 * @return double value at the given coordinates
 	 */
-	public float getValue(int x, int y) {
+	public double getValue(int x, int y) {
 		return matrix.getValue(x, y);
 	}
 
@@ -92,7 +92,7 @@ public class ContextualFloatMatrix {
 	 * 
 	 * @return max valid value for the matrix
 	 */
-	public float getRangeMax() {
+	public double getRangeMax() {
 		return rangeMax;
 	}
 
@@ -101,7 +101,7 @@ public class ContextualFloatMatrix {
 	 * 
 	 * @return min valid value for the matrix
 	 */
-	public float getRangeMin() {
+	public double getRangeMin() {
 		return rangeMin;
 	}
 

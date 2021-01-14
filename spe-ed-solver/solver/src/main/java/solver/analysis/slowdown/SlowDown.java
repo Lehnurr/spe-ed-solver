@@ -32,7 +32,7 @@ public final class SlowDown {
 
 		for (final PlayerAction action : PlayerAction.values()) {
 			final PredictivePlayer nextPlayer = new PredictivePlayer(startPlayer, action, board);
-			final float ratingValue = ratingValue(startPlayer, nextPlayer);
+			final double ratingValue = ratingValue(startPlayer, nextPlayer);
 			result.setRating(action, ratingValue);
 		}
 		return result;
@@ -45,11 +45,11 @@ public final class SlowDown {
 	 * 
 	 * @param parent {@link IPlayer} parent
 	 * @param child  {@link IPlayer} child
-	 * @return rating value result as float
+	 * @return rating value result as double
 	 */
-	private static float ratingValue(final IPlayer parent, final IPlayer child) {
+	private static double ratingValue(final IPlayer parent, final IPlayer child) {
 		if (child.isActive())
-			return (parent.getSpeed() - child.getSpeed()) / 2f + 0.5f;
+			return (parent.getSpeed() - child.getSpeed()) / 2 + 0.5;
 		else
 			return 0;
 	}

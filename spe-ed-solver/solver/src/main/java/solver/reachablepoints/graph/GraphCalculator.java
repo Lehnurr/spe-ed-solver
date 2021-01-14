@@ -214,7 +214,7 @@ public class GraphCalculator implements IReachablePoints {
 		GameLogger.logGameInformation(String.format("combined-rating:\t%s", combinedActionsRating));
 	}
 
-	public ActionsRating combineActionsRating(float aggressiveWeight, float defensiveWeight) {
+	public ActionsRating combineActionsRating(double aggressiveWeight, double defensiveWeight) {
 		return successCalculation.getRatingResult().combine(cutOffCalculation.getRatingResult(), aggressiveWeight)
 				.combine(importanceCalculation.getInvertedRatingResult(), defensiveWeight);
 	}

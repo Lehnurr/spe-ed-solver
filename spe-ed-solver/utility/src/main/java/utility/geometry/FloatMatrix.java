@@ -1,11 +1,11 @@
 package utility.geometry;
 
 /**
- * A Matrix with float values.
+ * A Matrix with double values.
  */
 public class FloatMatrix {
 
-	private final float[][] values;
+	private final double[][] values;
 
 	/**
 	 * Generates a new 2d matrix with the given dimensions.
@@ -14,7 +14,7 @@ public class FloatMatrix {
 	 * @param height the height of the {@link FloatMatrix}
 	 */
 	public FloatMatrix(int width, int height) {
-		this.values = new float[height][width];
+		this.values = new double[height][width];
 	}
 
 	/**
@@ -25,7 +25,7 @@ public class FloatMatrix {
 	 * @param height       the height of the {@link FloatMatrix}
 	 * @param initialValue the initial value for all elements
 	 */
-	public FloatMatrix(int width, int height, float initialValue) {
+	public FloatMatrix(int width, int height, double initialValue) {
 		this(width, height);
 
 		for (int y = 0; y < values.length; y++) {
@@ -69,23 +69,23 @@ public class FloatMatrix {
 	}
 
 	/**
-	 * Returns the float value stored at the given position.
+	 * Returns the double value stored at the given position.
 	 * 
 	 * @param point {@link Point2i} of the position
-	 * @return float value at the given position
+	 * @return double value at the given position
 	 */
-	public float getValue(Point2i point) {
+	public double getValue(Point2i point) {
 		return getValue(point.getX(), point.getY());
 	}
 
 	/**
-	 * Returns the float value stored at the given coordinates.
+	 * Returns the double value stored at the given coordinates.
 	 * 
 	 * @param x the x coordinate
 	 * @param y the y coordinate
-	 * @return float value at the given position
+	 * @return double value at the given position
 	 */
-	public float getValue(int x, int y) {
+	public double getValue(int x, int y) {
 		return values[y][x];
 	}
 
@@ -95,7 +95,7 @@ public class FloatMatrix {
 	 * @param point the {@link Point2i position} to set the value for
 	 * @param value the new value to set
 	 */
-	public void setValue(Point2i point, float value) {
+	public void setValue(Point2i point, double value) {
 		setValue(point.getX(), point.getY(), value);
 	}
 
@@ -106,7 +106,7 @@ public class FloatMatrix {
 	 * @param y     thy y coordinates
 	 * @param value the new value to set
 	 */
-	public void setValue(int x, int y, float value) {
+	public void setValue(int x, int y, double value) {
 		values[y][x] = value;
 	}
 
@@ -123,10 +123,10 @@ public class FloatMatrix {
 	/**
 	 * Returns the highest value of the matrix.
 	 * 
-	 * @return highest float value in matrix
+	 * @return highest double value in matrix
 	 */
-	public float max() {
-		float maxValue = Float.MIN_VALUE;
+	public double max() {
+		double maxValue = Float.MIN_VALUE;
 		for (int y = 0; y < values.length; y++) {
 			for (int x = 0; x < values[0].length; x++) {
 				maxValue = Math.max(values[y][x], maxValue);
@@ -161,10 +161,10 @@ public class FloatMatrix {
 	/**
 	 * Returns the lowest value of the matrix.
 	 * 
-	 * @return lowest float value in matrix
+	 * @return lowest double value in matrix
 	 */
-	public float min() {
-		float minValue = Float.MAX_VALUE;
+	public double min() {
+		double minValue = Float.MAX_VALUE;
 		for (int y = 0; y < values.length; y++) {
 			for (int x = 0; x < values[0].length; x++) {
 				minValue = Math.min(values[y][x], minValue);
@@ -247,8 +247,8 @@ public class FloatMatrix {
 	 * 
 	 * @return sum of each element
 	 */
-	public float sum() {
-		float sum = 0;
+	public double sum() {
+		double sum = 0;
 		for (int y = 0; y < values.length; y++) {
 			for (int x = 0; x < values[0].length; x++) {
 				sum += getValue(x, y);
@@ -261,9 +261,9 @@ public class FloatMatrix {
 	 * Adds a value to the matrix at a given position.
 	 * 
 	 * @param position {@link Point2i} of the position
-	 * @param value    float value to add
+	 * @param value    double value to add
 	 */
-	public void add(final Point2i position, final float value) {
+	public void add(final Point2i position, final double value) {
 		setValue(position, getValue(position) + value);
 	}
 
@@ -272,9 +272,9 @@ public class FloatMatrix {
 	 * value is smaller.
 	 * 
 	 * @param position {@link Point2i} of the position
-	 * @param value    float value to compare and possibly set
+	 * @param value    double value to compare and possibly set
 	 */
-	public void min(final Point2i position, final float value) {
+	public void min(final Point2i position, final double value) {
 		if (value < getValue(position)) {
 			setValue(position, value);
 		}
@@ -285,9 +285,9 @@ public class FloatMatrix {
 	 * value is bigger.
 	 * 
 	 * @param position {@link Point2i} of the position
-	 * @param value    float value to compare and possibly set
+	 * @param value    double value to compare and possibly set
 	 */
-	public void max(final Point2i position, final float value) {
+	public void max(final Point2i position, final double value) {
 		if (value > getValue(position)) {
 			setValue(position, value);
 		}
@@ -299,10 +299,10 @@ public class FloatMatrix {
 	 * @return The Matrix with normalized values
 	 */
 	public FloatMatrix normalize() {
-		final float maxValue = max();
+		final double maxValue = max();
 
-		final float normalizeFactor = 1 / maxValue;
-		if (Float.isNaN(normalizeFactor))
+		final double normalizeFactor = 1 / maxValue;
+		if (Double.isNaN(normalizeFactor))
 			return this;
 
 		final FloatMatrix factorMatrix = new FloatMatrix(this.getWidth(), this.getHeight(), normalizeFactor);

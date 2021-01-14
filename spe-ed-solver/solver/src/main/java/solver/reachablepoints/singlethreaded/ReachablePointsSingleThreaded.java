@@ -120,16 +120,16 @@ public class ReachablePointsSingleThreaded implements IReachablePoints {
 	 */
 	private void updateActionsRatings() {
 		for (final PlayerAction action : PlayerAction.values()) {
-			final float successValue = calculations.get(action).getSuccessMatrixResult().sum();
+			final double successValue = calculations.get(action).getSuccessMatrixResult().sum();
 			successRating.setRating(action, successValue);
-			final float cutOffValue = calculations.get(action).getCutOffMatrixResult().max();
+			final double cutOffValue = calculations.get(action).getCutOffMatrixResult().max();
 			cutOffRating.setRating(action, cutOffValue);
 		}
 		successRating.normalize();
 	}
 
 	@Override
-	public ActionsRating combineActionsRating(float aggressiveWeight, float defensiveWeight) {
+	public ActionsRating combineActionsRating(double aggressiveWeight, double defensiveWeight) {
 		return successRating.combine(cutOffRating, aggressiveWeight).combine(slowDownRating, defensiveWeight);
 	}
 

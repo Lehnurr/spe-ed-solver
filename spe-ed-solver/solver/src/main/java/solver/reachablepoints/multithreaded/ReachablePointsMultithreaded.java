@@ -178,7 +178,7 @@ public class ReachablePointsMultithreaded implements IReachablePoints {
 	}
 
 	@Override
-	public ActionsRating combineActionsRating(float aggressiveWeight, float defensiveWeight) {
+	public ActionsRating combineActionsRating(double aggressiveWeight, double defensiveWeight) {
 		return successRatingsResult.combine(cutOffRatingsResult, aggressiveWeight).combine(slowDownRatingsResult,
 				defensiveWeight);
 	}

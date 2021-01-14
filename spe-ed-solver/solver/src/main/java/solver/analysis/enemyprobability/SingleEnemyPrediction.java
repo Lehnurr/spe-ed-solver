@@ -49,7 +49,7 @@ public class SingleEnemyPrediction {
 	public void doCalculation(final int maxDepth) {
 		clearResults(maxDepth);
 		final PredictivePlayer startPlayer = new PredictivePlayer(player);
-		doRecursiveStep(startPlayer, 1f, 1, maxDepth);
+		doRecursiveStep(startPlayer, 1, 1, maxDepth);
 		floodFill();
 	}
 
@@ -60,7 +60,7 @@ public class SingleEnemyPrediction {
 	 */
 	private void clearResults(final int maxSteps) {
 		this.probabilities = new FloatMatrix(board.getWidth(), board.getHeight(),
-				(float) (1 / Math.pow(PlayerAction.values().length, maxSteps)));
+				1 / Math.pow(PlayerAction.values().length, maxSteps + 1));
 		this.minSteps = new FloatMatrix(board.getWidth(), board.getHeight(), Integer.MAX_VALUE);
 	}
 
@@ -69,17 +69,17 @@ public class SingleEnemyPrediction {
 	 * steps for the generated children if the max depth is not reached.
 	 * 
 	 * @param player           {@link PredictivePlayer} to generate children with
-	 * @param startProbability float probability value of the given
+	 * @param startProbability double probability value of the given
 	 *                         {@link PredictivePlayer}
 	 * @param depth            current depth of the calculation
 	 * @param maxDepth         max depth the calculation should reach
 	 */
-	private void doRecursiveStep(final PredictivePlayer player, final float startProbability, final int depth,
+	private void doRecursiveStep(final PredictivePlayer player, final double startProbability, final int depth,
 			final int maxDepth) {
 
 		final List<PredictivePlayer> validChildren = getValidChildren(player);
-		final float probabilityFactor = 1f / validChildren.size();
-		final float childProbability = startProbability * probabilityFactor;
+		final double probabilityFactor = 1 / validChildren.size();
+		final double childProbability = startProbability * probabilityFactor;
 
 		for (final PredictivePlayer child : validChildren) {
 

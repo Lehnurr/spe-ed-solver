@@ -38,7 +38,7 @@ public class CutOffCalculation {
 	 * @param position     the {@link Point2i position} the rating is valid for
 	 * @param cutOffRating the new calculated cut-off-rating
 	 */
-	public void add(PlayerAction action, Point2i position, float cutOffRating) {
+	public void add(PlayerAction action, Point2i position, double cutOffRating) {
 		matrixResult.get(action).max(position, cutOffRating);
 	}
 

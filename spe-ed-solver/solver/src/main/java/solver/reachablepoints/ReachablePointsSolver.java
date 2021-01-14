@@ -22,8 +22,8 @@ public class ReachablePointsSolver implements ISpeedSolver {
 
 	private final EnemyProbabilityCalculator enemyProbabilityCalculator;
 	private final IReachablePoints reachablePointsCalculator;
-	private final float aggressiveWeight;
-	private final float defensiveWeight;
+	private final double aggressiveWeight;
+	private final double defensiveWeight;
 
 	/**
 	 * Creates a new {@link ReachablePointsSolver} with the given configuration
@@ -38,7 +38,7 @@ public class ReachablePointsSolver implements ISpeedSolver {
 	 *                         use
 	 * @param type             the {@link ReachablePointsType} of the calculation
 	 */
-	public ReachablePointsSolver(final int enemySearchDepth, float aggressiveWeight, float defensiveWeight,
+	public ReachablePointsSolver(final int enemySearchDepth, double aggressiveWeight, double defensiveWeight,
 			final ReachablePointsType type, final int maxThreadCount) {
 		this.enemyProbabilityCalculator = new EnemyProbabilityCalculator(enemySearchDepth);
 		this.reachablePointsCalculator = type.newInstance(maxThreadCount);

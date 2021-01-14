@@ -225,8 +225,8 @@ public class ViewerWindow {
 			boardPanel.setLayout(new GridLayout(yGridElements, xGridElements));
 
 			// calculates max size in each dimension for board rating
-			final float maxElementWidth = boardPanel.getWidth() / xGridElements - BOARD_RATING_PADDING_HORIZONTAL;
-			final float maxElementHeight = boardPanel.getHeight() / yGridElements - BOARD_RATING_PADDING_VERTICAL;
+			final double maxElementWidth = boardPanel.getWidth() / xGridElements - BOARD_RATING_PADDING_HORIZONTAL;
+			final double maxElementHeight = boardPanel.getHeight() / yGridElements - BOARD_RATING_PADDING_VERTICAL;
 
 			// update graphics
 			boardPanel.removeAll();
@@ -243,7 +243,7 @@ public class ViewerWindow {
 				BufferedImage image = namedImage.getImage();
 
 				// scale and display image
-				float scalingFactor = maxElementWidth / image.getWidth();
+				double scalingFactor = maxElementWidth / image.getWidth();
 				if (image.getHeight() * scalingFactor > maxElementHeight)
 					scalingFactor = maxElementHeight / image.getHeight();
 				final int newWidth = (int) (image.getWidth() * scalingFactor);

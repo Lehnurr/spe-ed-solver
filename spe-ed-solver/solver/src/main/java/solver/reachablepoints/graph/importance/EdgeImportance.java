@@ -138,10 +138,10 @@ public class EdgeImportance {
 				return invertedRatingResult;
 
 			for (final Entry<PlayerAction, ConcreteEdge> entry : initialEdges.entrySet()) {
-				final float normalizedImportance = initialEdgeImportance.getOrDefault(entry.getValue(), 0)
-						/ (float) maxImportance;
+				final double normalizedImportance = initialEdgeImportance.getOrDefault(entry.getValue(), 0)
+						/ (double) maxImportance;
 
-				final float invertedNormalizedImportance = 1 - normalizedImportance;
+				final double invertedNormalizedImportance = 1 - normalizedImportance;
 				invertedRatingResult.setRating(entry.getKey(), invertedNormalizedImportance);
 			}
 		}
@@ -168,10 +168,10 @@ public class EdgeImportance {
 				return invertedMatrixResult;
 
 			for (final ConcreteEdge initialEdge : initialEdges.values()) {
-				final float normalizedImportance = initialEdgeImportance.getOrDefault(initialEdge, 0)
-						/ (float) maxImportance;
+				final double normalizedImportance = initialEdgeImportance.getOrDefault(initialEdge, 0)
+						/ maxImportance;
 
-				final float invertedNormalizedImportance = 1 - normalizedImportance;
+				final double invertedNormalizedImportance = 1 - normalizedImportance;
 				for (final Node cell : initialEdge.getPath()) {
 					invertedMatrixResult.setValue(cell.getPosition(), invertedNormalizedImportance);
 				}

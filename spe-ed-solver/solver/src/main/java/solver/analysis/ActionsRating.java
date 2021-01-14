@@ -7,11 +7,11 @@ import utility.game.player.PlayerAction;
 
 /**
  * Class representing a rating for all possible {@link PlayerAction} values.
- * Each rating is represented as float value.
+ * Each rating is represented as double value.
  */
 public class ActionsRating {
 
-	private final Map<PlayerAction, Float> ratingMap;
+	private final Map<PlayerAction, Double> ratingMap;
 
 	/**
 	 * Creates an empty {@link ActionsRating} with a value of 0 for all
@@ -20,7 +20,7 @@ public class ActionsRating {
 	public ActionsRating() {
 		this.ratingMap = new EnumMap<>(PlayerAction.class);
 		for (final PlayerAction action : PlayerAction.values()) {
-			ratingMap.put(action, 0f);
+			ratingMap.put(action, 0.);
 		}
 	}
 
@@ -30,7 +30,7 @@ public class ActionsRating {
 	 * @param playerAction {@link PlayerAction} to change the value for
 	 * @param ratingValue  new value to set
 	 */
-	public void setRating(final PlayerAction playerAction, final float ratingValue) {
+	public void setRating(final PlayerAction playerAction, final double ratingValue) {
 		ratingMap.put(playerAction, ratingValue);
 	}
 
@@ -40,7 +40,7 @@ public class ActionsRating {
 	 * @param playerAction {@link PlayerAction} to get the rating value for
 	 * @return rating value
 	 */
-	public float getRating(final PlayerAction playerAction) {
+	public double getRating(final PlayerAction playerAction) {
 		return ratingMap.get(playerAction);
 	}
 
@@ -53,9 +53,9 @@ public class ActionsRating {
 	 */
 	public PlayerAction maxAction() {
 		PlayerAction maxAction = PlayerAction.CHANGE_NOTHING;
-		float maxValue = Float.MIN_VALUE;
+		double maxValue = Float.MIN_VALUE;
 		for (final PlayerAction action : PlayerAction.values()) {
-			final float newValue = ratingMap.get(action);
+			final double newValue = ratingMap.get(action);
 			if (maxValue < newValue) {
 				maxValue = newValue;
 				maxAction = action;
@@ -70,7 +70,7 @@ public class ActionsRating {
 	 * 
 	 * @return maximum rating value
 	 */
-	public float maxRating() {
+	public double maxRating() {
 		return ratingMap.get(maxAction());
 	}
 
@@ -79,13 +79,13 @@ public class ActionsRating {
 	 * maximum value of all rating values.
 	 */
 	public void normalize() {
-		final float maxValue = maxRating();
+		final double maxValue = maxRating();
 
-		if (Float.isNaN(0 / maxValue))
+		if (Double.isNaN(0 / maxValue))
 			return;
 
 		for (final PlayerAction action : PlayerAction.values()) {
-			final float oldValue = getRating(action);
+			final double oldValue = getRating(action);
 			setRating(action, oldValue / maxValue);
 		}
 	}
@@ -98,11 +98,11 @@ public class ActionsRating {
 	 * @param otherWeight weight for the other object
 	 * @return combined {@link ActionsRating}
 	 */
-	public ActionsRating combine(final ActionsRating other, final float otherWeight) {
+	public ActionsRating combine(final ActionsRating other, final double otherWeight) {
 		final ActionsRating returnValue = new ActionsRating();
 		for (final PlayerAction action : PlayerAction.values()) {
-			final float otherWeightedValue = other.getRating(action) * otherWeight;
-			final float combinedValue = this.getRating(action) + otherWeightedValue;
+			final double otherWeightedValue = other.getRating(action) * otherWeight;
+			final double combinedValue = this.getRating(action) + otherWeightedValue;
 			returnValue.setRating(action, combinedValue);
 		}
 		return returnValue;

@@ -13,37 +13,37 @@ public enum SolverType {
 	CLASSIC_AGGRESSIVE {
 		@Override
 		public ISpeedSolver newInstance(final int maxThreadCount) {
-			return new ReachablePointsSolver(6, 0.5f, 0.01f, ReachablePointsType.CLASSIC, maxThreadCount);
+			return new ReachablePointsSolver(6, 0.5, 0.01, ReachablePointsType.CLASSIC, maxThreadCount);
 		}
 	},
 	CLASSIC_BALANCED {
 		@Override
 		public ISpeedSolver newInstance(final int maxThreadCount) {
-			return new ReachablePointsSolver(6, 0.4f, 0.05f, ReachablePointsType.CLASSIC, maxThreadCount);
+			return new ReachablePointsSolver(6, 0.4, 0.05, ReachablePointsType.CLASSIC, maxThreadCount);
 		}
 	},
 	CLASSIC_DEFENSIVE {
 		@Override
 		public ISpeedSolver newInstance(final int maxThreadCount) {
-			return new ReachablePointsSolver(6, 0.1f, 0.35f, ReachablePointsType.CLASSIC, maxThreadCount);
+			return new ReachablePointsSolver(6, 0.1, 0.35, ReachablePointsType.CLASSIC, maxThreadCount);
 		}
 	},
 	GRAPH_AGGRESSIVE {
 		@Override
 		public ISpeedSolver newInstance(final int maxThreadCount) {
-			return new ReachablePointsSolver(6, 0.5f, 0.01f, ReachablePointsType.GRAPH, maxThreadCount);
+			return new ReachablePointsSolver(6, 0.5, 0.01, ReachablePointsType.GRAPH, maxThreadCount);
 		}
 	},
 	GRAPH_BALANCED {
 		@Override
 		public ISpeedSolver newInstance(final int maxThreadCount) {
-			return new ReachablePointsSolver(6, 0.35f, 0.06f, ReachablePointsType.GRAPH, maxThreadCount);
+			return new ReachablePointsSolver(6, 0.35, 0.06, ReachablePointsType.GRAPH, maxThreadCount);
 		}
 	},
 	GRAPH_DEFENSIVE {
 		@Override
 		public ISpeedSolver newInstance(final int maxThreadCount) {
-			return new ReachablePointsSolver(6, 0.1f, 0.35f, ReachablePointsType.GRAPH, maxThreadCount);
+			return new ReachablePointsSolver(6, 0.1, 0.35, ReachablePointsType.GRAPH, maxThreadCount);
 		}
 	},
 	RANDOM {

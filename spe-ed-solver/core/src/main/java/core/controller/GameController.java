@@ -24,7 +24,8 @@ public class GameController {
 	private final int maxThreadCount;
 
 	/**
-	 * A Controller to Control multiple {@link SolverController}.
+	 * A Controller to control multiple {@link SolverController} instances for each
+	 * spe_ed player.
 	 * 
 	 * @param viewerEnabled  true if the viewer should be enabled for the
 	 *                       {@link SolverController solvers}
