@@ -151,14 +151,14 @@
 <a class="jxr_linenumber" name="141" href="#141">141</a> 				<strong class="jxr_keyword">this</strong>.enemyMinStepsMatrix, importanceCalculation.getInitialEdges(), deadline, totalBase);
 <a class="jxr_linenumber" name="142" href="#142">142</a> 		startPlayers.stream().forEach(baseCalculation::addPlayerToQueue);
 <a class="jxr_linenumber" name="143" href="#143">143</a> 
-<a class="jxr_linenumber" name="144" href="#144">144</a> 		<strong class="jxr_keyword">while</strong> (baseCalculation.queueHasNext() &amp;&amp; baseCalculation.queueRemaining() &lt; totalBase) {
+<a class="jxr_linenumber" name="144" href="#144">144</a> 		<strong class="jxr_keyword">while</strong> (baseCalculation.queuesHasNext() &amp;&amp; baseCalculation.queuesRemaining() &lt; totalBase) {
 <a class="jxr_linenumber" name="145" href="#145">145</a> 			baseCalculation.executeStep();
 <a class="jxr_linenumber" name="146" href="#146">146</a> 		}
 <a class="jxr_linenumber" name="147" href="#147">147</a> 		addResults(baseCalculation);
 <a class="jxr_linenumber" name="148" href="#148">148</a> 
 <a class="jxr_linenumber" name="149" href="#149">149</a> 		<strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> calculationIndex = 0; baseCalculation
-<a class="jxr_linenumber" name="150" href="#150">150</a> 				.queueHasNext(); calculationIndex = (calculationIndex + 1) % threadCount) {
-<a class="jxr_linenumber" name="151" href="#151">151</a> 			<strong class="jxr_keyword">final</strong> <a href="../../../solver/reachablepoints/graph/RatedPredictiveGraphPlayer.html">RatedPredictiveGraphPlayer</a> startPlayer = baseCalculation.queuePoll();
+<a class="jxr_linenumber" name="150" href="#150">150</a> 				.queuesHasNext(); calculationIndex = (calculationIndex + 1) % threadCount) {
+<a class="jxr_linenumber" name="151" href="#151">151</a> 			<strong class="jxr_keyword">final</strong> <a href="../../../solver/reachablepoints/graph/RatedPredictiveGraphPlayer.html">RatedPredictiveGraphPlayer</a> startPlayer = baseCalculation.queuesPoll();
 <a class="jxr_linenumber" name="152" href="#152">152</a> 			calculations.get(calculationIndex).addPlayerToQueue(startPlayer);
 <a class="jxr_linenumber" name="153" href="#153">153</a> 		}
 <a class="jxr_linenumber" name="154" href="#154">154</a> 
@@ -222,7 +222,7 @@
 <a class="jxr_linenumber" name="212" href="#212">212</a> 		GameLogger.logGameInformation(String.format(<span class="jxr_string">"success-rating:\t%s"</span>, successCalculation.getRatingResult()));
 <a class="jxr_linenumber" name="213" href="#213">213</a> 		GameLogger.logGameInformation(String.format(<span class="jxr_string">"cut-off-rating:\t%s"</span>, cutOffCalculation.getRatingResult()));
 <a class="jxr_linenumber" name="214" href="#214">214</a> 		GameLogger.logGameInformation(
-<a class="jxr_linenumber" name="215" href="#215">215</a> 				String.format(<span class="jxr_string">"inverted-importance-rating:\t%s"</span>, importanceCalculation.getInvertedRatingResult()));
+<a class="jxr_linenumber" name="215" href="#215">215</a> 				String.format(<span class="jxr_string">"importance-rating:\t%s"</span>, importanceCalculation.getInvertedRatingResult()));
 <a class="jxr_linenumber" name="216" href="#216">216</a> 		GameLogger.logGameInformation(String.format(<span class="jxr_string">"combined-rating:\t%s"</span>, combinedActionsRating));
 <a class="jxr_linenumber" name="217" href="#217">217</a> 	}
 <a class="jxr_linenumber" name="218" href="#218">218</a> 
