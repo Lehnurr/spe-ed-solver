@@ -27,5 +27,14 @@ public enum PlayerAction {
 	public String toString() {
 		return getName();
 	}
+	
+	/**
+	 * The ordinal next {@link PlayerAction}. The first {@link PlayerAction} if this is the last one.
+	 * 
+	 * @return the next {@link PlayerAction}
+	 */
+	public PlayerAction getNext(){
+		return values()[(ordinal() + 1) % values().length];
+	}
 
 }
