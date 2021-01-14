@@ -25,7 +25,9 @@ public class GraphCalculation {
 
 	private static final int DEADLINE_MILLISECOND_BUFFER = 500;
 	private static final int DEFAULT_QUEUE_SIZE = 10000;
-	private final LimitedQueue<RatedPredictiveGraphPlayer> queue;
+	
+	private final Map<PlayerAction, LimitedQueue<RatedPredictiveGraphPlayer>> queues;
+	private PlayerAction currentQueueAction = PlayerAction.TURN_LEFT;
 
 	private final FloatMatrix probabilities;
 	private final FloatMatrix minSteps;
@@ -59,7 +61,11 @@ public class GraphCalculation {
 		this.deadline = deadline;
 		this.graph = graph;
 
-		queue = new LimitedQueue<>(RatedPredictiveGraphPlayer.class, queueSize);
+		queues = new EnumMap<>(PlayerAction.class);
+		for(final PlayerAction action : PlayerAction.values()){
+			queues.put(action, new LimitedQueue<>(RatedPredictiveGraphPlayer.class, queueSize));
+		}
+		
 
 		successCalculation = new SuccessCalculation(graph.getWidth(), graph.getHeight());
 		cutOffCalculation = new CutOffCalculation(graph.getWidth(), graph.getHeight());
@@ -88,14 +94,14 @@ public class GraphCalculation {
 	 * 
 	 * @param startPlayer The {@link RatedPredictiveGraphPlayer player} to add
 	 */
-	public void addPlayerToQueue(RatedPredictiveGraphPlayer startPlayer) {
-		final PlayerAction action = startPlayer.getInitialAction();
-		final Point2i position = startPlayer.getPosition();
+	public void addPlayerToQueue(RatedPredictiveGraphPlayer player) {
+		final PlayerAction action = player.getInitialAction();
+		final Point2i position = player.getPosition();
 
-		successCalculation.add(action, position, startPlayer.getSuccessRating());
-		cutOffCalculation.add(action, position, startPlayer.getCutOffRating());
+		successCalculation.add(action, position, player.getSuccessRating());
+		cutOffCalculation.add(action, position, player.getCutOffRating());
 
-		queue.add(startPlayer);
+		queues.get(player.getInitialAction()).add(player);
 		calculatedPathsCount++;
 	}
 
@@ -105,7 +111,7 @@ public class GraphCalculation {
 	 * {@link GraphCalculation#DEADLINE_MILLISECOND_BUFFER}
 	 */
 	public void executeDeadline() {
-		while (queue.hasNext() && deadline.getRemainingMilliseconds() > DEADLINE_MILLISECOND_BUFFER) {
+		while (queueHasNext() && deadline.getRemainingMilliseconds() > DEADLINE_MILLISECOND_BUFFER) {
 			executeStep();
 		}
 	}
@@ -115,7 +121,7 @@ public class GraphCalculation {
 	 * the queue
 	 */
 	public void executeStep() {
-		final RatedPredictiveGraphPlayer parent = queue.poll();
+		final RatedPredictiveGraphPlayer parent = queuePoll();
 		final List<RatedPredictiveGraphPlayer> children = parent.getValidChildren(graph, probabilities, minSteps);
 
 		for (final RatedPredictiveGraphPlayer child : children) {
@@ -128,10 +134,13 @@ public class GraphCalculation {
 	 * The amount of remaining {@link RatedPredictiveGraphPlayer}.
 	 * 
 	 * @return An integer equal or higher than 0 and less than
-	 *         {@link GraphCalculation#DEFAULT_QUEUE_SIZE QUEUE_SIZE}
+	 *         {@link GraphCalculation#DEFAULT_QUEUE_SIZE QUEUE_SIZE} * 5
 	 */
 	public int queueRemaining() {
-		return queue.remaining();
+		int remaining = 0;
+		for(final PlayerAction action : PlayerAction.values())
+			remaining += queues.get(action).remaining();
+		return remaining;
 	}
 
 	/**
@@ -140,7 +149,10 @@ public class GraphCalculation {
 	 * @return true if the {@link GraphCalculation#queue} has a next value
 	 */
 	public boolean queueHasNext() {
-		return queue.hasNext();
+		for(final PlayerAction action : PlayerAction.values())
+			if(queues.get(action).hasNext())
+				return true;
+		return false;
 	}
 
 	/**
@@ -149,7 +161,19 @@ public class GraphCalculation {
 	 * @return the next value
 	 */
 	public RatedPredictiveGraphPlayer queuePoll() {
-		return queue.poll();
+		
+		PlayerAction action = currentQueueAction;
+		do{
+			if(queues.get(action).hasNext()){
+				currentQueueAction = currentQueueAction.getNext();
+				return queues.get(action).poll()
+			}
+			action = action.getNext();
+		}while(!action.equals(currentQueueAction);
+		
+		
+		
+		throw new NoSuchElementException("Tried to poll from an empty list!");
 	}
 
 	/**
