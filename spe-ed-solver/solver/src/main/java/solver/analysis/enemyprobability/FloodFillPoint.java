@@ -1,6 +1,7 @@
 package solver.analysis.enemyprobability;
 
 import utility.game.player.IPlayer;
+import utility.geometry.FloatMatrix;
 import utility.geometry.Point2i;
 
 /**

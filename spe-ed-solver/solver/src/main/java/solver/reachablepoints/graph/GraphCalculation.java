@@ -102,8 +102,8 @@ public class GraphCalculation {
 	}
 
 	/**
-	 * Adds a {@link RatedPredictiveGraphPlayer player} to the
-	 * {@link GraphCalculation#queue}
+	 * Adds a {@link RatedPredictiveGraphPlayer player} to the correct
+	 * {@link GraphCalculation#queues queue}
 	 * 
 	 * @param player The {@link RatedPredictiveGraphPlayer player} to add
 	 */

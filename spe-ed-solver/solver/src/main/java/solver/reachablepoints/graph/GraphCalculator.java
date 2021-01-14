@@ -212,7 +212,7 @@ public class GraphCalculator implements IReachablePoints {
 		GameLogger.logGameInformation(String.format("success-rating:\t%s", successCalculation.getRatingResult()));
 		GameLogger.logGameInformation(String.format("cut-off-rating:\t%s", cutOffCalculation.getRatingResult()));
 		GameLogger.logGameInformation(
-				String.format("inverted-importance-rating:\t%s", importanceCalculation.getInvertedRatingResult()));
+				String.format("importance-rating:\t%s", importanceCalculation.getInvertedRatingResult()));
 		GameLogger.logGameInformation(String.format("combined-rating:\t%s", combinedActionsRating));
 	}
 
