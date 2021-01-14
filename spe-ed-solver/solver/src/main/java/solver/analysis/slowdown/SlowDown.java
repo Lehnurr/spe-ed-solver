@@ -49,7 +49,7 @@ public final class SlowDown {
 	 */
 	private static double ratingValue(final IPlayer parent, final IPlayer child) {
 		if (child.isActive())
-			return (parent.getSpeed() - child.getSpeed()) / 2 + 0.5;
+			return (parent.getSpeed() - child.getSpeed()) / 2. + 0.5;
 		else
 			return 0;
 	}
