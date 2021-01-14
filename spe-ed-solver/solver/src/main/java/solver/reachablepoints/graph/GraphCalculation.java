@@ -1,7 +1,9 @@
 package solver.reachablepoints.graph;
 
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import solver.analysis.cutoff.CutOffCalculation;
 import solver.analysis.success.SuccessCalculation;
@@ -14,8 +16,6 @@ import utility.game.player.PlayerAction;
 import utility.game.step.IDeadline;
 import utility.geometry.FloatMatrix;
 import utility.geometry.Point2i;
-import java.util.NoSuchElementException;
-import java.util.EnumMap;
 
 /**
  * Calculation object for calculating success and cut off ratings based on some
