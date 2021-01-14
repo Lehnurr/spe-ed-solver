@@ -2,6 +2,7 @@ package webcommunication.time;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
+import java.util.Iterator;
 
 import utility.game.step.IDeadline;
 import utility.logging.ApplicationLogger;
@@ -14,8 +15,10 @@ public class TimeSynchronizationManager {
 
 	private static final long BUFFER_NANOSECONDS = 500_000_000;
 
-	private final Duration serverTimeOffset;
-	private final Duration bufferDuration;
+	private static final int TIME_API_REQUESTS = 10;
+
+	private Duration serverTimeOffset = Duration.ZERO;
+	private Duration bufferDuration = Duration.ofNanos(BUFFER_NANOSECONDS);
 
 	/**
 	 * Creates a new {@link TimeSynchronizationManager} which initially synchronizes
@@ -29,24 +32,41 @@ public class TimeSynchronizationManager {
 
 		final ZonedDateTime clientTime = ZonedDateTime.now();
 
-		Duration serverTimeOffset;
 		try {
-			final ZonedDateTime serverTime = timeApiClient.getServerTime();
-			serverTimeOffset = Duration.between(clientTime, serverTime);
+			initializeOffsetAndBuffer(timeApiClient);
 		} catch (TimeRequestException e) {
+			this.serverTimeOffset = Duration.ZERO;
+			this.bufferDuration = Duration.ofNanos(BUFFER_NANOSECONDS);
+			
 			ApplicationLogger.logException(e, LoggingLevel.WARNING);
 			ApplicationLogger
 					.logWarning("The time API couldn't be reached. Running without synchronization from now on!");
-			serverTimeOffset = Duration.ZERO;
 		}
 
-		final Duration requestDuration = Duration.between(clientTime, ZonedDateTime.now());
-		this.bufferDuration = requestDuration.plusNanos(BUFFER_NANOSECONDS);
-		this.serverTimeOffset = serverTimeOffset;
-
-		ApplicationLogger.logInformation(String.format("Server response time: %d ms", requestDuration.toMillis()));
 		ApplicationLogger.logInformation(String.format("Server time offset: %d ms", serverTimeOffset.toMillis()));
 		ApplicationLogger.logInformation(String.format("Server time buffer: %d ms", bufferDuration.toMillis()));
+	}
+
+	private void initializeOffsetAndBuffer(final TimeAPIClient timeApiClient) throws TimeRequestException {
+
+		Duration minRequestDuration = Duration.ofDays(1);
+		Duration minTimeOffset = Duration.ZERO;
+
+		for (int i = 0; i < TIME_API_REQUESTS; i++) {
+			final ZonedDateTime clientTime = ZonedDateTime.now();
+			final ZonedDateTime serverTime = timeApiClient.getServerTime();
+			final Duration requestDuration = Duration.between(clientTime, ZonedDateTime.now());
+			if (requestDuration.compareTo(minRequestDuration) < 0) {
+				minRequestDuration = requestDuration;
+				minTimeOffset = Duration.between(clientTime, serverTime);
+			}
+		}
+
+		this.serverTimeOffset = minTimeOffset;
+		this.bufferDuration = minRequestDuration.plusNanos(BUFFER_NANOSECONDS);
+
+		ApplicationLogger
+				.logInformation(String.format("Minimum server response time: %d ms", minRequestDuration.toMillis()));
 	}
 
 	/**
@@ -55,9 +75,6 @@ public class TimeSynchronizationManager {
 	 * recommended.
 	 */
 	public TimeSynchronizationManager() {
-		this.serverTimeOffset = Duration.ZERO;
-		this.bufferDuration = Duration.ofNanos(BUFFER_NANOSECONDS);
-
 		ApplicationLogger.logWarning("Running the client without synchronizing to the server time API!");
 	}
 
