@@ -17,4 +17,6 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
           repository: lehnurr/spe-ed-solver/latest
+          context: .
+          file: .docker/Dockerfile
           tag_with_ref: true
