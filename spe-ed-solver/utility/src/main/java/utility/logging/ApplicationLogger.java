@@ -140,8 +140,12 @@ public final class ApplicationLogger {
 			exception.printStackTrace();
 			closeException.printStackTrace();
 		}
-
-		logMessage(exceptionLoglevel, exceptionOutput.toString(), messageLoglevel, exception.getMessage());
+		
+		Throwable throwableToLog = exception;
+		while(throwableToLog != null) {
+			logMessage(exceptionLoglevel, exceptionOutput.toString(), messageLoglevel, throwableToLog.getMessage());
+			throwableToLog = throwableToLog.getCause();
+		}
 		if (debugModeEnabled) {
 			exception.printStackTrace();
 		}
