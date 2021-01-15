@@ -3,6 +3,7 @@
 ![build](https://github.com/Lehnurr/spe-ed-solver/workflows/Build/badge.svg)
 ![tests](https://github.com/Lehnurr/spe-ed-solver/workflows/Tests/badge.svg)
 ![java docs](https://github.com/Lehnurr/spe-ed-solver/workflows/Update%20Html%20JavaDocs/badge.svg?event=push)
+![Push DockerImage to DockerHub](https://github.com/Lehnurr/spe-ed-solver/workflows/Push%20DockerImage%20to%20DockerHub/badge.svg)
 
 [German Readme](README.de-DE.md)
 
