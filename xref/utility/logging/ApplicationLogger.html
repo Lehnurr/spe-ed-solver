@@ -150,80 +150,84 @@
 <a class="jxr_linenumber" name="140" href="#140">140</a> 			exception.printStackTrace();
 <a class="jxr_linenumber" name="141" href="#141">141</a> 			closeException.printStackTrace();
 <a class="jxr_linenumber" name="142" href="#142">142</a> 		}
-<a class="jxr_linenumber" name="143" href="#143">143</a> 
-<a class="jxr_linenumber" name="144" href="#144">144</a> 		logMessage(exceptionLoglevel, exceptionOutput.toString(), messageLoglevel, exception.getMessage());
-<a class="jxr_linenumber" name="145" href="#145">145</a> 		<strong class="jxr_keyword">if</strong> (debugModeEnabled) {
-<a class="jxr_linenumber" name="146" href="#146">146</a> 			exception.printStackTrace();
-<a class="jxr_linenumber" name="147" href="#147">147</a> 		}
-<a class="jxr_linenumber" name="148" href="#148">148</a> 	}
-<a class="jxr_linenumber" name="149" href="#149">149</a> 
-<a class="jxr_linenumber" name="150" href="#150">150</a> 	<em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="151" href="#151">151</a> <em class="jxr_javadoccomment">	 * Logs a {@link Throwable} with a Time-Stamp.</em>
-<a class="jxr_linenumber" name="152" href="#152">152</a> <em class="jxr_javadoccomment">	 * </em>
-<a class="jxr_linenumber" name="153" href="#153">153</a> <em class="jxr_javadoccomment">	 * @param exception                   The occurred {@link Throwable}</em>
-<a class="jxr_linenumber" name="154" href="#154">154</a> <em class="jxr_javadoccomment">	 * @param exceptionAndMessageLoglevel The {@link LoggingLevel} for the</em>
-<a class="jxr_linenumber" name="155" href="#155">155</a> <em class="jxr_javadoccomment">	 *                                    {@link Throwable}</em>
-<a class="jxr_linenumber" name="156" href="#156">156</a> <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="157" href="#157">157</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> logException(Throwable exception, <a href="../../utility/logging/LoggingLevel.html">LoggingLevel</a> exceptionAndMessageLoglevel) {
-<a class="jxr_linenumber" name="158" href="#158">158</a> 		logException(exception, exceptionAndMessageLoglevel, exceptionAndMessageLoglevel);
-<a class="jxr_linenumber" name="159" href="#159">159</a> 	}
-<a class="jxr_linenumber" name="160" href="#160">160</a> 
-<a class="jxr_linenumber" name="161" href="#161">161</a> 	<em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="162" href="#162">162</a> <em class="jxr_javadoccomment">	 * Logs a simple Information-String with the {@link LoggingLevel#FILE_INFO</em>
-<a class="jxr_linenumber" name="163" href="#163">163</a> <em class="jxr_javadoccomment">	 * FILE-INFO-Tag} and a Time-Stamp</em>
-<a class="jxr_linenumber" name="164" href="#164">164</a> <em class="jxr_javadoccomment">	 * </em>
-<a class="jxr_linenumber" name="165" href="#165">165</a> <em class="jxr_javadoccomment">	 * @param fileInformationMessage the Message to log</em>
-<a class="jxr_linenumber" name="166" href="#166">166</a> <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="167" href="#167">167</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> logFileInformation(String fileInformationMessage) {
-<a class="jxr_linenumber" name="168" href="#168">168</a> 		logMessage(LoggingLevel.FILE_INFO, fileInformationMessage, LoggingLevel.FILE_INFO, fileInformationMessage);
-<a class="jxr_linenumber" name="169" href="#169">169</a> 	}
-<a class="jxr_linenumber" name="170" href="#170">170</a> 
-<a class="jxr_linenumber" name="171" href="#171">171</a> 	<em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="172" href="#172">172</a> <em class="jxr_javadoccomment">	 * </em>
-<a class="jxr_linenumber" name="173" href="#173">173</a> <em class="jxr_javadoccomment">	 * Outputs a message to the console and saves it to a file (depending on the</em>
-<a class="jxr_linenumber" name="174" href="#174">174</a> <em class="jxr_javadoccomment">	 * configuration)</em>
-<a class="jxr_linenumber" name="175" href="#175">175</a> <em class="jxr_javadoccomment">	 * </em>
-<a class="jxr_linenumber" name="176" href="#176">176</a> <em class="jxr_javadoccomment">	 * @param logFileLevel   A {@link LoggingLevel LoggingLevel} to Tag the Message</em>
-<a class="jxr_linenumber" name="177" href="#177">177</a> <em class="jxr_javadoccomment">	 *                       as Info, Warning, etc. for the LogFile</em>
-<a class="jxr_linenumber" name="178" href="#178">178</a> <em class="jxr_javadoccomment">	 * @param logFileMessage The message for the log File</em>
-<a class="jxr_linenumber" name="179" href="#179">179</a> <em class="jxr_javadoccomment">	 * @param consoleLevel   A {@link LoggingLevel LoggingLevel} to Tag and filter</em>
-<a class="jxr_linenumber" name="180" href="#180">180</a> <em class="jxr_javadoccomment">	 *                       the Message for the console output</em>
-<a class="jxr_linenumber" name="181" href="#181">181</a> <em class="jxr_javadoccomment">	 * @param consoleMessage The message for the console output</em>
-<a class="jxr_linenumber" name="182" href="#182">182</a> <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="183" href="#183">183</a> 	<strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> logMessage(<a href="../../utility/logging/LoggingLevel.html">LoggingLevel</a> logFileLevel, String logFileMessage, <a href="../../utility/logging/LoggingLevel.html">LoggingLevel</a> consoleLevel,
-<a class="jxr_linenumber" name="184" href="#184">184</a> 			String consoleMessage) {
-<a class="jxr_linenumber" name="185" href="#185">185</a> 		<strong class="jxr_keyword">if</strong> (logFilePath == <strong class="jxr_keyword">null</strong> &amp;&amp; consoleLevel.getLevel() &gt; consoleLoggingLevel.getLevel())
-<a class="jxr_linenumber" name="186" href="#186">186</a> 			<strong class="jxr_keyword">return</strong>;
-<a class="jxr_linenumber" name="187" href="#187">187</a> 
-<a class="jxr_linenumber" name="188" href="#188">188</a> 		<em class="jxr_comment">// A String for the chronological classification of the message</em>
-<a class="jxr_linenumber" name="189" href="#189">189</a> 		String timeTag = ZonedDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-<a class="jxr_linenumber" name="190" href="#190">190</a> 		String fileLog = String.format(<span class="jxr_string">"%-13s [%s]: %s"</span>, logFileLevel.getTag(), timeTag, logFileMessage);
-<a class="jxr_linenumber" name="191" href="#191">191</a> 		String consoleLog = String.format(<span class="jxr_string">"%-13s [%s]: %s"</span>, consoleLevel.getTag(), timeTag, consoleMessage);
-<a class="jxr_linenumber" name="192" href="#192">192</a> 
-<a class="jxr_linenumber" name="193" href="#193">193</a> 		<strong class="jxr_keyword">if</strong> (consoleLoggingLevel.getLevel() &gt;= consoleLevel.getLevel()) {
-<a class="jxr_linenumber" name="194" href="#194">194</a> 			<strong class="jxr_keyword">if</strong> (consoleLevel == LoggingLevel.ERROR || consoleLevel == LoggingLevel.WARNING) {
-<a class="jxr_linenumber" name="195" href="#195">195</a> 				System.err.println(consoleLog);
-<a class="jxr_linenumber" name="196" href="#196">196</a> 			} <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="197" href="#197">197</a> 				System.out.println(consoleLog);
-<a class="jxr_linenumber" name="198" href="#198">198</a> 			}
-<a class="jxr_linenumber" name="199" href="#199">199</a> 		}
-<a class="jxr_linenumber" name="200" href="#200">200</a> 
-<a class="jxr_linenumber" name="201" href="#201">201</a> 		<strong class="jxr_keyword">if</strong> (ApplicationLogger.logFilePath != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="202" href="#202">202</a> 			<strong class="jxr_keyword">try</strong> (FileWriter logFile = <strong class="jxr_keyword">new</strong> FileWriter(ApplicationLogger.logFilePath, <strong class="jxr_keyword">true</strong>)) {
-<a class="jxr_linenumber" name="203" href="#203">203</a> 				logFile.append(String.format(<span class="jxr_string">"%s%n"</span>, fileLog));
-<a class="jxr_linenumber" name="204" href="#204">204</a> 			} <strong class="jxr_keyword">catch</strong> (IOException ex) {
-<a class="jxr_linenumber" name="205" href="#205">205</a> 				System.err.println(<span class="jxr_string">"Error while Writing in LOG-File"</span>);
-<a class="jxr_linenumber" name="206" href="#206">206</a> 				ApplicationLogger.logFilePath = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="207" href="#207">207</a> 				<strong class="jxr_keyword">if</strong> (consoleLoggingLevel.getLevel() &lt; logFileLevel.getLevel()) {
-<a class="jxr_linenumber" name="208" href="#208">208</a> 					<em class="jxr_comment">// Output the message to console if this has not already happened</em>
-<a class="jxr_linenumber" name="209" href="#209">209</a> 					System.err.println(fileLog);
-<a class="jxr_linenumber" name="210" href="#210">210</a> 				}
-<a class="jxr_linenumber" name="211" href="#211">211</a> 				ex.printStackTrace();
-<a class="jxr_linenumber" name="212" href="#212">212</a> 			}
-<a class="jxr_linenumber" name="213" href="#213">213</a> 		}
-<a class="jxr_linenumber" name="214" href="#214">214</a> 	}
-<a class="jxr_linenumber" name="215" href="#215">215</a> 
-<a class="jxr_linenumber" name="216" href="#216">216</a> }
+<a class="jxr_linenumber" name="143" href="#143">143</a> 		
+<a class="jxr_linenumber" name="144" href="#144">144</a> 		Throwable throwableToLog = exception;
+<a class="jxr_linenumber" name="145" href="#145">145</a> 		<strong class="jxr_keyword">while</strong>(throwableToLog != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="146" href="#146">146</a> 			logMessage(exceptionLoglevel, exceptionOutput.toString(), messageLoglevel, throwableToLog.getMessage());
+<a class="jxr_linenumber" name="147" href="#147">147</a> 			throwableToLog = throwableToLog.getCause();
+<a class="jxr_linenumber" name="148" href="#148">148</a> 		}
+<a class="jxr_linenumber" name="149" href="#149">149</a> 		<strong class="jxr_keyword">if</strong> (debugModeEnabled) {
+<a class="jxr_linenumber" name="150" href="#150">150</a> 			exception.printStackTrace();
+<a class="jxr_linenumber" name="151" href="#151">151</a> 		}
+<a class="jxr_linenumber" name="152" href="#152">152</a> 	}
+<a class="jxr_linenumber" name="153" href="#153">153</a> 
+<a class="jxr_linenumber" name="154" href="#154">154</a> 	<em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="155" href="#155">155</a> <em class="jxr_javadoccomment">	 * Logs a {@link Throwable} with a Time-Stamp.</em>
+<a class="jxr_linenumber" name="156" href="#156">156</a> <em class="jxr_javadoccomment">	 * </em>
+<a class="jxr_linenumber" name="157" href="#157">157</a> <em class="jxr_javadoccomment">	 * @param exception                   The occurred {@link Throwable}</em>
+<a class="jxr_linenumber" name="158" href="#158">158</a> <em class="jxr_javadoccomment">	 * @param exceptionAndMessageLoglevel The {@link LoggingLevel} for the</em>
+<a class="jxr_linenumber" name="159" href="#159">159</a> <em class="jxr_javadoccomment">	 *                                    {@link Throwable}</em>
+<a class="jxr_linenumber" name="160" href="#160">160</a> <em class="jxr_javadoccomment">	 */</em>
+<a class="jxr_linenumber" name="161" href="#161">161</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> logException(Throwable exception, <a href="../../utility/logging/LoggingLevel.html">LoggingLevel</a> exceptionAndMessageLoglevel) {
+<a class="jxr_linenumber" name="162" href="#162">162</a> 		logException(exception, exceptionAndMessageLoglevel, exceptionAndMessageLoglevel);
+<a class="jxr_linenumber" name="163" href="#163">163</a> 	}
+<a class="jxr_linenumber" name="164" href="#164">164</a> 
+<a class="jxr_linenumber" name="165" href="#165">165</a> 	<em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="166" href="#166">166</a> <em class="jxr_javadoccomment">	 * Logs a simple Information-String with the {@link LoggingLevel#FILE_INFO</em>
+<a class="jxr_linenumber" name="167" href="#167">167</a> <em class="jxr_javadoccomment">	 * FILE-INFO-Tag} and a Time-Stamp</em>
+<a class="jxr_linenumber" name="168" href="#168">168</a> <em class="jxr_javadoccomment">	 * </em>
+<a class="jxr_linenumber" name="169" href="#169">169</a> <em class="jxr_javadoccomment">	 * @param fileInformationMessage the Message to log</em>
+<a class="jxr_linenumber" name="170" href="#170">170</a> <em class="jxr_javadoccomment">	 */</em>
+<a class="jxr_linenumber" name="171" href="#171">171</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> logFileInformation(String fileInformationMessage) {
+<a class="jxr_linenumber" name="172" href="#172">172</a> 		logMessage(LoggingLevel.FILE_INFO, fileInformationMessage, LoggingLevel.FILE_INFO, fileInformationMessage);
+<a class="jxr_linenumber" name="173" href="#173">173</a> 	}
+<a class="jxr_linenumber" name="174" href="#174">174</a> 
+<a class="jxr_linenumber" name="175" href="#175">175</a> 	<em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="176" href="#176">176</a> <em class="jxr_javadoccomment">	 * </em>
+<a class="jxr_linenumber" name="177" href="#177">177</a> <em class="jxr_javadoccomment">	 * Outputs a message to the console and saves it to a file (depending on the</em>
+<a class="jxr_linenumber" name="178" href="#178">178</a> <em class="jxr_javadoccomment">	 * configuration)</em>
+<a class="jxr_linenumber" name="179" href="#179">179</a> <em class="jxr_javadoccomment">	 * </em>
+<a class="jxr_linenumber" name="180" href="#180">180</a> <em class="jxr_javadoccomment">	 * @param logFileLevel   A {@link LoggingLevel LoggingLevel} to Tag the Message</em>
+<a class="jxr_linenumber" name="181" href="#181">181</a> <em class="jxr_javadoccomment">	 *                       as Info, Warning, etc. for the LogFile</em>
+<a class="jxr_linenumber" name="182" href="#182">182</a> <em class="jxr_javadoccomment">	 * @param logFileMessage The message for the log File</em>
+<a class="jxr_linenumber" name="183" href="#183">183</a> <em class="jxr_javadoccomment">	 * @param consoleLevel   A {@link LoggingLevel LoggingLevel} to Tag and filter</em>
+<a class="jxr_linenumber" name="184" href="#184">184</a> <em class="jxr_javadoccomment">	 *                       the Message for the console output</em>
+<a class="jxr_linenumber" name="185" href="#185">185</a> <em class="jxr_javadoccomment">	 * @param consoleMessage The message for the console output</em>
+<a class="jxr_linenumber" name="186" href="#186">186</a> <em class="jxr_javadoccomment">	 */</em>
+<a class="jxr_linenumber" name="187" href="#187">187</a> 	<strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> logMessage(<a href="../../utility/logging/LoggingLevel.html">LoggingLevel</a> logFileLevel, String logFileMessage, <a href="../../utility/logging/LoggingLevel.html">LoggingLevel</a> consoleLevel,
+<a class="jxr_linenumber" name="188" href="#188">188</a> 			String consoleMessage) {
+<a class="jxr_linenumber" name="189" href="#189">189</a> 		<strong class="jxr_keyword">if</strong> (logFilePath == <strong class="jxr_keyword">null</strong> &amp;&amp; consoleLevel.getLevel() &gt; consoleLoggingLevel.getLevel())
+<a class="jxr_linenumber" name="190" href="#190">190</a> 			<strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="191" href="#191">191</a> 
+<a class="jxr_linenumber" name="192" href="#192">192</a> 		<em class="jxr_comment">// A String for the chronological classification of the message</em>
+<a class="jxr_linenumber" name="193" href="#193">193</a> 		String timeTag = ZonedDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+<a class="jxr_linenumber" name="194" href="#194">194</a> 		String fileLog = String.format(<span class="jxr_string">"%-13s [%s]: %s"</span>, logFileLevel.getTag(), timeTag, logFileMessage);
+<a class="jxr_linenumber" name="195" href="#195">195</a> 		String consoleLog = String.format(<span class="jxr_string">"%-13s [%s]: %s"</span>, consoleLevel.getTag(), timeTag, consoleMessage);
+<a class="jxr_linenumber" name="196" href="#196">196</a> 
+<a class="jxr_linenumber" name="197" href="#197">197</a> 		<strong class="jxr_keyword">if</strong> (consoleLoggingLevel.getLevel() &gt;= consoleLevel.getLevel()) {
+<a class="jxr_linenumber" name="198" href="#198">198</a> 			<strong class="jxr_keyword">if</strong> (consoleLevel == LoggingLevel.ERROR || consoleLevel == LoggingLevel.WARNING) {
+<a class="jxr_linenumber" name="199" href="#199">199</a> 				System.err.println(consoleLog);
+<a class="jxr_linenumber" name="200" href="#200">200</a> 			} <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="201" href="#201">201</a> 				System.out.println(consoleLog);
+<a class="jxr_linenumber" name="202" href="#202">202</a> 			}
+<a class="jxr_linenumber" name="203" href="#203">203</a> 		}
+<a class="jxr_linenumber" name="204" href="#204">204</a> 
+<a class="jxr_linenumber" name="205" href="#205">205</a> 		<strong class="jxr_keyword">if</strong> (ApplicationLogger.logFilePath != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="206" href="#206">206</a> 			<strong class="jxr_keyword">try</strong> (FileWriter logFile = <strong class="jxr_keyword">new</strong> FileWriter(ApplicationLogger.logFilePath, <strong class="jxr_keyword">true</strong>)) {
+<a class="jxr_linenumber" name="207" href="#207">207</a> 				logFile.append(String.format(<span class="jxr_string">"%s%n"</span>, fileLog));
+<a class="jxr_linenumber" name="208" href="#208">208</a> 			} <strong class="jxr_keyword">catch</strong> (IOException ex) {
+<a class="jxr_linenumber" name="209" href="#209">209</a> 				System.err.println(<span class="jxr_string">"Error while Writing in LOG-File"</span>);
+<a class="jxr_linenumber" name="210" href="#210">210</a> 				ApplicationLogger.logFilePath = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="211" href="#211">211</a> 				<strong class="jxr_keyword">if</strong> (consoleLoggingLevel.getLevel() &lt; logFileLevel.getLevel()) {
+<a class="jxr_linenumber" name="212" href="#212">212</a> 					<em class="jxr_comment">// Output the message to console if this has not already happened</em>
+<a class="jxr_linenumber" name="213" href="#213">213</a> 					System.err.println(fileLog);
+<a class="jxr_linenumber" name="214" href="#214">214</a> 				}
+<a class="jxr_linenumber" name="215" href="#215">215</a> 				ex.printStackTrace();
+<a class="jxr_linenumber" name="216" href="#216">216</a> 			}
+<a class="jxr_linenumber" name="217" href="#217">217</a> 		}
+<a class="jxr_linenumber" name="218" href="#218">218</a> 	}
+<a class="jxr_linenumber" name="219" href="#219">219</a> 
+<a class="jxr_linenumber" name="220" href="#220">220</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>
