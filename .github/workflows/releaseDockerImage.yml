@@ -16,5 +16,5 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          repository: lehnurr/spe-ed-java/latest
+          repository: lehnurr/spe-ed-solver/latest
           tag_with_ref: true
