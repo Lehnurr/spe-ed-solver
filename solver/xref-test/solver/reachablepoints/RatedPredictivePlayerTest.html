@@ -66,7 +66,7 @@
 <a class="jxr_linenumber" name="56" href="#56">56</a>  		RatedPredictivePlayer nextPlayer = <strong class="jxr_keyword">new</strong> RatedPredictivePlayer(startPlayer, PlayerAction.CHANGE_NOTHING, board,
 <a class="jxr_linenumber" name="57" href="#57">57</a>  				probabilitites, minSteps);
 <a class="jxr_linenumber" name="58" href="#58">58</a>  
-<a class="jxr_linenumber" name="59" href="#59">59</a>  		assertEquals(0.5, nextPlayer.getSuccessRating(), 0.01);
+<a class="jxr_linenumber" name="59" href="#59">59</a>  		assertEquals(0.425, nextPlayer.getSuccessRating(), 0.01);
 <a class="jxr_linenumber" name="60" href="#60">60</a>  	}
 <a class="jxr_linenumber" name="61" href="#61">61</a>  
 <a class="jxr_linenumber" name="62" href="#62">62</a>  	@Test
@@ -87,7 +87,7 @@
 <a class="jxr_linenumber" name="77" href="#77">77</a>  		RatedPredictivePlayer nextPlayer1 = <strong class="jxr_keyword">new</strong> RatedPredictivePlayer(nextPlayer0, PlayerAction.CHANGE_NOTHING, board,
 <a class="jxr_linenumber" name="78" href="#78">78</a>  				probabilitites, minSteps);
 <a class="jxr_linenumber" name="79" href="#79">79</a>  
-<a class="jxr_linenumber" name="80" href="#80">80</a>  		assertEquals(0.4, nextPlayer1.getSuccessRating(), 0.001);
+<a class="jxr_linenumber" name="80" href="#80">80</a>  		assertEquals(0.3082, nextPlayer1.getSuccessRating(), 0.001);
 <a class="jxr_linenumber" name="81" href="#81">81</a>  	}
 <a class="jxr_linenumber" name="82" href="#82">82</a>  
 <a class="jxr_linenumber" name="83" href="#83">83</a>  	@Test
@@ -108,7 +108,7 @@
 <a class="jxr_linenumber" name="98" href="#98">98</a>  		RatedPredictivePlayer nextPlayer = <strong class="jxr_keyword">new</strong> RatedPredictivePlayer(startPlayer, PlayerAction.CHANGE_NOTHING, board,
 <a class="jxr_linenumber" name="99" href="#99">99</a>  				probabilitites, minSteps);
 <a class="jxr_linenumber" name="100" href="#100">100</a> 
-<a class="jxr_linenumber" name="101" href="#101">101</a> 		assertEquals(0.15, nextPlayer.getCutOffRating(), 0.001);
+<a class="jxr_linenumber" name="101" href="#101">101</a> 		assertEquals(0.1277, nextPlayer.getCutOffRating(), 0.001);
 <a class="jxr_linenumber" name="102" href="#102">102</a> 	}
 <a class="jxr_linenumber" name="103" href="#103">103</a> 
 <a class="jxr_linenumber" name="104" href="#104">104</a> 	@Test
