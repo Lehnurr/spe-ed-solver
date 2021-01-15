@@ -56,7 +56,7 @@ public class RatedPredictivePlayerTest {
 		RatedPredictivePlayer nextPlayer = new RatedPredictivePlayer(startPlayer, PlayerAction.CHANGE_NOTHING, board,
 				probabilitites, minSteps);
 
-		assertEquals(0.5, nextPlayer.getSuccessRating(), 0.01);
+		assertEquals(0.425, nextPlayer.getSuccessRating(), 0.01);
 	}
 
 	@Test
@@ -77,7 +77,7 @@ public class RatedPredictivePlayerTest {
 		RatedPredictivePlayer nextPlayer1 = new RatedPredictivePlayer(nextPlayer0, PlayerAction.CHANGE_NOTHING, board,
 				probabilitites, minSteps);
 
-		assertEquals(0.4, nextPlayer1.getSuccessRating(), 0.001);
+		assertEquals(0.3082, nextPlayer1.getSuccessRating(), 0.001);
 	}
 
 	@Test
@@ -98,7 +98,7 @@ public class RatedPredictivePlayerTest {
 		RatedPredictivePlayer nextPlayer = new RatedPredictivePlayer(startPlayer, PlayerAction.CHANGE_NOTHING, board,
 				probabilitites, minSteps);
 
-		assertEquals(0.15, nextPlayer.getCutOffRating(), 0.001);
+		assertEquals(0.1277, nextPlayer.getCutOffRating(), 0.001);
 	}
 
 	@Test
