@@ -85,6 +85,7 @@ public final class GameLogger {
 				player.getSpeed(), player.getRound(), requiredSeconds, availableSeconds);
 
 		ApplicationLogger.logMessage(LoggingLevel.GAME_INFO, playerState, LoggingLevel.GAME_INFO, playerState);
+		System.out.println();
 	}
 
 	public static void logGameInformation(String message) {

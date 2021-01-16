@@ -2,6 +2,7 @@ package solver.analysis;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import utility.game.player.PlayerAction;
 
@@ -110,7 +111,8 @@ public class ActionsRating {
 
 	@Override
 	public String toString() {
-		return ratingMap.toString();
+		return ratingMap.entrySet().stream().map(e -> String.format("%s=%.3f", e.getKey(), e.getValue()))
+				.collect(Collectors.toList()).toString();
 	}
 
 }
