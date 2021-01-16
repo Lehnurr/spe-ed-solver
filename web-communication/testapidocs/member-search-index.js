@@ -1,0 +1,1 @@
+memberSearchIndex = [{"p":"webcommunication.webservice.parser","c":"GameStepParserTest","l":"GameStepParserTest()","url":"%3Cinit%3E()"},{"p":"webcommunication.webservice.parser","c":"GameStepParserTest","l":"testParseGameStep()"}]

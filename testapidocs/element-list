@@ -8,3 +8,4 @@ utility.extensions
 utility.game.board
 utility.game.player
 utility.geometry
+webcommunication.webservice.parser
