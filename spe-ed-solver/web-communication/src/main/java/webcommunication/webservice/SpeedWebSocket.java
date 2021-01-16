@@ -68,15 +68,17 @@ public class SpeedWebSocket {
 
 		final GameStep gameStep = gameStepParser.parseGameStep(message, roundCounter);
 		final PlayerAction responseAction = handleStepFunction.apply(gameStep);
-		String responseText = responseParser.parseResponse(responseAction);
-
+		final String responseText = responseParser.parseResponse(responseAction);
+		
 		if (gameStep.isRunning()) {
+			
 			try {
 				session.getRemote().sendString(responseText);
 			} catch (IOException e) {
 				throw new MessageSendingException("Could not sent response: " + responseText, e);
 			}
 		}
+		
 		ApplicationLogger.logInformation("response " + responseText + " sent to the server");
 
 		roundCounter++;
