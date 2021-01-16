@@ -1,1 +1,1 @@
-typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"webcommunication.webservice.parser","l":"GameStepParserTest"}]
+typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"webcommunication.webservice.parser","l":"GameStepParserTest"},{"p":"webcommunication.webservice.parser","l":"ResponseParserTest"},{"p":"webcommunication.time.parser","l":"ServerTimeParserTest"}]
