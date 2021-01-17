@@ -23,9 +23,13 @@ Python Prototype | [spe-ed-solver-prototype](https://github.com/Lehnurr/spe-ed-s
 
 ## Build
 
-The Java 11 JDK and maven are required to compile the project. Other dependencies are provided automatically by maven. Just call  `mvn package -f spe-ed-solver/pom.xml`.
+The Java 11 JDK and maven are required to compile the project. Other dependencies are provided automatically by maven. Just call 
 
-To Build a Docker Image you can call `docker build --pull --rm -f ".docker/Dockerfile" -t teamlehnurr/spe-ed-solver:latest "."`
+`mvn package -f spe-ed-solver/pom.xml`.
+
+To Build a Docker Image you can call
+
+`docker build --pull --rm -f ".docker/Dockerfile" -t teamlehnurr/spe-ed-solver:latest "."`
 
 ## Run
 You can run the project with docker or java 11.
