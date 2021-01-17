@@ -1,3 +1,5 @@
+![banner](.github/images/banner.png)
+
 # spe-ed-solver by team Lehnurr
 
 ![build](https://github.com/Lehnurr/spe-ed-solver/workflows/Build/badge.svg)
