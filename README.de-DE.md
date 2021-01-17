@@ -1,3 +1,4 @@
+![banner](.github/images/banner.png)
 # spe-ed-solver von Team Lehnurr
 
 [English Readme](README.md)
