@@ -33,5 +33,4 @@ WORKDIR /app
 COPY --from=builder /app/core/target/core-0.0.1-SNAPSHOT-jar-with-dependencies.jar .
 
 ENTRYPOINT [ "java", "-jar", "/app/core-0.0.1-SNAPSHOT-jar-with-dependencies.jar"]
-CMD ["live", "-l=/"]
-
+CMD ["live", "-l=/", "-m=1"]
