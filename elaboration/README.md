@@ -1,6 +1,6 @@
 # elaboration
 
-In diesem Verzeiochnis sind Dokumente bezüglich der Ausarbeitung für den theoretischen Hintergrund und die Architektur des Systems enthalten.
+In diesem Verzeichnis sind Dokumente bezüglich der Ausarbeitung für den theoretischen Hintergrund und die Architektur des Systems enthalten.
 
 ~
 
