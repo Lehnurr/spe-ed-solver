@@ -16,7 +16,7 @@ This repository contains Team Lehnurr's solution for the [InformatiCup:2021](htt
 | Sourcecode                           | [spe-ed-solver directory](spe-ed-solver)                                                           |
 | Docker Files + Guide                 | [.docker directory](.docker)                                                                       |
 | Documentation + User manual          | [ausarbeitung_informaticup2021_lehnurr.pdf](elaboration/ausarbeitung_informaticup2021_lehnurr.pdf) |
-| Project documentation                | [spe-ed-docs.lehnurr.de/apidocs](https://spe-ed-docs.lehnurr.de/index.html)                        |
+| Project documentation                | [spe-ed-docs.lehnurr.de](https://spe-ed-docs.lehnurr.de/index.html)                        |
 | Sourcecode documentation             | [spe-ed-docs.lehnurr.de/apidocs](https://spe-ed-docs.lehnurr.de/apidocs/index.html)                |
 | Branch for documenation source files | [gh-pages branch](https://github.com/Lehnurr/spe-ed-solver/tree/gh-pages)                          |
 | Python Prototype                     | [spe-ed-solver-prototype](https://github.com/Lehnurr/spe-ed-solver-prototype)                      |
@@ -25,7 +25,7 @@ This repository contains Team Lehnurr's solution for the [InformatiCup:2021](htt
 
 The Java 11 JDK and maven are required to compile the project. Other dependencies are provided automatically by maven. Just call
 
-`mvn package -f spe-ed-solver/pom.xml`.
+`mvn package -f spe-ed-solver/pom.xml`
 
 To Build a Docker Image you can call
 
