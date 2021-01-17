@@ -4,7 +4,7 @@ In this directory you will find everything you need to build and run the spe-ed-
 
 You have 2 options:
 
-- Use the deafult version with 4 threads
+- Use the default version with 4 threads
   - build the image yourself
   - or use the latest release from DockerHub via `docker pull teamlehnurr/spe-ed-solver:latest`
   - or use latest release from GitHub
