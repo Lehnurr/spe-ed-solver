@@ -27,13 +27,13 @@ public class SimulationDeadlineTest {
         SimulationDeadline.setLowerTimeLimit(1);
         SimulationDeadline.setUpperTimeLimit(1);
         final SimulationDeadline oneSecondDeadline = new SimulationDeadline();
-        assertTrue("Deadline upper limit must be the maximum", oneSecondDeadline.getRemainingMilliseconds() < 1000);
+        assertTrue("Deadline upper limit must be the maximum", oneSecondDeadline.getRemainingMilliseconds() <= 1000);
 
         SimulationDeadline.setLowerTimeLimit(5);
         SimulationDeadline.setUpperTimeLimit(1);
         final SimulationDeadline swappedDeadline = new SimulationDeadline();
-        assertTrue("Deadline upper limit must be the maximum", swappedDeadline.getRemainingMilliseconds() > 1000);
-        assertTrue("Deadline lower limit must be the minimum", swappedDeadline.getRemainingMilliseconds() < 5000);
+        assertTrue("Deadline upper limit must be the maximum", swappedDeadline.getRemainingMilliseconds() >= 1000);
+        assertTrue("Deadline lower limit must be the minimum", swappedDeadline.getRemainingMilliseconds() <= 5000);
 
         // reset the limits
         SimulationDeadline.setLowerTimeLimit(2);

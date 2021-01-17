@@ -20,7 +20,7 @@ public class PlayerDeadlineTest {
         assertTrue(deadlineA.getRemainingMilliseconds() > 0);
         assertTrue(deadlineB.getRemainingMilliseconds() > 0);
 
-        TimeUnit.MILLISECONDS.sleep(100);
-        assertTrue(deadlineA.getRemainingMilliseconds() <= 0);
+        TimeUnit.MILLISECONDS.sleep(200);
+        assertTrue(deadlineA.getRemainingMilliseconds() < 0);
     }
 }
