@@ -9,7 +9,6 @@
 
 This repository contains Team Lehnurr's solution for the [InformatiCup:2021](https://github.com/informatiCup/informatiCup2021)
 
-
 ## Available data
 Description | Data
 ------------ | -------------
@@ -35,6 +34,11 @@ You can run the project with docker or java 11.
 - For java download a released [`core-<Version>-jar-with-dependencies.jar`](https://github.com/Lehnurr/spe-ed-solver/releases)
   
 Further information about the cli and configuration are available in the [user manual](elaboration/ausarbeitung_informaticup2021_lehnurr.pdf) and the [.docker/README file](/.docker).
+
+
+## Further information
+
+To avoid information overload, only project-related information is included in this readme file.Ffurther, technical information can be found in the README's of the subdirectories.
 
 ## Contact
 Feel free to contact us: [team@lehnurr.de](mailto:team@lehnurr.de)
