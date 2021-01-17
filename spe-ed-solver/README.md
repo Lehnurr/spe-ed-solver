@@ -1,6 +1,6 @@
 # spe-ed-solver Multi-Module Project
 
-Further information about the submodules are contained in their seperated README files!
+Further information about the submodules are contained in their seperated README files! Each module is split into source code (`src/main/java`) and tests (`src/test`).
 
 ## Submodule [`core`](core)
 

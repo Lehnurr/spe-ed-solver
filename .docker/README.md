@@ -8,7 +8,7 @@ You have 2 options:
   - build the image yourself
   - or use the latest release from DockerHub via `docker pull teamlehnurr/spe-ed-solver:latest`
   - or use latest release from GitHub
-- use the version for low performance systems with only one thread
+- Use the version for low performance systems with only one thread
 
 ## Default version
 

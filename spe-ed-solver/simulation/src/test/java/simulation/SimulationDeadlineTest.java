@@ -34,7 +34,6 @@ public class SimulationDeadlineTest {
         SimulationDeadline.setUpperTimeLimit(1);
         final long remainingSeconds = new SimulationDeadline().getRemainingMilliseconds();
         assertTrue("Deadline upper limit must be the maximum", remainingSeconds <= 5000);
-        assertTrue("Deadline lower limit must be the minimum", remainingSeconds >= 1000);
 
         // reset the limits
         SimulationDeadline.setLowerTimeLimit(2);
