@@ -30,7 +30,7 @@ RUN mvn -B -e clean install -DskipTests=true
 
 FROM openjdk:11-jre-slim
 WORKDIR /app
-COPY --from=builder /app/core/target/core-0.0.1-SNAPSHOT-jar-with-dependencies.jar .
+COPY --from=builder /app/core/target/core-1.0-jar-with-dependencies.jar .
 
-ENTRYPOINT [ "java", "-jar", "/app/core-0.0.1-SNAPSHOT-jar-with-dependencies.jar"]
+ENTRYPOINT [ "java", "-jar", "/app/core-1.0-jar-with-dependencies.jar"]
 CMD ["live", "-l=/", "-m=1"]
