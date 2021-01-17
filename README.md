@@ -28,7 +28,7 @@ The Java 11 JDK and maven are required to compile the project. Other dependencie
 
 To Build a Docker Image you can call `docker build --pull --rm -f ".docker/Dockerfile" -t teamlehnurr/spe-ed-solver:latest "."`
 
-# Run
+## Run
 You can run the project with docker or java 11.
 
 - For docker you can pull the image with `docker pull teamlehnurr/spe-ed-solver:latest`
@@ -36,7 +36,7 @@ You can run the project with docker or java 11.
   
 Further information about the cli and configuration are available in the [user manual](elaboration/ausarbeitung_informaticup2021_lehnurr.pdf) and the [.docker/README file](/.docker).
 
-# Contact
+## Contact
 Feel free to contact us: [team@lehnurr.de](mailto:team@lehnurr.de)
 
 [Team Lehnurr](https://team.lehnurr.de)
