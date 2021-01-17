@@ -3,7 +3,7 @@
 
 [English Readme](README.md)
 
-Dieses Repository enthält die Lösung des Teams Lehnurr für den [InformatiCup:2021](https://github.com/informatiCup/informatiCup2021)
+Dieses Repository enthält die Lösung des Teams Lehnurr für den [InformatiCup:2021](https://github.com/informatiCup/informatiCup2021).
 
 ## Verfügbare Daten
 
@@ -12,7 +12,7 @@ Dieses Repository enthält die Lösung des Teams Lehnurr für den [InformatiCup:
 | Quellcode                                  | [spe-ed-solver verzeichnis](spe-ed-solver)                                                         |
 | Docker Files mit Anleitung                 | [.docker verzeichnis](.docker)                                                                     |
 | Dokumentation und Benutzerhandbuch         | [ausarbeitung_informaticup2021_lehnurr.pdf](elaboration/ausarbeitung_informaticup2021_lehnurr.pdf) |
-| Projekt Dokumentation                      | [spe-ed-docs.lehnurr.de/apidocs](https://spe-ed-docs.lehnurr.de/index.html)                        |
+| Projekt Dokumentation                      | [spe-ed-docs.lehnurr.de](https://spe-ed-docs.lehnurr.de/index.html)                        |
 | Quellcode Dokumentation                    | [spe-ed-docs.lehnurr.de/apidocs](https://spe-ed-docs.lehnurr.de/apidocs/index.html)                |
 | Branch für den Quellcode der Dokumentation | [gh-pages branch](https://github.com/Lehnurr/spe-ed-solver/tree/gh-pages)                          |
 | Python Prototyp                            | [spe-ed-solver-prototype](https://github.com/Lehnurr/spe-ed-solver-prototype)                      |
