@@ -4,7 +4,7 @@
 
 Dieses Repository enthält die Lösung des Teams Lehnurr für den [InformatiCup:2021](https://github.com/informatiCup/informatiCup2021)
 
-## Verfügbare Date
+## Verfügbare Daten
 
 | Beschreibung                               | Daten                                                                                              |
 | ------------------------------------------ | -------------------------------------------------------------------------------------------------- |
