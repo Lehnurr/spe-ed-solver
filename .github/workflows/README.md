@@ -16,6 +16,10 @@ Builds the project when a change is pushed on an Ubuntu machine.
 
 You can view the state of the Action in the main [README-File](https://github.com/Lehnurr/spe-ed-solver)!
 
+## codeql-analysis.yml
+
+Default Code scanning alerts. Automatically detect common vulnerability and coding errors
+
 ## dockerImageDockerHub.yml
 
 Builds a DockerImage when a change is pushed and uploads it to [DockerHub](https://hub.docker.com/r/teamlehnurr/spe-ed-solver).
