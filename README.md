@@ -6,6 +6,7 @@
 ![tests](https://github.com/Lehnurr/spe-ed-solver/workflows/Tests/badge.svg)
 ![java docs](https://github.com/Lehnurr/spe-ed-solver/workflows/Update%20Html%20JavaDocs/badge.svg?event=push)
 ![Push DockerImage to DockerHub](https://github.com/Lehnurr/spe-ed-solver/workflows/Push%20DockerImage%20to%20DockerHub/badge.svg)
+![Lines of Code](https://img.shields.io/tokei/lines/github/Lehnurr/spe-ed-solver)
 
 [German Readme](README.de-DE.md)
 
